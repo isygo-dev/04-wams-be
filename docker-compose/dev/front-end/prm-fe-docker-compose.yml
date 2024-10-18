@@ -1,0 +1,105 @@
+version: "3.7"
+services:
+  ##############################################################
+  ###  Gateway frontend service:
+  ##############################################################
+  gateway-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/gateway:dev
+    container_name: gateway-fe-dev
+    restart: always
+    ports:
+      - "4000:4000"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  ###  Frontend services:
+  ##############################################################
+  sysadmin-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/sysadmin:dev
+    container_name: sysadmin-fe-dev
+    restart: always
+    ports:
+      - "4001:4001"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  calendar-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/cms:dev
+    container_name: calendar-fe-dev
+    restart: always
+    ports:
+      - "4003:4003"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  recruitment-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/rpm:dev
+    container_name: rpm-fe-dev
+    restart: always
+    ports:
+      - "4002:4002"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  condidate-fo-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/cfo:dev
+    container_name: cfo-fe-dev
+    restart: always
+    ports:
+      - "4004:4004"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  quizz-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/quizz:dev
+    container_name: quizz-fe-dev
+    restart: always
+    ports:
+      - "4005:4005"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  hrm-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/hrm:dev
+    container_name: hrm-fe-dev
+    restart: always
+    ports:
+      - "4006:4006"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+  ##############################################################
+  link-fe-service:
+    image: dhub.dev.prm.isygoit.eu/webapp/frontend/link:dev
+    container_name: link-fe-dev
+    restart: always
+    ports:
+      - "4011:4011"
+    networks:
+      - prm-fe-dev
+      - prm-be-dev
+    ##############################################################
+    ###  Networks:
+    ##############################################################
+networks:
+  tp-tools:
+    name: net-tp-tools
+    driver: bridge
+  cloud-dev:
+    name: net-cloud-dev
+    driver: bridge
+  prm-fe-dev:
+    name: net-prm-fe-dev
+    driver: bridge
+  prm-be-dev:
+    name: net-prm-be-dev
+    driver: bridge
+  ai-fe-dev:
+    name: net-ai-fe-dev
+    driver: bridge

@@ -1,0 +1,187 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  - development
+resources:
+  - repo: self
+variables:
+  tag: '$(Build.BuildId)'
+stages:
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          #vmImage: 'ubuntu-latest'
+          name: Default
+        steps:
+          - task: SonarQubePrepare@6
+            inputs:
+              SonarQube: 'SonarConnection'
+              scannerMode: 'Other'
+              extraProperties: |
+                # Additional properties that will be passed to the scanner,
+                # Put one key=value per line, example:
+                # sonar.exclusions=**/*.bin
+                sonar.projectKey=web-app-microservices_wams-back-end_AZBPlE803CDmtWaMleDW
+                sonar.projectName=wams-back-end
+          #- task: JavaToolInstaller@0
+          #  inputs:
+          #    versionSpec: '8'
+          #    jdkArchitectureOption: 'x64'
+          #    jdkSourceOption: 'PreInstalled'
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: '-T 8 -DskipTests=true clean install -Pddl-update -Pbuild-dev'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'latest'
+              checkStyleRunAnalysis: true
+              pmdRunAnalysis: true
+              # findBugsRunAnalysis: true
+              # spotBugsRunAnalysis: true
+          - task: SonarQubePublish@6
+            inputs:
+              pollingTimeoutSec: '300'
+          - task: Docker@2
+            displayName: Build and push config-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/config
+              dockerfile: '02-cloud-ms/01-config-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,config,dev
+          - task: Docker@2
+            displayName: Build and push discovery-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/discovery
+              dockerfile: '02-cloud-ms/02-discovery-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,discovery,dev
+          - task: Docker@2
+            displayName: Build and push gateway-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/gateway
+              dockerfile: '02-cloud-ms/03-gateway-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,gateway,dev
+          - task: Docker@2
+            displayName: Build and push kms-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/kms
+              dockerfile: '10-key-management/04-kms-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,kms,dev
+          - task: Docker@2
+            displayName: Build and push ims-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/ims
+              dockerfile: '20-identity-management/04-ims-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,ims,dev
+          - task: Docker@2
+            displayName: Build and push mms-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/mms
+              dockerfile: '30-messaging-management/04-mms-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,mms,dev
+          - task: Docker@2
+            displayName: Build and push dms-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/dms
+              dockerfile: '40-document-management/04-dms-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,dms,dev
+          - task: Docker@2
+            displayName: Build and push sms-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/sms
+              dockerfile: '50-storage-management/04-sms-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,sms,dev
+          - task: Docker@2
+            displayName: Build and push cms-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/cms
+              dockerfile: '60-calendar-management/04-cms-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,cms,dev
+          - task: Docker@2
+            displayName: Build and push rpm-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/rpm
+              dockerfile: '70-recruitment-management/03-rpm-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,rpm,dev
+          - task: Docker@2
+            displayName: Build and push quiz-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/quiz
+              dockerfile: '90-quiz-management/03-quiz-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,quiz,dev
+          - task: Docker@2
+            displayName: Build and push hrm-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/hrm
+              dockerfile: '80-human-resources-management/03-hrm-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,hrm,dev
+          - task: Docker@2
+            displayName: Build and push link-service image to container registry
+            inputs:
+              command: buildAndPush
+              arguments: --no-cache
+              repository: webapp/backend/link
+              dockerfile: '75-link-management/03-link-service/Dockerfile'
+              containerRegistry: 'prmDockerHubDev'
+              tags: |
+                be,link,dev
+      - job: Clean
+        workspace:
+          clean: all # what to clean up before the job runs - outputs | resources | all    

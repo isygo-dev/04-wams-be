@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  scui-fe-prod-local-service:
+    image: dhub.prm.isygoit.eu/webapp/frontend/scui:prod-local
+    container_name: scui-fe-prod-local
+    restart: always
+    ports:
+      - "4008:4008"
+    networks:
+      - ai-fe-prod
+      - prm-be-prod
+
+  scui-fe-qa-service:
+    image: dhub.prm.isygoit.eu/webapp/frontend/scui:docker
+    container_name: scui-fe-qa
+    restart: always
+    ports:
+      - "4009:4008"
+    networks:
+      - ai-fe-prod
+      - prm-be-prod
+    ##############################################################
+    ###  Networks:
+    ##############################################################
+networks:
+  tp-tools:
+    name: net-tp-tools
+    driver: bridge
+  cloud-prod:
+    name: net-cloud-prod
+    driver: bridge
+  prm-fe-prod:
+    name: net-prm-fe-prod
+    driver: bridge
+  prm-be-prod:
+    name: net-prm-be-prod
+    driver: bridge
+  ai-fe-prod:
+    name: net-ai-fe-prod
+    driver: bridge

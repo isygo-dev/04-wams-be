@@ -1,0 +1,67 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <organization>
+        <name>isygo-it-services</name>
+        <url>http://www.isygo-it.eu</url>
+    </organization>
+
+    <groupId>eu.isygo-it.services</groupId>
+    <artifactId>web-app-microservices</artifactId>
+    <version>1.0.241017-S0215</version>
+
+    <packaging>pom</packaging>
+
+    <properties>
+        <java.source.version>17</java.source.version>
+        <java.target.version>17</java.target.version>
+        <spring-cloud.version>2022.0.3</spring-cloud.version>
+    </properties>
+
+    <modules>
+        <module>10-key-management</module>
+        <module>20-identity-management</module>
+        <module>30-messaging-management</module>
+        <module>40-document-management</module>
+        <module>50-storage-management</module>
+        <module>60-calendar-management</module>
+        <module>70-recruitment-management</module>
+        <module>75-link-management</module>
+        <module>90-quiz-management</module>
+        <module>80-human-resources-management</module>
+        <module>85-project-management</module>
+        <module>95-learning-management</module>
+        <module>99-data-integration</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.source.version}</source>
+                    <target>${java.target.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub isygo-it Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/isygo-it/00-service-stack</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub isygo-it Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/isygo-it/00-service-stack</url>
+        </repository>
+    </repositories>
+</project>

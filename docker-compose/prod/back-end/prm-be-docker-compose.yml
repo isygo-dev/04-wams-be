@@ -1,0 +1,201 @@
+version: "3.7"
+services:
+  ##############################################################
+  ###  Backend services:
+  ##############################################################
+  key-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/kms:prod
+    container_name: kms-prod
+    restart: always
+    ports:
+      - "55403:55403"
+    healthcheck:
+      test: ls -la
+      interval: 4s
+      timeout: 2s
+      retries: 3
+    volumes:
+      - /home/prm/prod/kms/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  messaging-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/mms:prod
+    container_name: mms-prod
+    restart: always
+    ports:
+      - "55404:55404"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/mms/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  storage-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/sms:prod
+    container_name: sms-prod
+    restart: always
+    ports:
+      - "55400:55400"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/sms/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  document-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/dms:prod
+    container_name: dms-prod
+    restart: always
+    ports:
+      - "55405:55405"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/dms/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  calendar-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/cms:prod
+    container_name: cms-prod
+    restart: always
+    ports:
+      - "55407:55407"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/cms/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  identity-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/ims:prod
+    container_name: ims-prod
+    restart: always
+    ports:
+      - "55402:55402"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/ims/uploads:/uploads
+    networks:
+      - prm-be-prod
+      - tp-tools
+      - cloud-prod
+
+  ##############################################################
+  recruitment-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/rpm:prod
+    container_name: rpm-prod
+    restart: always
+    ports:
+      - "55409:55409"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/rpm/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  quiz-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/quiz:prod
+    container_name: quiz-prod
+    restart: always
+    ports:
+      - "55412:55412"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/quiz/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  hrm-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/hrm:prod
+    container_name: hrm-prod
+    restart: always
+    ports:
+      - "55408:55408"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/hrm/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+  ##############################################################
+  link-service:
+    image: dhub.prm.isygoit.eu/webapp/backend/link:prod
+    container_name: link-prod
+    restart: always
+    ports:
+      - "55413:55413"
+    depends_on:
+      key-service:
+        condition: service_healthy
+    links:
+      - key-service
+    volumes:
+      - /home/prm/prod/link/uploads:/uploads
+    networks:
+      - tp-tools
+      - cloud-prod
+      - prm-be-prod
+    ########################################################### ###
+    ###  Networks:
+    ##############################################################
+networks:
+  tp-tools:
+    name: net-tp-tools
+    driver: bridge
+  cloud-prod:
+    name: net-cloud-prod
+    driver: bridge
+  prm-fe-prod:
+    name: net-prm-fe-prod
+    driver: bridge
+  prm-be-prod:
+    name: net-prm-be-prod
+    driver: bridge

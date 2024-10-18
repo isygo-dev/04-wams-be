@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://camel.apache.org/schema/spring">
+    <!-- Define additional camel routes here file:config/camel/*.xml is automatically
+        scanned -->
+    <route id="parse-resume-route" autoStartup="true">
+        <from uri="direct:parse-resume-queue"/>
+        <log message="Parsing resume..."/>
+        <process ref="resumeParserProcessor"/>
+        <choice>
+            <when>
+                <simple>${header.return} == "true"</simple>
+                <log
+                        message="Resume ${header.code} was parsed successfully"
+                        loggingLevel="INFO" logName="eu.isygoit"/>
+            </when>
+            <otherwise>
+                <log
+                        message="Error: Resume ${header.code} was not parsed"
+                        loggingLevel="INFO" logName="eu.isygoit"/>
+            </otherwise>
+        </choice>
+    </route>
+</routes>

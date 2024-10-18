@@ -1,0 +1,34 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  - development
+resources:
+  - repo: self
+variables:
+  tag: '$(Build.BuildId)'
+stages:
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          #vmImage: 'ubuntu-latest'
+          name: Default
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: '-T 8 -DskipTests=true clean install -Pddl-update -Pbuild-dev'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
+      - job: Clean
+        workspace:
+          clean: all # what to clean up before the job runs - outputs | resources | all
