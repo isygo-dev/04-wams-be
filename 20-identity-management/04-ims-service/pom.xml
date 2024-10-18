@@ -16,7 +16,6 @@
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>service-stack-parent</artifactId>
         <version>1.0.241017-S0215</version>
-        <relativePath>../../00-service-stack/01-service-stack-parent</relativePath>
     </parent>
 
     <profiles>
@@ -161,14 +160,22 @@
 
     <distributionManagement>
         <repository>
-            <id>nexus-release</id>
-            <url>https://pkgs.dev.azure.com/isygo-it-information-solutions/_packaging/release/maven/v1</url>
+            <id>github</id>
+            <name>GitHub isygo-it Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/isygo-dev/04-wams-be</url>
         </repository>
     </distributionManagement>
+
     <repositories>
         <repository>
-            <id>nexus-release</id>
-            <url>https://pkgs.dev.azure.com/isygo-it-information-solutions/_packaging/release/maven/v1</url>
+            <id>github-01</id>
+            <name>GitHub isygo-it Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/isygo-dev/01-wams-stack</url>
+        </repository>
+        <repository>
+            <id>github-02</id>
+            <name>GitHub isygo-it Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/isygo-dev/02-wams-core</url>
         </repository>
     </repositories>
 </project>

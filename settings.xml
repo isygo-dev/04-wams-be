@@ -130,30 +130,16 @@ under the License.
           <passphrase>optional; leave empty if not used.</passphrase>
         </server>
         -->
+
         <server>
-            <id>nexus-release</id>
-            <username>isygo-it-information-solutions</username>
-            <password>pa2z5u4zlsch7qtvosbdt3sdcrcquocq45viebkjd6rzygu4yv2q</password>
+            <id>github-01</id>
+            <username>isygo-it</username>
+            <password>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</password> <!-- deploy_package_token -->
         </server>
         <server>
-            <id>nexus-snapshots</id>
-            <username>isygo-it-information-solutions</username>
-            <password>pa2z5u4zlsch7qtvosbdt3sdcrcquocq45viebkjd6rzygu4yv2q</password>
-        </server>
-        <server>
-            <id>nexus</id>
-            <username>admin</username>
-            <password>isygo@241180</password>
-        </server>
-        <server>
-            <id>isygo-it-information-system</id>
-            <username>isygo-it-information-solutions</username>
-            <password>thxsnfdeom4ya7qlw3ya54yoqc6md4qlvsgzlaoelmnb6ovpfudq</password>
-        </server>
-        <server>
-            <id>amp-dhub.isygoit.eu</id>
-            <username>amp-dhub</username>
-            <password>HbiEXdfrDPNHgB2qmARR</password>
+            <id>github-02</id>
+            <username>isygo-it</username>
+            <password>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</password> <!-- deploy_package_token -->
         </server>
     </servers>
 
