@@ -49,14 +49,6 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <repository>
-            <id>isygo-it-github-04</id>
-            <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-dev/04-wams-be</url>
-        </repository>
-    </distributionManagement>
-
     <repositories>
         <repository>
             <id>isygo-it-github-01</id>
