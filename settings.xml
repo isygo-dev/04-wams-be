@@ -132,14 +132,14 @@ under the License.
         -->
 
         <server>
-            <id>github-01</id>
+            <id>isygo-it-github-01</id>
             <username>isygo-it</username>
-            <password>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</password> <!-- deploy_package_token -->
+            <password>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</password> <!-- deploy_package_token -->
         </server>
         <server>
-            <id>github-02</id>
+            <id>isygo-it-github-02</id>
             <username>isygo-it</username>
-            <password>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</password> <!-- deploy_package_token -->
+            <password>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</password> <!-- deploy_package_token -->
         </server>
     </servers>
 
