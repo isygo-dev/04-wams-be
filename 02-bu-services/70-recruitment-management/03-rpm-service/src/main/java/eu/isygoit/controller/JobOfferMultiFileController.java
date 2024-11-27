@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.CtrlDef;
-import eu.isygoit.com.rest.api.IUploadMultiFileApi;
+import eu.isygoit.com.rest.api.IMappedMultiFileUploadApi;
 import eu.isygoit.com.rest.controller.impl.MappedMultiFileController;
 import eu.isygoit.dto.data.JobOfferDto;
 import eu.isygoit.dto.data.JobOfferLinkedFileDto;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CtrlDef(handler = RpmExceptionHandler.class, mapper = JobOfferMapper.class, minMapper = JobOfferMapper.class, service = JobOfferMultiFileService.class)
 @RequestMapping(path = "/api/v1/private/JobOffer")
 public class JobOfferMultiFileController extends MappedMultiFileController<Long, JobOffer, JobOfferLinkedFileDto, JobOfferDto, JobOfferDto, JobOfferMultiFileService>
-        implements IUploadMultiFileApi<JobOfferLinkedFileDto, Long> {
+        implements IMappedMultiFileUploadApi<JobOfferLinkedFileDto, Long> {
 
     @Autowired
     private JobOfferLinkedFileMapper jobLinkedFileMapper;

@@ -9,14 +9,14 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>learning-management</artifactId>
-    <version>1.0.271124-S0916</version>
+    <version>WB-1.0.271124-S0916</version>
 
     <packaging>pom</packaging>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>web-app-microservices</artifactId>
-        <version>1.0.271124-S0916</version>
+        <version>WB-1.0.271124-S0916</version>
     </parent>
 
     <modules>

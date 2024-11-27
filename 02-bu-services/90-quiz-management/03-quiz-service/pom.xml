@@ -80,11 +80,13 @@
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>key-management-shared</artifactId>
             <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>document-management-shared</artifactId>
             <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
@@ -96,11 +98,13 @@
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>calendar-management-shared</artifactId>
             <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>identity-management-shared</artifactId>
             <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core -->
         <dependency>
@@ -197,7 +201,7 @@
         <repository>
             <id>isygo-it-github-01</id>
             <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-it/01-wams-stack</url>
+            <url>https://maven.pkg.github.com/your-org/01-wams-stack</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -205,7 +209,7 @@
         <repository>
             <id>isygo-it-github-02</id>
             <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-it/02-wams-core</url>
+            <url>https://maven.pkg.github.com/your-org/02-wams-core</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

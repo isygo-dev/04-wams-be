@@ -17,7 +17,7 @@ import eu.isygoit.dto.common.LinkedFileResponseDto;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
-import eu.isygoit.dto.request.RegisterNewAccountDto;
+import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
 import eu.isygoit.enums.IEnumMsgTemplateName;
 import eu.isygoit.enums.IEnumResumeStatType;
@@ -437,7 +437,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     public void createAccount(Resume resume) throws IOException {
-        kafkaRegisterAccountProducer.sendMessage(RegisterNewAccountDto.builder()
+        kafkaRegisterAccountProducer.sendMessage(NewAccountDto.builder()
                 .origin(new StringBuilder(IEnumAccountOrigin.Types.RESUME.name()).append("-").append(resume.getCode()).toString())
                 .domain(resume.getDomain())
                 .email(resume.getEmail())

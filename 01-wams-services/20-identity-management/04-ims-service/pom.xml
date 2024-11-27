@@ -66,7 +66,7 @@
                 <groupId>eu.isygo-it.services</groupId>
                 <artifactId>identity-management-starter-parent</artifactId>
                 <version>WC-1.0.271124-S0916</version>
-                <scope>import</scope>
+                <scope>compile</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -162,7 +162,7 @@
         <repository>
             <id>isygo-it-github-01</id>
             <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-it/01-wams-stack</url>
+            <url>https://maven.pkg.github.com/your-org/01-wams-stack</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -170,7 +170,7 @@
         <repository>
             <id>isygo-it-github-02</id>
             <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-it/02-wams-core</url>
+            <url>https://maven.pkg.github.com/your-org/02-wams-core</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

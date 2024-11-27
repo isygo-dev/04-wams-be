@@ -9,13 +9,13 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>link-management-service</artifactId>
-    <version>1.0.271124-S0916</version>
+    <version>WB-1.0.271124-S0916</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>service-stack-parent</artifactId>
-        <version>1.0.271124-S0916</version>
+        <version>WS-1.0.271124-S0916</version>
     </parent>
 
     <profiles>
@@ -91,27 +91,28 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>link-management-jpa</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WB-1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>blog-management-jpa</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WB-1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>link-management-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WB-1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>identity-management-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>service-stack-web</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WS-1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -121,23 +122,26 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>key-management-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>document-management-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>messaging-management-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WC-1.0.271124-S0916</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>calendar-management-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WC-1.0.271124-S0916</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core -->

@@ -14,7 +14,7 @@ import eu.isygoit.dto.common.LinkedFileResponseDto;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
-import eu.isygoit.dto.request.RegisterNewAccountDto;
+import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
 import eu.isygoit.enums.IEnumBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
@@ -367,7 +367,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
 
     @Override
     public void createAccount(Employee employee) throws IOException {
-        kafkaRegisterAccountProducer.sendMessage(RegisterNewAccountDto.builder()
+        kafkaRegisterAccountProducer.sendMessage(NewAccountDto.builder()
                 .origin(new StringBuilder(IEnumAccountOrigin.Types.EMPLOYEE.name()).append("-").append(employee.getCode()).toString())
                 .domain(employee.getDomain())
                 .email(employee.getEmail())

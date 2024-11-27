@@ -34,14 +34,14 @@
 
 ### Cloud services
 
-- clone the cloud project from https://github.com/isygo-it/03-wams-cloud.git
+- clone the cloud project from https://github.com/your-org/03-wams-cloud.git
 - Open the cloud project with Intellij IDEA (open as maven project)
 - Run: `mvn clean install` in the terminal or use the Intellij Maven GUI (use dev-localhost and ddl-create profiles)
 - Run Config sever then the Discovery server
 
 ### isygo-it services
 
-- clone the isygo-it project from https://github.com/isygo-it/04-isygo-it-be.git
+- clone the isygo-it project from https://github.com/your-org/04-wams-be.git
 - Open the project with Intellij IDEA (open as maven project)
 - Copy the settings.xml file from the root directory to the Maven .m2 directory
 - Run: `mvn clean install` in the terminal or use the Intellij Maven GUI

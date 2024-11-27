@@ -1,6 +1,6 @@
 package eu.isygoit.async.kafka;
 
-import eu.isygoit.dto.request.RegisterNewAccountDto;
+import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.helper.JsonHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class KafkaRegisterAccountProducer {
      * @param message the message
      * @throws IOException the io exception
      */
-    public void sendMessage(RegisterNewAccountDto message) throws IOException {
+    public void sendMessage(NewAccountDto message) throws IOException {
         log.info("Message sent to {} -> {}", register_account_topic, message);
         kafkaTemplate.send(register_account_topic, JsonHelper.toJson(message));
     }

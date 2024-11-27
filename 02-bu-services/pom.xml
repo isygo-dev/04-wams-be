@@ -25,7 +25,13 @@
     </properties>
 
     <modules>
+        <module>70-recruitment-management</module>
+        <module>75-link-management</module>
+        <module>80-human-resources-management</module>
+        <module>85-project-management</module>
         <module>90-quiz-management</module>
+        <module>95-learning-management</module>
+        <module>99-data-integration</module>
     </modules>
 
     <build>
@@ -46,7 +52,7 @@
         <repository>
             <id>isygo-it-github-01</id>
             <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-it/01-wams-stack</url>
+            <url>https://maven.pkg.github.com/your-org/01-wams-stack</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -54,7 +60,7 @@
         <repository>
             <id>isygo-it-github-02</id>
             <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/isygo-it/02-wams-core</url>
+            <url>https://maven.pkg.github.com/your-org/02-wams-core</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

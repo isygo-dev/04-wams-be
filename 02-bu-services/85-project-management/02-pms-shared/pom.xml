@@ -11,7 +11,7 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>project-management-shared</artifactId>
-    <version>1.0.271124-S0916</version>
+    <version>WB-1.0.271124-S0916</version>
     <packaging>jar</packaging>
     <name>project-management-shared</name>
     <description>project-management-shared</description>
@@ -19,7 +19,7 @@
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>project-management</artifactId>
-        <version>1.0.271124-S0916</version>
+        <version>WB-1.0.271124-S0916</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>service-stack-shared</artifactId>
-            <version>1.0.271124-S0916</version>
+            <version>WS-1.0.271124-S0916</version>
         </dependency>
     </dependencies>
 
