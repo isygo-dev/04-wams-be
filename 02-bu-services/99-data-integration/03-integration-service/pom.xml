@@ -9,13 +9,13 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>data-integration-service</artifactId>
-    <version>1.0.261112-S1046</version>
+    <version>1.0.271124-S0916</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>service-stack-parent</artifactId>
-        <version>1.0.261112-S1046</version>
+        <version>1.0.271124-S0916</version>
     </parent>
 
     <profiles>
@@ -91,17 +91,17 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>data-integration-jpa</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>data-integration-shared</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>service-stack-web</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -111,28 +111,28 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>key-management-shared</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>document-management-shared</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>identity-management-shared</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>messaging-management-shared</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>calendar-management-shared</artifactId>
-            <version>1.0.261112-S1046</version>
+            <version>1.0.271124-S0916</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.statemachine/spring-statemachine-core -->
@@ -207,7 +207,7 @@
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             <addClasspath>true</addClasspath>
-                            <mainClass>eu.isygo-it.IntegrationStarter</mainClass>
+                            <mainClass>eu.isygoit.IntegrationStarter</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -218,7 +218,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
-                    <mainClass>eu.isygo-it.IntegrationStarter</mainClass>
+                    <mainClass>eu.isygoit.IntegrationStarter</mainClass>
                     <executable>true</executable>
                     <workingDirectory>target</workingDirectory>
                 </configuration>

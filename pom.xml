@@ -9,7 +9,7 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>web-app-microservices</artifactId>
-    <version>SK-1.0.261112-S1046</version>
+    <version>WB-1.0.271124-S0916</version>
     <packaging>pom</packaging>
 
     <properties>

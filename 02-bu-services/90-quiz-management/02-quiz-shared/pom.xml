@@ -11,7 +11,7 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>quiz-management-shared</artifactId>
-    <version>WB-1.0.261112-S1046</version>
+    <version>WB-1.0.271124-S0916</version>
     <packaging>jar</packaging>
     <name>quiz-management-shared</name>
     <description>quiz-management-shared</description>
@@ -19,7 +19,7 @@
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>quiz-management</artifactId>
-        <version>WB-1.0.261112-S1046</version>
+        <version>WB-1.0.271124-S0916</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>service-stack-shared</artifactId>
-            <version>WS-1.0.261112-S1046</version>
+            <version>WS-1.0.271124-S0916</version>
         </dependency>
     </dependencies>
 

@@ -9,14 +9,14 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>data-integration</artifactId>
-    <version>1.0.261112-S1046</version>
+    <version>1.0.271124-S0916</version>
 
     <packaging>pom</packaging>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>web-app-microservices</artifactId>
-        <version>1.0.261112-S1046</version>
+        <version>1.0.271124-S0916</version>
     </parent>
 
     <modules>
