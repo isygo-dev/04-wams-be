@@ -1,51 +1,52 @@
-# web jobApplication microservices
+# 04-isygo-it-be
 
-## Architecture
+> isygo-it backend microservices.
 
-Our sample microservices-based system consists of the following modules:
+# Technology Stack
 
-- **gateway-service** - a module that Spring Cloud Netflix Zuul for running Spring Boot jobApplication that acts as a
-  proxy/gateway in our architecture.
-- **config-service** - a module that uses Spring Cloud Config Server for running configuration server in the `native`
-  mode. The configuration files are placed on the classpath.
-- **discovery-service** - a module that depending on the example it uses Spring Cloud Netflix Eureka or Spring Cloud
-  Netlix Alibaba Nacos as an embedded discovery server.
-- **messaging-management-service** - a module containing the first of our sample microservices that allows to perform
-  CRUD operation on in-memory repository of employees
-- **identity-management-service** - a module containing the second of our sample microservices that allows to perform
-  CRUD operation on in-memory repository of departments. It communicates with messaging-management-service.
-- **key-management-service** - a module containing the third of our sample microservices that allows to perform CRUD
-  operation on in-memory repository of organizations. It communicates with both messaging-management-service and
-  key-management-service.
+ Component       | Technology 
+-----------------|------------
+ Java            | 17         
+ Spring Boot     | 3.2.1      
+ Spring security | 6.1.1      
+ Postgred SQL    | 17         
+ Hibernate       | 6.2.2      
+ Maven           | 3          
 
-### Servers and links
+# Getting Started
 
-- **Servername** | **Port** | **Link** -
-- config.dev.prm.isygoit.eu | 8088 | https://config.dev.prm.isygoit.eu -
-- eureka.dev.prm.isygoit.eu | 8061 | https://eureka.dev.prm.isygoit.eu -
-- gateway.dev.prm.isygoit.eu | 8060 | https://gateway.dev.prm.isygoit.eu -
-- sms.dev.prm.isygoit.eu | 55400 | https://sms.dev.prm.isygoit.eu -
-- ims.dev.prm.isygoit.eu | 55402 | https://ims.dev.prm.isygoit.eu -
-- kms.dev.prm.isygoit.eu | 55403 | https://kms.dev.prm.isygoit.eu -
-- mms.dev.prm.isygoit.eu | 55404 | https://mms.dev.prm.isygoit.eu -
-- dms.dev.prm.isygoit.eu | 55405 | https://dms.dev.prm.isygoit.eu -
-- cms.dev.prm.isygoit.eu | 55407 | https://cms.dev.prm.isygoit.eu -
-- hrm.dev.prm.isygoit.eu | 55408 | https://hrm.dev.prm.isygoit.eu -
-- rpm.dev.prm.isygoit.eu | 55409 | https://rpm.dev.prm.isygoit.eu -
-- lms.dev.prm.isygoit.eu | 55410 | https://lms.dev.prm.isygoit.eu -
-- pms.dev.prm.isygoit.eu | 55411 | https://pms.dev.prm.isygoit.eu -
-- integrationApi.dev.prm.isygoit.eu | 55412 | https://integrationApi.dev.prm.isygoit.eu -
-- lnk.dev.prm.isygoit.eu | 55413 | https://lnk.dev.prm.isygoit.eu -
-- fe-gateway.dev.prm.isygoit.eu | 4000 | https://fe-gateway.dev.prm.isygoit.eu -
-- fe-sysadmin.dev.prm.isygoit.eu | 4001 | https://fe-sysadmin.dev.prm.isygoit.eu -
-- fe-recruitment.dev.prm.isygoit.eu | 4002 | https://fe-recruitment.dev.prm.isygoit.eu -
-- fe-calendar.dev.prm.isygoit.eu | 4003 | https://fe-calendar.dev.prm.isygoit.eu -
-- fe-candidate.dev.prm.isygoit.eu | 4004 | https://fe-candidate.dev.prm.isygoit.eu -
-- fe-integrationApi.dev.prm.isygoit.eu | 4005 | https://fe-integrationApi.dev.prm.isygoit.eu -
-- fe-hrm.dev.prm.isygoit.eu | 4006 | https://fe-hrm.dev.prm.isygoit.eu -
-- fe-document.dev.prm.isygoit.eu | 4007 | https://fe-document.dev.prm.isygoit.eu -
-- dev.smartcode.isygoit.eu | 4008 | https://dev.smartcode.isygoit.eu -
-- qa.smartcode.isygoit.eu | 4009 | https://qa.smartcode.isygoit.eu -
-- fe-visio.dev.prm.isygoit.eu | 4010 | https://fe-visio.dev.prm.isygoit.eu -
-- fe-lnk.dev.prm.isygoit.eu | 4011 | https://fe-lnk.dev.prm.isygoit.eu -
-- fe-minio.dev.prm.isygoit.eu | 9001 | https://fe-minio.dev.prm.isygoit.eu -
+## Prerequisites
+
+- Install Git last version from https://git-scm.com/downloads/win
+- Install Intellij IDEA last version (Ultimate or Community) from https://www.jetbrains.com/idea/download/other.html
+- Install Java 17 from https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+- install Docker desktop last version from https://www.docker.com/products/docker-desktop
+
+## Backend
+
+### Third-party tools
+
+- Run Docker desktop
+- Run the docker compose scripts under docker-compose/tools
+- pgadmin : http://localhost:5050/ (user: s.mbarki@isygoit.eu / pwd: root)
+- Create schemas : kms, ims, cms, dms, sms, dms, quiz
+- Cassandra : CQLsh >> CREATE KEYSPACE isygoit WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+
+### Cloud services
+
+- clone the cloud project from https://github.com/isygo-it/03-wams-cloud.git
+- Open the cloud project with Intellij IDEA (open as maven project)
+- Run: `mvn clean install` in the terminal or use the Intellij Maven GUI (use dev-localhost and ddl-create profiles)
+- Run Config sever then the Discovery server
+
+### isygo-it services
+
+- clone the isygo-it project from https://github.com/isygo-it/04-isygo-it-be.git
+- Open the project with Intellij IDEA (open as maven project)
+- Copy the settings.xml file from the root directory to the Maven .m2 directory
+- Run: `mvn clean install` in the terminal or use the Intellij Maven GUI
+- Create run configuration for all the services Starter and set the working directory to the related Target directory
+  (Ultimate version will detect automatically the Springboot configurations)
+- Run configurations in the order: Kms, Ims, Mms, Dms, Sms, Cms, Quiz
+
+

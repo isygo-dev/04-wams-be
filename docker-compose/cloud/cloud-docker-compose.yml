@@ -1,0 +1,34 @@
+version: '3'  #choose version as per your need
+
+services:
+  config-service:
+    container_name: config-service
+    image: cloud/config-serv:latest
+    ports:
+      - "8088:8088"
+    restart: unless-stopped
+    volumes:
+      - /c/docker/volumes/cloud/config-data:/config
+
+  discovery-service:
+    container_name: discovery-service
+    image: cloud/discovery-serv:latest
+    depends_on:
+      - config-service
+    ports:
+      - "8061:8061"
+    restart: unless-stopped
+    volumes:
+      - /c/docker/volumes/cloud/discovery-data:/discovery
+
+#  gateway-service:
+#    container_name: gateway-service
+#    image: cloud/gateway-serv:latest
+#    depends_on:
+#      - config-service
+#      - discovery-service
+#    ports:
+#      - "8060:8060"
+#    restart: unless-stopped
+#    volumes:
+#      - /c/docker/volumes/cloud/gateway-data:/gateway
