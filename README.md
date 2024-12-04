@@ -30,7 +30,7 @@
 - Run the docker compose scripts under docker-compose/tools
 - pgadmin : http://localhost:5050/ (user: s.mbarki@isygoit.eu / pwd: root)
 - Create schemas : kms, ims, cms, dms, sms, dms, quiz
-- Cassandra : CQLsh >> CREATE KEYSPACE isygoit WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
+- Cassandra : cqlsh >> CREATE KEYSPACE isygoit WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 3};
 
 ### Cloud services
 

@@ -3,7 +3,7 @@ services:
   ##############################################################
   ###  minio:
   ##############################################################
-  minio:
+  minio-server:
     container_name: minIo
     image: bitnami/minio:latest
     ports:
@@ -16,5 +16,12 @@ services:
       - MINIO_ROOT_USER=admin
       - MINIO_ROOT_PASSWORD=password
       - MINIO_DEFAULT_BUCKETS=isygoit.eu
+    networks:
+      - tools-net
+
 volumes:
   minio-data:
+
+networks:
+  tools-net:
+    driver: bridge
