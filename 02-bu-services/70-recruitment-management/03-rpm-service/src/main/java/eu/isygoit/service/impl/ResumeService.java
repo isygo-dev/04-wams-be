@@ -142,7 +142,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
                                         .sharedWith(acc.getCode())
                                         .build());
 
-                    }).collect(Collectors.toList());
+                    }).toList();
 
                     resume.getResumeShareInfos().clear();
                     resume.getResumeShareInfos().addAll(shareInfos);

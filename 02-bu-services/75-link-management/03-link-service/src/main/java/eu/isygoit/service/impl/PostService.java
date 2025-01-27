@@ -168,7 +168,7 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
         if (!posts.isEmpty()) {
             return posts.toList();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
@@ -177,6 +177,6 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
         if (!posts.isEmpty()) {
             return posts.toList();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

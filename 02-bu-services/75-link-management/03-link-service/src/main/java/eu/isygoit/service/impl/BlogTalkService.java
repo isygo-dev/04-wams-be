@@ -34,7 +34,7 @@ public class BlogTalkService extends CassandraCrudService<UUID, BlogTalk, BlogTa
     public List<BlogTalk> findByBlogId(Long blogId) {
         List<BlogTalk> talks = repository().findAllByBlogId(blogId);
         if (talks.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return this.afterFindAll(talks);
     }
@@ -43,7 +43,7 @@ public class BlogTalkService extends CassandraCrudService<UUID, BlogTalk, BlogTa
     public List<BlogTalk> findByBlogId(Long blogId, Integer page, Integer size) throws NotSupportedException {
         Slice<BlogTalk> talks = repository().findAllByBlogId(blogId, PageRequest.of(page, size));
         if (talks.isEmpty()) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         return this.afterFindAll(talks.getContent());
     }

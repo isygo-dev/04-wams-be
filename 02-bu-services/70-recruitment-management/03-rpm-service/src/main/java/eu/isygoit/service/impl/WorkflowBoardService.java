@@ -150,7 +150,7 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                                         }
                                     })
                                     .filter(Objects::nonNull)
-                                    .collect(Collectors.toList())
+                                    .toList()
                             )
                             .build())
                     .toList();
