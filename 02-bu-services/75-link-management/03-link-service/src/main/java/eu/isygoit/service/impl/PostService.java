@@ -13,6 +13,7 @@ import eu.isygoit.helper.DateHelper;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Blog;
 import eu.isygoit.model.Post;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -66,33 +67,39 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
 
     @Override
     public void beforeDelete(Long id) {
-        Post oldPost = this.findById(id);
-        if (DateHelper.isInLastHours(oldPost.getCreateDate(), 24)) {
-            throw new PostDeleteForbiddenException("With id " + id);
+        Optional<Post> optional = this.findById(id);
+        if (optional.isPresent()) {
+            if (DateHelper.isInLastHours(optional.get().getCreateDate(), 24)) {
+                throw new PostDeleteForbiddenException("With id " + id);
+            }
         }
         super.beforeDelete(id);
     }
 
     @Override
     public Post beforeUpdate(Post post) {
-        Post oldPost = this.findById(post.getId());
-        if (DateHelper.isInLastHours(oldPost.getCreateDate(), 24)) {
-            oldPost.setTalk(post.getTalk());
-            oldPost.setTitle(post.getTitle());
-            oldPost.setImagePath(post.getImagePath());
-            oldPost.setOriginalFileName(post.getOriginalFileName());
-            oldPost.setExtension(post.getExtension());
-            oldPost.setType(post.getType());
-            if (CollectionUtils.isEmpty(oldPost.getTags())) {
-                oldPost.setTags(new ArrayList<>() {{
-                    add("Post");
-                    add(post.getType());
-                }});
+        Optional<Post> optional = this.findById(post.getId());
+        optional.ifPresent(oldPost -> {
+            if (DateHelper.isInLastHours(oldPost.getCreateDate(), 24)) {
+                oldPost.setTalk(post.getTalk());
+                oldPost.setTitle(post.getTitle());
+                oldPost.setImagePath(post.getImagePath());
+                oldPost.setOriginalFileName(post.getOriginalFileName());
+                oldPost.setExtension(post.getExtension());
+                oldPost.setType(post.getType());
+                if (CollectionUtils.isEmpty(oldPost.getTags())) {
+                    oldPost.setTags(new ArrayList<>() {{
+                        add("Post");
+                        add(post.getType());
+                    }});
+                }
+
+            } else {
+                throw new PostUpdateForbiddenException("With id " + post.getId());
             }
-            return super.beforeUpdate(oldPost);
-        } else {
-            throw new PostUpdateForbiddenException("With id " + post.getId());
-        }
+        });
+
+        return super.beforeUpdate(optional.get());
     }
 
     @Override
@@ -144,15 +151,15 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Post.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("PST")
                 .valueLength(6L)
                 .value(1L)
-                .build();
+                .build());
     }
 
     @Override

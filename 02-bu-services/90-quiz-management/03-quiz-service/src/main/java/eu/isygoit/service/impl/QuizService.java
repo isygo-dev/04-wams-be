@@ -13,6 +13,7 @@ import eu.isygoit.helper.FileHelper;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Quiz;
 import eu.isygoit.model.QuizQuestion;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.QuizQuestionRepository;
@@ -61,8 +62,8 @@ public class QuizService extends CodifiableService<Long, Quiz, QuizRepository> i
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Quiz.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -70,7 +71,7 @@ public class QuizService extends CodifiableService<Long, Quiz, QuizRepository> i
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
     @Override

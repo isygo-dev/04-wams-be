@@ -17,6 +17,7 @@ import eu.isygoit.enums.IEnumPositionType;
 import eu.isygoit.exception.*;
 import eu.isygoit.mapper.InterviewSkillsMapper;
 import eu.isygoit.model.*;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.cms.CmsCalendarEventService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -38,9 +39,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * The type Workflow board service.
- */
 @Slf4j
 @Service
 @Transactional
@@ -76,11 +74,6 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
     @Autowired
     private WorkflowStateRepository workflowStateRepository;
 
-    /**
-     * Instantiates a new Workflow board service.
-     *
-     * @param appProperties the app properties
-     */
     public WorkflowBoardService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
@@ -166,12 +159,6 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
         }
     }
 
-    /**
-     * State exist boolean.
-     *
-     * @param code the code
-     * @return the boolean
-     */
     boolean stateExist(String code) {
         Optional<WorkflowState> workflowStateOptional = workflowStateRepository.findByCodeIgnoreCase(code);
         return workflowStateOptional.isPresent();
@@ -529,8 +516,8 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(WorkflowBoard.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -538,6 +525,6 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 }

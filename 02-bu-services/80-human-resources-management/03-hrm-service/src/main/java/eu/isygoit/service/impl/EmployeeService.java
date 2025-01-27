@@ -9,8 +9,6 @@ import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.service.impl.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.dto.common.LinkedFileRequestDto;
-import eu.isygoit.dto.common.LinkedFileResponseDto;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
@@ -19,8 +17,8 @@ import eu.isygoit.enums.IEnumAccountOrigin;
 import eu.isygoit.enums.IEnumBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
-import eu.isygoit.exception.handler.EmployeeNotFoundException;
 import eu.isygoit.model.*;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.ims.ImAccountService;
@@ -33,20 +31,19 @@ import eu.isygoit.service.IEmployeeService;
 import eu.isygoit.service.ILeaveSummaryService;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The type Employee service.
@@ -128,8 +125,8 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Employee.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -137,7 +134,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
     @Override
@@ -175,73 +172,6 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
             throw new NotFoundException("Employee not found with CODE: " + id);
         }
         return null;
-    }
-
-    @Override
-    public List<EmployeeLinkedFile> uploadAdditionalFile(Long id, MultipartFile[] files) throws IOException {
-        Employee employee = findById(id);
-
-        // int crc16 = CRC16.calculate(buffer);
-        //int crc32 = CRC32.calculate(buffer);
-        if (employee != null) {
-            for (MultipartFile file : files) {
-                try {
-                    ResponseEntity<LinkedFileResponseDto> result = dmsLinkedFileService.upload(//RequestContextDto.builder().build(),
-                            LinkedFileRequestDto.builder()
-                                    .domain(employee.getDomain())
-                                    .path(File.separator + "employee" + File.separator + "additional")
-                                    .categoryNames(Arrays.asList("Employee"))
-                                    .file(file)
-                                    .build());
-                    if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
-                        EmployeeLinkedFile employeeLinkedFile = EmployeeLinkedFile.builder()
-                                .code(result.getBody().getCode())   //NOSONAR
-                                .originalFileName(file.getOriginalFilename())
-                                .extension(FilenameUtils.getExtension(file.getOriginalFilename()))
-                                .crc16(254147)
-                                .crc32(365214)
-                                .size(file.getSize())
-                                .path("/employee/additional")
-                                .mimetype(file.getContentType())
-                                .version(1L)
-                                .build();
-                        if (CollectionUtils.isEmpty(employee.getAdditionalFiles())) {
-                            employee.setAdditionalFiles(new ArrayList<>());
-                        }
-                        employee.getAdditionalFiles().add(employeeLinkedFile);
-                        employee = this.update(employee);
-                    }
-                } catch (Exception e) {
-                    log.error("Remote feign call failed : ", e);
-                    //throw new RemoteCallFailedException(e);
-                }
-
-            }
-            return employee.getAdditionalFiles();
-        } else {
-            throw new EmployeeNotFoundException("with id: " + id);
-        }
-    }
-
-    @Override
-    public boolean deleteAdditionalFile(Long parentId, Long fileId) throws IOException {
-        Employee employee = findById(parentId);
-        if (employee != null) {
-            EmployeeLinkedFile employeeLinkedFile = employee.getAdditionalFiles().stream()
-                    .filter((EmployeeLinkedFile item) -> item.getId().equals(fileId)).findAny()
-                    .orElse(null);
-            if (employeeLinkedFile != null) {
-                employee.getAdditionalFiles().removeIf(elm -> elm.getId().equals(fileId));
-                dmsLinkedFileService.deleteFile(RequestContextDto.builder().build(), employee.getDomain(), employeeLinkedFile.getCode());
-                this.update(employee);
-                employeeLinkedFileRepository.deleteById(employeeLinkedFile.getId());
-                return true;
-            } else {
-                throw new FileNotFoundException("with original File name: " + fileId);
-            }
-        } else {
-            throw new EmployeeNotFoundException("with id: " + parentId);
-        }
     }
 
     @Override

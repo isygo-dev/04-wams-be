@@ -9,6 +9,7 @@ import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferApplication;
 import eu.isygoit.model.Resume;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.JobOfferApplicationRepository;
@@ -21,9 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-/**
- * The type Job offer application service.
- */
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
@@ -71,8 +69,8 @@ public class JobOfferApplicationService extends CodifiableService<Long, JobOffer
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(JobOfferApplication.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -80,6 +78,6 @@ public class JobOfferApplicationService extends CodifiableService<Long, JobOffer
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 }

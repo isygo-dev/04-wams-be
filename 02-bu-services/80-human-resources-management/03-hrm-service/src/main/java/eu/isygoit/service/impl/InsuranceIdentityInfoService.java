@@ -8,6 +8,7 @@ import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.InsuranceIdentityInfo;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.InsuranceIdentityInfoRepository;
@@ -15,6 +16,8 @@ import eu.isygoit.service.IInsuranceIdentityInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 /**
@@ -42,8 +45,8 @@ public class InsuranceIdentityInfoService extends ImageService<Long, InsuranceId
 
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(InsuranceIdentityInfo.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -51,7 +54,7 @@ public class InsuranceIdentityInfoService extends ImageService<Long, InsuranceId
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
     @Override

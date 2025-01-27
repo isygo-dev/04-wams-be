@@ -8,6 +8,7 @@ import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.IntegrationFlow;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.nosql.IntegrationElement;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The type Integration flow service.
@@ -48,8 +50,8 @@ public class IntegrationFlowService extends FileService<Long, IntegrationFlow, I
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(IntegrationFlow.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -57,7 +59,7 @@ public class IntegrationFlowService extends FileService<Long, IntegrationFlow, I
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
     @Override

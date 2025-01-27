@@ -10,6 +10,7 @@ import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Resume;
 import eu.isygoit.model.ResumeLinkedFile;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -19,9 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Resume multi file service.
- */
+import java.util.Optional;
+
 @Slf4j
 @Service
 @Transactional
@@ -34,11 +34,6 @@ public class ResumeMultiFileService extends MultiFileService<Long, Resume, Resum
 
     private final AppProperties appProperties;
 
-    /**
-     * Instantiates a new Resume multi file service.
-     *
-     * @param appProperties the app properties
-     */
     public ResumeMultiFileService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
@@ -49,8 +44,8 @@ public class ResumeMultiFileService extends MultiFileService<Long, Resume, Resum
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Resume.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -58,6 +53,6 @@ public class ResumeMultiFileService extends MultiFileService<Long, Resume, Resum
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 }

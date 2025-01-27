@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-/**
- * The type Time line listener service.
- */
 @Component
 public class TimeLineListenerService implements ITimeLineListenerService {
     @Autowired

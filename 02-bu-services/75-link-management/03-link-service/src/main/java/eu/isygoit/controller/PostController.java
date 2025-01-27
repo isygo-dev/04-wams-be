@@ -11,6 +11,7 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.PostDto;
 import eu.isygoit.dto.extendable.IdentifiableDto;
+import eu.isygoit.exception.PostNotFoundException;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.PostMapper;
 import eu.isygoit.model.Post;
@@ -31,6 +32,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The type Post controller.
@@ -71,14 +73,16 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                                                   @RequestParam Boolean isLike
     ) {
         try {
+            Optional<Post> optional = postService.findById(postId);
+            optional.ifPresentOrElse(post -> {
+                        final boolean b = isLike
+                                ? (post.getUsersAccountCode().add(accountCode))
+                                : (post.getUsersAccountCode().remove(accountCode));
+                    },
+                    () -> new PostNotFoundException("with id " + postId)
+            );
 
-            final Post post = postService.findById(postId);
-            final List<String> accountList = post.getUsersAccountCode();
-            boolean b = isLike ? (accountList.add(accountCode)) : (accountList.remove(accountCode));
-            post.setUsersAccountCode(accountList);
-            postService.update(post);
-            PostDto postDto = postMapper.entityToDto(post);
-            return ResponseFactory.ResponseOk(postDto);
+            return ResponseFactory.ResponseOk(postMapper.entityToDto(postService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -105,7 +109,9 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
     public ResponseEntity<List<String>> getUsersLikedPostByPostId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                                   @PathVariable(name = RestApiConstants.POST_ID) Long postId) {
         try {
-            return ResponseFactory.ResponseOk(postService.findById(postId).getUsersAccountCode());
+            return ResponseFactory.ResponseOk(postService.findById(postId)
+                    .orElseThrow(() -> new PostNotFoundException("with id " + postId))
+                    .getUsersAccountCode());
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -135,15 +141,17 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                                                      @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                      @RequestParam Boolean isLike) {
         try {
-            final Post post = postService.findById(postId);
-            final List<String> accountList = post.getUsersAccountCodeDislike();
-            boolean b = isLike ? (accountList.add(accountCode)) : (accountList.remove(accountCode));
-            post.setUsersAccountCodeDislike(accountList);
-            postService.update(post);
-            PostDto postDto = postMapper.entityToDto(post);
-            return ResponseFactory.ResponseOk(postDto);
+            final Optional<Post> optional = postService.findById(postId);
+            final List<String> accountList = optional.get().getUsersAccountCodeDislike();
+            optional.ifPresentOrElse(post -> {
+                        final boolean b = isLike
+                                ? (accountList.add(accountCode))
+                                : (accountList.remove(accountCode));
+                    },
+                    () -> new PostNotFoundException("with id " + postId)
+            );
 
-
+            return ResponseFactory.ResponseOk(postMapper.entityToDto(postService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

@@ -8,21 +8,20 @@ import eu.isygoit.com.rest.service.impl.CodifiableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.dto.common.LinkedFileRequestDto;
-import eu.isygoit.dto.common.LinkedFileResponseDto;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.DomainDto;
 import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
 import eu.isygoit.dto.data.MailMessageDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
-import eu.isygoit.encrypt.helper.CRC16;
-import eu.isygoit.encrypt.helper.CRC32;
 import eu.isygoit.enums.IEnumMsgTemplateName;
 import eu.isygoit.enums.IEnumSharedStatType;
-import eu.isygoit.exception.ResumeNotFoundException;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
-import eu.isygoit.model.*;
+import eu.isygoit.model.AppNextCode;
+import eu.isygoit.model.JobOffer;
+import eu.isygoit.model.JobOfferDetails;
+import eu.isygoit.model.JobOfferShareInfo;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.ims.ImsAppParameterService;
@@ -38,26 +37,17 @@ import eu.isygoit.types.EmailSubjects;
 import eu.isygoit.types.MsgTemplateVariables;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * The type Job offer service.
- */
 @Slf4j
 @Service
 @Transactional
@@ -85,18 +75,13 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
     @Autowired
     private JobOfferApplicationRepository jobApplicationRepository;
 
-    /**
-     * Instantiates a new Job offer service.
-     *
-     * @param appProperties the app properties
-     */
     public JobOfferService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(JobOffer.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -104,7 +89,7 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
     @Override
@@ -113,103 +98,33 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
     }
 
     @Override
-    public List<JobOfferLinkedFile> uploadAdditionalFile(Long parentId, MultipartFile[] files) throws IOException {
-        JobOffer jobOffer = findById(parentId);
-        if (jobOffer != null) {
-            for (MultipartFile file : files) {
-                try {
-                    ResponseEntity<LinkedFileResponseDto> result = dmsLinkedFileService.upload(//RequestContextDto.builder().build(),
-                            LinkedFileRequestDto.builder()
-                                    .domain(jobOffer.getDomain())
-                                    .path(File.separator + "job" + File.separator + "additional")
-                                    .tags(Arrays.asList("Job"))
-                                    .categoryNames(Arrays.asList("Job"))
-                                    .file(file)
-                                    .build());
-                    if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
-                        log.info("File uploaded successfully {}", file.getOriginalFilename());
-                        JobOfferLinkedFile jobLinkedFile = JobOfferLinkedFile.builder()
-                                .code(result.getBody().getCode())
-                                .originalFileName(file.getOriginalFilename())
-                                .extension(FilenameUtils.getExtension(file.getOriginalFilename()))
-                                .crc16(CRC16.calculate(file.getBytes()))
-                                .crc32(CRC32.calculate(file.getBytes()))
-                                .size(file.getSize())
-                                .path("/job/additional")
-                                .mimetype(file.getContentType())
-                                .version(1L)
-                                .build();
-                        if (CollectionUtils.isEmpty(jobOffer.getAdditionalFiles())) {
-                            jobOffer.setAdditionalFiles(new ArrayList<>());
+    public List<JobOfferShareInfo> shareJob(Long id, String jobOwner, List<AccountModelDto> accounts) throws JsonProcessingException {
+        Optional<JobOffer> optional = findById(id);
+        optional.ifPresentOrElse(jobOffer -> {
+                    List<JobOfferShareInfo> shareInfos = accounts.stream().map(accountModelDto -> {
+                        Optional<JobOfferShareInfo> optionalJobOfferShareInfo = jobOffer.getJobShareInfos().stream()
+                                .filter(jobOfferShareInfo -> jobOfferShareInfo.getSharedWith().equals(accountModelDto.getCode()))
+                                .findFirst();
+
+                        try {
+                            shareJobNotification(jobOffer, jobOwner, accountModelDto);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
                         }
-                        jobOffer.getAdditionalFiles().add(jobLinkedFile);
-                        jobOffer = this.update(jobOffer);
-                    }
-                } catch (Exception e) {
-                    log.error("Remote feign call failed : ", e);
-                    //throw new RemoteCallFailedException(e);
-                }
 
-            }
-            return jobOffer.getAdditionalFiles();
-        } else {
-            throw new ResumeNotFoundException("with id: " + parentId);
-        }
-    }
+                        return optionalJobOfferShareInfo
+                                .orElse(JobOfferShareInfo.builder()
+                                        .sharedWith(accountModelDto.getCode())
+                                        .build());
+                    }).collect(Collectors.toList());
 
-    @Override
-    public boolean deleteAdditionalFile(Long parentId, Long fileId) throws IOException {
-        JobOffer jobOffer = findById(parentId);
-        if (jobOffer != null) {
-            JobOfferLinkedFile jobLinkedFile = jobOffer.getAdditionalFiles().stream()
-                    .filter((JobOfferLinkedFile item) -> item.getId().equals(fileId)).findAny()
-                    .orElse(null);
-            if (jobLinkedFile != null) {
-                jobOffer.getAdditionalFiles().removeIf(elm -> elm.getId().equals(fileId));
-                dmsLinkedFileService.deleteFile(RequestContextDto.builder().build(), jobOffer.getDomain(), jobLinkedFile.getCode());
-                this.update(jobOffer);
-                jobLinkedFileRepository.deleteById(jobLinkedFile.getId());
-                return true;
-            } else {
-                throw new FileNotFoundException("with id " + fileId);
-            }
-        } else {
-            throw new ResumeNotFoundException("with id: " + parentId);
-        }
-    }
+                    jobOffer.getJobShareInfos().clear();
+                    jobOffer.getJobShareInfos().addAll(shareInfos);
+                },
+                () -> new NotFoundException("Resume not found with ID: " + id)
+        );
 
-    @Override
-    public List<JobOfferShareInfo> shareJob(Long id, String jobOwner, List<AccountModelDto> account) throws JsonProcessingException {
-        JobOffer job = findById(id);
-        List<JobOfferShareInfo> shareInfos = new ArrayList<>();
-        if (job != null) {
-            for (AccountModelDto acc : account) {
-                boolean exists = false;
-                JobOfferShareInfo existingShareInfo = null;
-
-                for (JobOfferShareInfo shareInfo : job.getJobShareInfos()) {
-                    if (shareInfo.getSharedWith().equals(acc.getCode())) {
-                        exists = true;
-                        existingShareInfo = shareInfo;
-                        break;
-                    }
-                }
-
-                if (!exists) {
-                    JobOfferShareInfo shareInfo = new JobOfferShareInfo();
-                    shareInfo.setSharedWith(acc.getCode());
-                    shareInfos.add(shareInfo);
-                    shareJobNotification(job, jobOwner, acc);
-                } else {
-                    shareInfos.add(existingShareInfo);
-                }
-            }
-            job.getJobShareInfos().clear();
-            job.getJobShareInfos().addAll(shareInfos);
-            return jobOfferRepository.save(job).getJobShareInfos();
-        } else {
-            throw new NotFoundException("Resume not found with ID: " + id);
-        }
+        return jobOfferRepository.save(optional.get()).getJobShareInfos();
     }
 
     @Override

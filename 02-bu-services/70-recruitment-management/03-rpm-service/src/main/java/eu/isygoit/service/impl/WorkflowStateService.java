@@ -7,6 +7,7 @@ import eu.isygoit.com.rest.service.impl.CodifiableService;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.WorkflowState;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.WorkflowStateRepository;
@@ -14,9 +15,8 @@ import eu.isygoit.service.IWorkflowStateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Workflow state service.
- */
+import java.util.Optional;
+
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
@@ -26,8 +26,8 @@ public class WorkflowStateService extends CodifiableService<Long, WorkflowState,
         implements IWorkflowStateService {
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(WorkflowState.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -35,6 +35,6 @@ public class WorkflowStateService extends CodifiableService<Long, WorkflowState,
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 }

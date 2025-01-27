@@ -10,9 +10,7 @@ import eu.isygoit.dto.data.ResumeStatDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
 import eu.isygoit.enums.IEnumResumeStatType;
 import eu.isygoit.model.Resume;
-import eu.isygoit.model.ResumeLinkedFile;
 import eu.isygoit.model.ResumeShareInfo;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -27,31 +25,11 @@ public interface IResumeService extends ICrudServiceMethod<Long, Resume>, IFileS
      *
      * @param id          the id
      * @param resumeOwner the resume owner
-     * @param account     the account
+     * @param accounts    the account
      * @return the list
      * @throws JsonProcessingException the json processing exception
      */
-    List<ResumeShareInfo> shareWithAccounts(Long id, String resumeOwner, List<AccountModelDto> account) throws JsonProcessingException;
-
-    /**
-     * Upload additional file list.
-     *
-     * @param id    the id
-     * @param files the files
-     * @return the list
-     * @throws IOException the io exception
-     */
-    List<ResumeLinkedFile> uploadAdditionalFile(Long id, MultipartFile[] files) throws IOException;
-
-    /**
-     * Delete additional file boolean.
-     *
-     * @param parentId the parent id
-     * @param fileId   the file id
-     * @return the boolean
-     * @throws IOException the io exception
-     */
-    boolean deleteAdditionalFile(Long parentId, Long fileId) throws IOException;
+    List<ResumeShareInfo> shareWithAccounts(Long id, String resumeOwner, List<AccountModelDto> accounts) throws JsonProcessingException;
 
     /**
      * Gets resume by account code.

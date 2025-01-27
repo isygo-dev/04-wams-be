@@ -7,6 +7,7 @@ import eu.isygoit.com.rest.service.impl.CodifiableService;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.WorkflowTransition;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.WorkflowTransitionRepository;
@@ -14,9 +15,8 @@ import eu.isygoit.service.IWorkflowTransitionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Workflow transition service.
- */
+import java.util.Optional;
+
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
@@ -26,8 +26,8 @@ public class WorkflowTransitionService extends CodifiableService<Long, WorkflowT
         implements IWorkflowTransitionService {
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(WorkflowTransition.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -35,7 +35,7 @@ public class WorkflowTransitionService extends CodifiableService<Long, WorkflowT
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
 }

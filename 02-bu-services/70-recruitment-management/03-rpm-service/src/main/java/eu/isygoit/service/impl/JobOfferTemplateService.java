@@ -11,9 +11,6 @@ import eu.isygoit.service.IJobOfferTemplateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Job template service.
- */
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)

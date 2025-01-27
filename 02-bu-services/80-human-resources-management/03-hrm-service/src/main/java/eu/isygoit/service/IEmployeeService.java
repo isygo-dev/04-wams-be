@@ -8,8 +8,6 @@ import eu.isygoit.dto.data.EmployeeStatDto;
 import eu.isygoit.enums.IEnumBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.model.Employee;
-import eu.isygoit.model.EmployeeLinkedFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,26 +40,6 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @return the employee
      */
     Employee updateEmployeeStatus(Long id, IEnumBinaryStatus.Types newStatus);
-
-    /**
-     * Upload additional file list.
-     *
-     * @param id    the id
-     * @param files the files
-     * @return the list
-     * @throws IOException the io exception
-     */
-    List<EmployeeLinkedFile> uploadAdditionalFile(Long id, MultipartFile[] files) throws IOException;
-
-    /**
-     * Delete additional file boolean.
-     *
-     * @param parentId the parent id
-     * @param fileId   the file id
-     * @return the boolean
-     * @throws IOException the io exception
-     */
-    boolean deleteAdditionalFile(Long parentId, Long fileId) throws IOException;
 
     /**
      * Gets object statistics.

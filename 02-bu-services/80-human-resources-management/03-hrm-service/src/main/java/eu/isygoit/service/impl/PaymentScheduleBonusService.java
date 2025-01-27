@@ -45,13 +45,15 @@ public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusS
             SalaryInformation salaryInformation = contract.getSalaryInformation();
             if (salaryInformation != null && !CollectionUtils.isEmpty(salaryInformation.getPrimes())) {
                 List<Prime> primes = salaryInformation.getPrimes();
-                primes.forEach(prime -> {
+                primes.stream().forEach(prime -> {
                     double montant = prime.getAnnualMinAmount() / prime.getAnnualFrequency();
                     if (CollectionUtils.isEmpty(prime.getBonusSchedules())) {
                         List<PaymentBonusSchedule> primeBonusSchedules = new ArrayList<>();
                         for (int i = 0; i < prime.getAnnualFrequency(); i++) {
-                            PaymentBonusSchedule bonusSchedule = PaymentBonusSchedule.builder().paymentAmount(montant).isSubmited(false).build();
-                            primeBonusSchedules.add(bonusSchedule);
+                            primeBonusSchedules.add(PaymentBonusSchedule.builder()
+                                    .paymentAmount(montant)
+                                    .isSubmited(false)
+                                    .build());
                         }
                         prime.setBonusSchedules(primeBonusSchedules);
                         repository().saveAll(primeBonusSchedules);
@@ -59,7 +61,6 @@ public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusS
                     } else {
                         bonusSchedules.addAll(prime.getBonusSchedules());
                     }
-
                 });
             }
         }

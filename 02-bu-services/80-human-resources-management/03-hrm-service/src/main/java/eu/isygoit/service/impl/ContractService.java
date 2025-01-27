@@ -12,6 +12,7 @@ import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Contract;
 import eu.isygoit.model.Employee;
 import eu.isygoit.model.LeaveSummary;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -86,8 +87,8 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Contract.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -95,7 +96,7 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 
     @Override
@@ -106,11 +107,10 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
 
     @Override
     public Contract beforeUpdate(Contract contract) {
-        Contract oldContract = this.findById(contract.getId());
-        if (CollectionUtils.isEmpty(oldContract.getTags())) {
-            oldContract.setTags(Arrays.asList("Contract" /*, contract.getType()*/));
+        if (CollectionUtils.isEmpty(contract.getTags())) {
+            contract.setTags(Arrays.asList("Contract" /*, contract.getType()*/));
         }
-        return super.beforeUpdate(oldContract);
+        return super.beforeUpdate(contract);
     }
 
     @Override

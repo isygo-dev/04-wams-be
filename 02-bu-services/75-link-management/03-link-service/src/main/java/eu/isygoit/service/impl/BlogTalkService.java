@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -55,21 +56,24 @@ public class BlogTalkService extends CassandraCrudService<UUID, BlogTalk, BlogTa
 
     @Override
     public void beforeDelete(UUID id) {
-        BlogTalk oldblogTalk = this.findById(id);
-        if (DateHelper.isInLastHours(oldblogTalk.getCreateDate(), 24)) {
-            throw new BlogTalkUpdateForbiddenException("With id " + id);
-        }
+        this.findById(id).ifPresent(blogTalk -> {
+            if (DateHelper.isInLastHours(blogTalk.getCreateDate(), 24)) {
+                throw new BlogTalkUpdateForbiddenException("With id " + id);
+            }
+        });
+
         super.beforeDelete(id);
     }
 
     @Override
     public BlogTalk beforeUpdate(BlogTalk blogTalk) {
-        BlogTalk oldblogTalk = this.findById(blogTalk.getId());
-        if (DateHelper.isInLastHours(oldblogTalk.getCreateDate(), 24)) {
-            oldblogTalk.setText(blogTalk.getText());
-            return super.beforeUpdate(oldblogTalk);
-        } else {
-            throw new BlogTalkUpdateForbiddenException("With id " + blogTalk.getId());
-        }
+        Optional<BlogTalk> optional = this.findById(blogTalk.getId());
+        optional.ifPresent(oldblogTalk -> {
+            if (DateHelper.isInLastHours(oldblogTalk.getCreateDate(), 24)) {
+                blogTalk.setText(blogTalk.getText());
+            }
+        });
+
+        return super.beforeUpdate(optional.get());
     }
 }

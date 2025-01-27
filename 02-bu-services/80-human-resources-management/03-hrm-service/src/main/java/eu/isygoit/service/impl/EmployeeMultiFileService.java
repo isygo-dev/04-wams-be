@@ -10,6 +10,7 @@ import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Employee;
 import eu.isygoit.model.EmployeeLinkedFile;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -18,6 +19,8 @@ import eu.isygoit.service.IEmployeeMultiFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * The type Employee multi file service.
@@ -49,8 +52,8 @@ public class EmployeeMultiFileService extends MultiFileService<Long, Employee, E
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Employee.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -58,6 +61,6 @@ public class EmployeeMultiFileService extends MultiFileService<Long, Employee, E
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build();
+                .build());
     }
 }

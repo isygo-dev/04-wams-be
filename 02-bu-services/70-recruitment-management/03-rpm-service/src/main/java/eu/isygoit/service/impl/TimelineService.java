@@ -13,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * The type Timeline service.
- */
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)

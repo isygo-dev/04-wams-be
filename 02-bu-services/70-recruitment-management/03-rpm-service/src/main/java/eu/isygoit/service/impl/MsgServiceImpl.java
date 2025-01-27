@@ -8,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * The type Msg service.
- */
 @Slf4j
 @Service
 public class MsgServiceImpl implements IMsgService {

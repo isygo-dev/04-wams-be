@@ -12,8 +12,6 @@ import eu.isygoit.com.rest.service.impl.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.dto.common.LinkedFileRequestDto;
-import eu.isygoit.dto.common.LinkedFileResponseDto;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
@@ -21,9 +19,9 @@ import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
 import eu.isygoit.enums.IEnumMsgTemplateName;
 import eu.isygoit.enums.IEnumResumeStatType;
-import eu.isygoit.exception.ResumeNotFoundException;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.*;
+import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.ims.ImAccountService;
@@ -41,7 +39,6 @@ import eu.isygoit.types.EmailSubjects;
 import eu.isygoit.types.MsgTemplateVariables;
 import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -50,14 +47,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-/**
- * The type Resume service.
- */
 @Slf4j
 @Service
 @Transactional
@@ -94,25 +90,20 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     private ImAccountService imAccountService;
 
 
-    /**
-     * Instantiates a new Resume service.
-     *
-     * @param appProperties the app properties
-     */
     public ResumeService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
 
     @Override
-    public AppNextCode initCodeGenerator() {
-        return AppNextCode.builder()
+    public Optional<NextCodeModel> initCodeGenerator() {
+        return Optional.ofNullable(AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Resume.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("RES")
                 .valueLength(6L)
                 .value(1L)
-                .build();
+                .build());
     }
 
     @Override
@@ -131,105 +122,36 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     @Override
-    public List<ResumeShareInfo> shareWithAccounts(Long id, String resumeOwner, List<AccountModelDto> account) throws JsonProcessingException {
-        Resume resume = findById(id);
-        List<ResumeShareInfo> shareInfos = new ArrayList<>();
-        if (resume != null) {
-            for (AccountModelDto acc : account) {
-                boolean exists = false;
-                ResumeShareInfo existingShareInfo = null;
+    public List<ResumeShareInfo> shareWithAccounts(Long id, String resumeOwner, List<AccountModelDto> accounts) throws JsonProcessingException {
+        Optional<Resume> optional = findById(id);
+        optional.ifPresentOrElse(resume -> {
+                    List<ResumeShareInfo> shareInfos = accounts.stream().map(acc -> {
+                        Optional<ResumeShareInfo> optionalResumeShareInfo = resume.getResumeShareInfos().stream()
+                                .filter(resumeShareInfo -> resumeShareInfo.getSharedWith().equals(acc.getCode()))
+                                .findFirst();
 
-                for (ResumeShareInfo shareInfo : resume.getResumeShareInfos()) {
-                    if (shareInfo.getSharedWith().equals(acc.getCode())) {
-                        exists = true;
-                        existingShareInfo = shareInfo;
-                        break;
-                    }
-                }
 
-                if (!exists) {
-                    ResumeShareInfo shareInfo = new ResumeShareInfo();
-                    shareInfo.setSharedWith(acc.getCode());
-                    shareInfos.add(shareInfo);
-                    shareResumeNotification(resume, resumeOwner, acc);
-                } else {
-                    shareInfos.add(existingShareInfo);
-                }
-            }
-            resume.getResumeShareInfos().clear();
-            resume.getResumeShareInfos().addAll(shareInfos);
-            return repository().save(resume).getResumeShareInfos();
-        } else {
-            // Handle the case where the Resume with the given ID doesn't exist
-            throw new NotFoundException("Resume not found with ID: " + id);
-        }
-    }
-
-    @Override
-    public List<ResumeLinkedFile> uploadAdditionalFile(Long id, MultipartFile[] files) throws IOException {
-        Resume resume = findById(id);
-
-        // int crc16 = CRC16.calculate(buffer);
-        //int crc32 = CRC32.calculate(buffer);
-        if (resume != null) {
-            for (MultipartFile file : files) {
-                try {
-                    ResponseEntity<LinkedFileResponseDto> result = dmsLinkedFileService.upload(//RequestContextDto.builder().build(),
-                            LinkedFileRequestDto.builder()
-                                    .domain(resume.getDomain())
-                                    .path(File.separator + "resume" + File.separator + "additional")
-                                    .tags(resume.getTags())
-                                    .categoryNames(Arrays.asList("Resume"))
-                                    .file(file)
-                                    .build());
-                    if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
-                        ResumeLinkedFile resumeLinkedFile = ResumeLinkedFile.builder()
-                                .code(result.getBody().getCode())   //NOSONAR
-                                .originalFileName(file.getOriginalFilename())
-                                .extension(FilenameUtils.getExtension(file.getOriginalFilename()))
-                                .crc16(254147)
-                                .crc32(365214)
-                                .size(file.getSize())
-                                .path("/resume/additional")
-                                .mimetype(file.getContentType())
-                                .version(1L)
-                                .build();
-                        if (CollectionUtils.isEmpty(resume.getAdditionalFiles())) {
-                            resume.setAdditionalFiles(new ArrayList<>());
+                        try {
+                            shareResumeNotification(resume, resumeOwner, acc);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
                         }
-                        resume.getAdditionalFiles().add(resumeLinkedFile);
-                        resume = this.update(resume);
-                    }
-                } catch (Exception e) {
-                    log.error("Remote feign call failed : ", e);
-                    //throw new RemoteCallFailedException(e);
-                }
-            }
-            return resume.getAdditionalFiles();
-        } else {
-            throw new ResumeNotFoundException("with id: " + id);
-        }
-    }
 
-    @Override
-    public boolean deleteAdditionalFile(Long parentId, Long fileId) throws IOException {
-        Resume resume = findById(parentId);
-        if (resume != null) {
-            ResumeLinkedFile resumeLinkedFile = resume.getAdditionalFiles().stream()
-                    .filter((ResumeLinkedFile item) -> item.getId().equals(fileId)).findAny()
-                    .orElse(null);
-            if (resumeLinkedFile != null) {
-                resume.getAdditionalFiles().removeIf(elm -> elm.getId().equals(fileId));
-                dmsLinkedFileService.deleteFile(RequestContextDto.builder().build(), resume.getDomain(), resumeLinkedFile.getCode());
-                this.update(resume);
-                resumeLinkedFileRepository.deleteById(resumeLinkedFile.getId());
-                return true;
-            } else {
-                throw new FileNotFoundException("with original File name: " + fileId);
-            }
-        } else {
-            throw new ResumeNotFoundException("with id: " + parentId);
-        }
+                        return optionalResumeShareInfo
+                                .orElse(ResumeShareInfo.builder()
+                                        .sharedWith(acc.getCode())
+                                        .build());
+
+                    }).collect(Collectors.toList());
+
+                    resume.getResumeShareInfos().clear();
+                    resume.getResumeShareInfos().addAll(shareInfos);
+                }, () ->
+                        // Handle the case where the Resume with the given ID doesn't exist
+                        new NotFoundException("Resume not found with ID: " + id)
+        );
+
+        return repository().save(optional.get()).getResumeShareInfos();
     }
 
     private void shareResumeNotification(Resume resume, String resumeOwner, AccountModelDto account) throws JsonProcessingException {
@@ -480,11 +402,11 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
 
     @Override
     public Resume beforeUpdate(Resume resume) {
-        Resume oldResume = this.findById(resume.getId());
-        if (CollectionUtils.isEmpty(oldResume.getTags())) {
-            oldResume.setTags(Arrays.asList("Resume" /*, resume.getType()*/));
+        Optional<Resume> optional = this.findById(resume.getId());
+        if (optional.isPresent() && CollectionUtils.isEmpty(optional.get().getTags())) {
+            optional.get().setTags(Arrays.asList("Resume" /*, resume.getType()*/));
         }
-        return super.beforeUpdate(oldResume);
+        return super.beforeUpdate(optional.get());
     }
 
     @Override

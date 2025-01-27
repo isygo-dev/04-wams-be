@@ -14,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.Optional;
 
-/**
- * The type Api extractor service.
- */
 @Slf4j
 @Service
 @Transactional
