@@ -15,7 +15,7 @@
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
-        <artifactId>web-app-microservices</artifactId>
+        <artifactId>bu-services</artifactId>
         <version>WB-1.0.271124-S0916</version>
     </parent>
 
