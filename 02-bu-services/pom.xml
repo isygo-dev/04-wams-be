@@ -31,6 +31,7 @@
         <module>80-human-resources-management</module>
         <module>85-project-management</module>
         <module>95-learning-management</module>
+        <module>96-smekit-management</module>
         <module>99-data-integration</module>
     </modules>
 
