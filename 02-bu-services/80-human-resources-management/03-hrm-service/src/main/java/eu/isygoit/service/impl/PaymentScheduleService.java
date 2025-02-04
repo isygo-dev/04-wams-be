@@ -39,8 +39,7 @@ public class PaymentScheduleService extends CrudService<Long, PaymentSchedule, P
     /**
      * The Payment bonus schedule repository.
      */
-    final
-    PaymentBonusScheduleRepository paymentBonusScheduleRepository;
+    private final PaymentBonusScheduleRepository paymentBonusScheduleRepository;
     private final ContractRepository contractRepository;
 
     @Autowired
