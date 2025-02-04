@@ -98,7 +98,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
                     employee.setAccountCode(accountCode);
                     return employee;
                 })
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
     }
 
     /**

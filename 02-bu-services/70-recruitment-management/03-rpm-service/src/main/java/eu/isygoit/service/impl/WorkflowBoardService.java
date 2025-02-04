@@ -150,10 +150,10 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                                         }
                                     })
                                     .filter(Objects::nonNull)
-                                    .toList()
+                                    .collect(Collectors.toUnmodifiableList())
                             )
                             .build())
-                    .toList();
+                    .collect(Collectors.toUnmodifiableList());
         } else {
             throw new WorkflowBoardNotFoundException("with code " + wbCode);
         }
@@ -416,7 +416,7 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
         return workflowBoardRepository.findByCodeIgnoreCase(domain)
                 .stream().filter(wfb -> wfb.getWorkflow().getCode().equals(workflowCode))
                 .flatMap(workflowBoard -> workflowBoard.getWatchers().stream()).distinct()
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -508,7 +508,7 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                 .subject(EmailSubjects.ITEM_STATUS_CHANGED_EMAIL_SUBJECT)
                 .toAddr(String.join(",",
                         Stream.concat(workflowBoard.getWatchers().stream(),
-                                workflowTransition.getWatchers().stream()).distinct().toList()))
+                                workflowTransition.getWatchers().stream()).distinct().collect(Collectors.toUnmodifiableList())))
                 .templateName(IEnumMsgTemplateName.Types.WFB_UPDATED_TEMPLATE)
                 .sent(true)
                 .variables(MailMessageDto.getVariablesAsString(variables))

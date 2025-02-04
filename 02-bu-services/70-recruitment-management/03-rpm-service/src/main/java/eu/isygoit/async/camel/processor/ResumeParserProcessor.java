@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /**
  * The type Resume parser processor.
@@ -60,7 +61,7 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
                     if (optional.isPresent()) {
                         Resume resume = optional.get();
                         try (Scanner scanner = new Scanner(result.getBody().getContentAsString(StandardCharsets.UTF_8))) {   //NOSONAR
-                            List<String> tokens = scanner.tokens().toList();
+                            List<String> tokens = scanner.tokens().collect(Collectors.toUnmodifiableList());
                             if (!CollectionUtils.isEmpty(tokens)) {
                                 tokens.stream().forEach(s -> {
                                     //get email

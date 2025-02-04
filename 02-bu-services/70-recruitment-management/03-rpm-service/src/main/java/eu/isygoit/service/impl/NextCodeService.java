@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class NextCodeService extends AbstractNextCodeService<AppNextCode> {
+public class NextCodeService extends AbstractNextCodeService<AppNextCode, Long> {
 
     @Autowired
     private AppNextCodeRepository nextCodeRepository;

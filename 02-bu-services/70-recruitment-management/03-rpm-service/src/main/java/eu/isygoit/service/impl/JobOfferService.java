@@ -116,7 +116,7 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
                                 .orElse(JobOfferShareInfo.builder()
                                         .sharedWith(accountModelDto.getCode())
                                         .build());
-                    }).toList();
+                    }).collect(Collectors.toUnmodifiableList());
 
                     jobOffer.getJobShareInfos().clear();
                     jobOffer.getJobShareInfos().addAll(shareInfos);

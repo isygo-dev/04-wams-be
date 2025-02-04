@@ -36,6 +36,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The type Workflow board controller.
@@ -75,7 +76,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             List<WorkflowStateDto> list = workflowStateMapper.listEntityToDto(workflowBoardService.getStates(wbCode))
                     .stream()
                     .peek(workflowStateDto -> workflowStateDto.setWbCode(wbCode))
-                    .toList();
+                    .collect(Collectors.toUnmodifiableList());
             if (CollectionUtils.isEmpty(list)) {
                 return ResponseFactory.ResponseNoContent();
             }
@@ -163,7 +164,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
         try {
             List<String> list = this.exceptionHandler().getEntityMap().values().stream()
                     .filter(c -> IStatable.class.isAssignableFrom(c))
-                    .map(aClass -> aClass.getName()).toList();
+                    .map(aClass -> aClass.getName()).collect(Collectors.toUnmodifiableList());
             if (CollectionUtils.isEmpty(list)) {
                 return ResponseFactory.ResponseNoContent();
             }

@@ -88,7 +88,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
                     resumeDto.setAccountCode(accountCode);
                     return super.afterFindById(resumeDto);
                 })
-                .toList());
+                .collect(Collectors.toUnmodifiableList()));
     }
 
     @Override

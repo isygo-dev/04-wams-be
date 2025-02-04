@@ -198,7 +198,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
                 completeAnswer.getSections().stream().forEach(quizSection -> {
                     quizSection.getQuestions().stream().forEach(quizQuestion -> {
                         List<CandidateQuizAnswer> answers = candidateQuiz.getAnswers().stream().filter(candidateQuizAnswer ->
-                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).toList();
+                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).collect(Collectors.toUnmodifiableList());
                         if (quizQuestion.getType() == IEnumQuestionType.Types.TAQ || quizQuestion.getType() == IEnumQuestionType.Types.CODE) {
                             if (!CollectionUtils.isEmpty(answers) && answers.size() == 1 && answers.get(0).getOption() == 0) {
                                 quizQuestion.setTextAnswer(answers.get(0).getAnswerText());
@@ -242,7 +242,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
                 completeAnswer.getSections().stream().forEach(quizSection -> {
                     quizSection.getQuestions().stream().forEach(quizQuestion -> {
                         List<CandidateQuizAnswer> answers = candidateQuiz.getAnswers().stream().filter(candidateQuizAnswer ->
-                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).toList();
+                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).collect(Collectors.toUnmodifiableList());
                         if (!CollectionUtils.isEmpty(answers) && answers.size() == 1 && answers.get(0).getOption() == 0) {
                             quizQuestion.setTextAnswer(answers.get(0).getAnswerText());
                             quizQuestion.setScore(answers.get(0).getScore());
