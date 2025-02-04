@@ -39,10 +39,15 @@ public class PaymentScheduleService extends CrudService<Long, PaymentSchedule, P
     /**
      * The Payment bonus schedule repository.
      */
-    @Autowired
+    final
     PaymentBonusScheduleRepository paymentBonusScheduleRepository;
+    private final ContractRepository contractRepository;
+
     @Autowired
-    private ContractRepository contractRepository;
+    public PaymentScheduleService(PaymentBonusScheduleRepository paymentBonusScheduleRepository, ContractRepository contractRepository) {
+        this.paymentBonusScheduleRepository = paymentBonusScheduleRepository;
+        this.contractRepository = contractRepository;
+    }
 
     @Override
     @Transactional

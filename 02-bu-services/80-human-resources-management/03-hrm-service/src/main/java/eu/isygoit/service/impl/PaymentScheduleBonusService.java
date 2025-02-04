@@ -33,8 +33,13 @@ import java.util.Optional;
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = PaymentBonusScheduleRepository.class)
 public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusSchedule, PaymentBonusScheduleRepository> implements IPaymentScheduleBonusService {
+
+    private final ContractRepository contractRepository;
+
     @Autowired
-    private ContractRepository contractRepository;
+    public PaymentScheduleBonusService(ContractRepository contractRepository) {
+        this.contractRepository = contractRepository;
+    }
 
     @Override
     public List<PaymentBonusSchedule> calculateBonusPaymentSchedule(Long contractId) {

@@ -40,10 +40,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * The type Employee service.
@@ -59,30 +56,27 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
 
     private final AppProperties appProperties;
 
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private ContractRepository contractRepository;
-    @Autowired
-    private ILeaveSummaryService leaveSummaryService;
-    @Autowired
-    private KafkaRegisterAccountProducer kafkaRegisterAccountProducer;
-    @Autowired
-    private DmsLinkedFileService dmsLinkedFileService;
-    @Autowired
-    private EmployeeLinkedFileRepository employeeLinkedFileRepository;
-    @Autowired
-    private ImAccountService imAccountService;
-    @Autowired
-    private AssoAccountEmployeeRepository assoAccountEmployeeRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ContractRepository contractRepository;
+    private final ILeaveSummaryService leaveSummaryService;
+    private final KafkaRegisterAccountProducer kafkaRegisterAccountProducer;
+    private final ImAccountService imAccountService;
+    private final AssoAccountEmployeeRepository assoAccountEmployeeRepository;
 
     /**
      * Instantiates a new Employee service.
      *
      * @param appProperties the app properties
      */
-    public EmployeeService(AppProperties appProperties) {
+    @Autowired
+    public EmployeeService(AppProperties appProperties, EmployeeRepository employeeRepository, ContractRepository contractRepository, ILeaveSummaryService leaveSummaryService, KafkaRegisterAccountProducer kafkaRegisterAccountProducer, ImAccountService imAccountService, AssoAccountEmployeeRepository assoAccountEmployeeRepository) {
         this.appProperties = appProperties;
+        this.employeeRepository = employeeRepository;
+        this.contractRepository = contractRepository;
+        this.leaveSummaryService = leaveSummaryService;
+        this.kafkaRegisterAccountProducer = kafkaRegisterAccountProducer;
+        this.imAccountService = imAccountService;
+        this.assoAccountEmployeeRepository = assoAccountEmployeeRepository;
     }
 
     @Override
@@ -164,14 +158,11 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
 
     @Override
     public Employee updateEmployeeStatus(Long id, IEnumBinaryStatus.Types newStatus) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        //TODO pour assurer notifications
-        if (optionalEmployee.isPresent()) {
-            optionalEmployee.get().setEmployeeStatus(newStatus);
-        } else {
-            throw new NotFoundException("Employee not found with CODE: " + id);
-        }
-        return null;
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Employee not found with CODE: " + id));
+
+        employee.setEmployeeStatus(newStatus);
+        return update(employee);
     }
 
     @Override
@@ -184,51 +175,36 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     private Integer getTotalContractByEmployee(String code) {
-        Optional<Employee> optionalEmployee = employeeRepository.findByCodeIgnoreCase(code);
-        if (optionalEmployee.isPresent()) {
-            Employee employee = optionalEmployee.get();
-            List<Contract> contracts = employee.getContracts();
-            return contracts.size();
-        } else {
-            return 0;
-        }
+        return employeeRepository.findByCodeIgnoreCase(code)
+                .map(employee -> Optional.ofNullable(employee.getContracts()).map(List::size).orElse(0))
+                .orElse(0);
     }
 
     private LocalDate getLastContractEndDate(String code) {
-        Optional<Employee> optionalEmployee = employeeRepository.findByCodeIgnoreCase(code);
-        if (optionalEmployee.isPresent()) {
-            Employee employee = optionalEmployee.get();
-            if (!CollectionUtils.isEmpty(employee.getContracts())) {
-                return employee.getContracts().stream()
+        return employeeRepository.findByCodeIgnoreCase(code)
+                .map(employee -> employee.getContracts())
+                .filter(contracts -> !contracts.isEmpty())
+                .flatMap(contracts -> contracts.stream()
                         .filter(contract -> contract.getEndDate() != null)
                         .map(Contract::getEndDate)
-                        .max(LocalDate::compareTo)
-                        .orElse(null);
-            }
-        }
-        return null;
+                        .max(LocalDate::compareTo))
+                .orElse(null);
     }
 
     private LocalDate getActiveContractAnniversaryDate(String code) {
-        Optional<Employee> optionalEmployee = employeeRepository.findByCodeIgnoreCase(code);
-        if (optionalEmployee.isPresent()) {
-            Employee employee = optionalEmployee.get();
-            if (!CollectionUtils.isEmpty(employee.getContracts())) {
-                Optional<Contract> activeContract = employee.getContracts().stream()
-                        .filter(contract -> contract.getEndDate() == null || contract.getEndDate().isAfter(LocalDate.now()))
-                        .findFirst();
-
-                if (activeContract.isPresent() && activeContract.get().getStartDate() != null) {
-                    LocalDate startLocalDate = activeContract.get().getStartDate();
+        return employeeRepository.findByCodeIgnoreCase(code)
+                .flatMap(employee -> Optional.ofNullable(employee.getContracts()) // Handle null contracts
+                        .orElseGet(Collections::emptyList) // Return an empty list if contracts is null
+                        .stream()
+                        .filter(contract -> contract.getEndDate() == null || contract.getEndDate().isAfter(LocalDate.now())) // Get active contract
+                        .filter(contract -> contract.getStartDate() != null) // Ensure start date is not null
+                        .findFirst())
+                .map(contract -> {
+                    LocalDate startLocalDate = contract.getStartDate();
                     int yearsBetween = Period.between(startLocalDate, LocalDate.now()).getYears();
-                    LocalDate nextAnniversaryDate = startLocalDate.plusYears(yearsBetween + 1L);
-                    return nextAnniversaryDate;
-                } else {
-                    return null;
-                }
-            }
-        }
-        return null;
+                    return startLocalDate.plusYears(yearsBetween + 1L); // Calculate next anniversary date
+                })
+                .orElse(null); // Return null if no contract found
     }
 
     /**
@@ -238,35 +214,26 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
      * @return the last due date
      */
     public LocalDate getLastDueDate(String code) {
-        Optional<Employee> employeeOpt = employeeRepository.findByCodeIgnoreCase(code);
-        if (!employeeOpt.isPresent()) {
-            return null;
-        }
-        Employee employee = employeeOpt.get();
+        return employeeRepository.findByCodeIgnoreCase(code)
+                .flatMap(employee -> employee.getContracts().stream()
+                        .filter(contract -> !contract.getCheckCancel()) // Filter out canceled contracts
+                        .max(Comparator.comparing(Contract::getEndDate)) // Get the contract with the latest end date
+                        .map(contract -> contract.getSalaryInformation()) // Get salary information from the contract
+                )
+                .flatMap(salaryInfo -> Optional.ofNullable(salaryInfo.getPrimes()) // Handle null primes
+                        .stream()
+                        .flatMap(primes -> primes.stream()
+                                .flatMap(prime -> Optional.ofNullable(prime.getBonusSchedules()) // Handle null bonus schedules
+                                        .stream()
+                                        .flatMap(bonusSchedules -> bonusSchedules.stream()
+                                                .map(PaymentBonusSchedule::getDueDate)
+                                        )
+                                )
+                        )
+                        .max(Comparator.naturalOrder())
+                )
+                .orElse(null); // Return null if no due date is found
 
-        // Fetch contracts for the employee
-        List<Contract> contracts = employee.getContracts();
-
-        // Get the last active contract
-        Optional<Contract> lastActiveContractOpt = contracts.stream()
-                .filter(contract -> !contract.getCheckCancel()) // Filter out canceled contracts
-                .max(Comparator.comparing(Contract::getEndDate)); // Get the contract with the latest end date
-
-        if (!lastActiveContractOpt.isPresent()) {
-            return null;
-        }
-        Contract lastActiveContract = lastActiveContractOpt.get();
-
-        SalaryInformation salaryInformation = lastActiveContract.getSalaryInformation();
-        if (salaryInformation == null) {
-            return null;
-        }
-        List<Prime> primes = salaryInformation.getPrimes();
-        return primes.stream()
-                .flatMap(prime -> prime.getBonusSchedules().stream())
-                .map(PaymentBonusSchedule::getDueDate)
-                .max(Comparator.naturalOrder())
-                .orElse(null);
     }
 
     @Override

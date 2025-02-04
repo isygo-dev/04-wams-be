@@ -26,7 +26,6 @@ public class LeaveSummaryService extends CrudService<Long, LeaveSummary, LeaveSu
 
     private final AppProperties appProperties;
 
-
     /**
      * Instantiates a new Leave summary service.
      *
@@ -35,5 +34,4 @@ public class LeaveSummaryService extends CrudService<Long, LeaveSummary, LeaveSu
     public LeaveSummaryService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
-
 }

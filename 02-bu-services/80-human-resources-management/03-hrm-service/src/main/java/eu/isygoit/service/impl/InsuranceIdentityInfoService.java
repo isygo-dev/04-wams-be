@@ -33,7 +33,6 @@ public class InsuranceIdentityInfoService extends ImageService<Long, InsuranceId
 
     private final AppProperties appProperties;
 
-
     /**
      * Instantiates a new Insurance identity info service.
      *

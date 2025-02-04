@@ -44,20 +44,21 @@ import java.util.Optional;
 public class ContractService extends FileService<Long, Contract, ContractRepository> implements IContractService {
 
     private final AppProperties appProperties;
-    @Autowired
-    private ILeaveSummaryService leaveSummaryService;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private LeaveSummaryRepository leaveSummaryRepository;
+    private final ILeaveSummaryService leaveSummaryService;
+    private final EmployeeRepository employeeRepository;
+    private final LeaveSummaryRepository leaveSummaryRepository;
 
     /**
      * Instantiates a new Contract service.
      *
      * @param appProperties the app properties
      */
-    public ContractService(AppProperties appProperties) {
+    @Autowired
+    public ContractService(AppProperties appProperties, ILeaveSummaryService leaveSummaryService, EmployeeRepository employeeRepository, LeaveSummaryRepository leaveSummaryRepository) {
         this.appProperties = appProperties;
+        this.leaveSummaryService = leaveSummaryService;
+        this.employeeRepository = employeeRepository;
+        this.leaveSummaryRepository = leaveSummaryRepository;
     }
 
     @Override

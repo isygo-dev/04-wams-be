@@ -33,7 +33,6 @@ public class TravelIdentityInfoService extends ImageService<Long, TravelIdentity
 
     private final AppProperties appProperties;
 
-
     /**
      * Instantiates a new Travel identity info service.
      *
@@ -42,7 +41,6 @@ public class TravelIdentityInfoService extends ImageService<Long, TravelIdentity
     public TravelIdentityInfoService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
-
 
     @Override
     public Optional<NextCodeModel> initCodeGenerator() {
