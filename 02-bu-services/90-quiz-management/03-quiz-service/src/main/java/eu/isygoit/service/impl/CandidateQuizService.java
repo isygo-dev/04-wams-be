@@ -66,7 +66,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public boolean startCandidateAnswer(String quizCode, String accountCode, CandidateQuizAnswer answer) {
         //Check if Quiz is already started for candidate
         CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-        if (candidateQuiz == null) {
+        if (Objects.isNull(candidateQuiz)) {
             throw new CandidateQuizNotYetStartedException("with code: " + accountCode + "/" + quizCode);
         }
 
@@ -95,7 +95,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public boolean submitCandidateAnswer(String quizCode, String accountCode, CandidateQuizAnswer answer) {
         //Check if Quiz is already started for candidate
         CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-        if (candidateQuiz == null) {
+        if (Objects.isNull(candidateQuiz)) {
             throw new CandidateQuizNotYetStartedException("with code: " + accountCode + "/" + quizCode);
         }
 
@@ -129,7 +129,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
         answers.stream().forEach(candidateQuizAnswer -> {
             //Check if Quiz is already started for candidate otherwise start it (!! INTERVIEW)
             CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-            if (candidateQuiz == null) {
+            if (Objects.isNull(candidateQuiz)) {
                 this.startCandidateQuiz(quizCode, accountCode);
                 candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
             }
@@ -176,7 +176,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public boolean submitCandidateQuiz(String quizCode, String accountCode) {
         //Check if Quiz is not yet started for candidate => Exception
         CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-        if (candidateQuiz == null) {
+        if (Objects.isNull(candidateQuiz)) {
             throw new CandidateQuizNotYetStartedException("with code: " + accountCode + "/" + quizCode);
         }
 
@@ -301,7 +301,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
                         if (!optionalCandidateQuizAnswer.isPresent() || "interview".equals(quiz.getCategory())) {
                             questionsToComplete.add(quizQuestion);
                         } else {
-                            if (optionalCandidateQuizAnswer.get().getSubmitDate() == null) {
+                            if (Objects.isNull(optionalCandidateQuizAnswer.get().getSubmitDate())) {
                                 Long passed = DateHelper.between(optionalCandidateQuizAnswer.get().getStartDate(), new Date());
                                 quizQuestion.setRemainInSec(Math.max(0, quizQuestion.getDurationInSec() - passed));
                                 if (passed < quizQuestion.getDurationInSec() - 10) {

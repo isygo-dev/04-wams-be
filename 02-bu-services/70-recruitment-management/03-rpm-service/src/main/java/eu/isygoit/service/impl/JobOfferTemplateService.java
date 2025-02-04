@@ -18,5 +18,4 @@ import org.springframework.transaction.annotation.Transactional;
 @SrvRepo(value = JobOfferTemplateRepository.class)
 public class JobOfferTemplateService extends CrudService<Long, JobOfferTemplate, JobOfferTemplateRepository> implements IJobOfferTemplateService {
 
-
 }

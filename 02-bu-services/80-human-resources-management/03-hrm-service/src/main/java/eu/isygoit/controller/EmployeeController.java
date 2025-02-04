@@ -24,7 +24,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -54,7 +53,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     public ResponseEntity<EmployeeDto> getEmployeeByCode(RequestContextDto requestContext,
                                                          String code) {
         try {
-            return crudService().findEmployeeByCode(code)
+            return crudService().findByCode(code)
                     .map(employee -> ResponseEntity.ok(mapper().entityToDto(employee)))
                     .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (Exception e) {
@@ -66,7 +65,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     @Override
     public ResponseEntity<List<EmployeeDto>> getEmployeeByDomain(RequestContextDto requestContext, String domain) {
         try {
-            List<Employee> employees = crudService().findEmployeeByDomain(domain);
+            List<Employee> employees = crudService().findByDomain(domain);
             if(CollectionUtils.isEmpty(employees)){
                 return ResponseEntity.noContent().build();
             }
@@ -84,7 +83,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
                                                             IEnumBinaryStatus.Types newStatus) {
         log.info("update employee status");
         try {
-            return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().updateEmployeeStatus(id, newStatus)));
+            return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().updateStatus(id, newStatus)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

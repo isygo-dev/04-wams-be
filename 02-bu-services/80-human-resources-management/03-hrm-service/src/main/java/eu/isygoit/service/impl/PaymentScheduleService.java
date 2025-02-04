@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 
@@ -64,7 +61,7 @@ public class PaymentScheduleService extends CrudService<Long, PaymentSchedule, P
 
                 if (startDate != null && frequency > 0) {
                     // Handle CDI contract with no end date
-                    if (endDate == null && contract.getContract() == IEnumContractType.Types.CDI) {
+                    if (Objects.isNull(endDate) && contract.getContract() == IEnumContractType.Types.CDI) {
                         createPaymentSchedulesForCDIContract(startDate, frequency, salaryInformation, paymentSchedules);
                     }
                     // Handle contract with a specific end date

@@ -48,10 +48,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -66,32 +63,28 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
 
     private final AppProperties appProperties;
 
-    @Autowired
-    private DmsLinkedFileService dmsLinkedFileService;
-    @Autowired
-    private AssoAccountResumeRepository assoAccountResumeRepository;
-    @Autowired
-    private IMsgService msgService;
-    @Autowired
-    private ICamelRepository camelRepository;
-    @Autowired
-    private ResumeLinkedFileRepository resumeLinkedFileRepository;
-    @Autowired
-    private ImsAppParameterService imsAppParameterService;
-    @Autowired
-    private ImsDomainService imsDomainService;
-    @Autowired
-    private JobOfferApplicationRepository jobApplicationRepository;
-    @Autowired
-    private KafkaRegisterAccountProducer kafkaRegisterAccountProducer;
-    @Autowired
-    private QuizCandidateQuizService quizCandidateQuizService;
-    @Autowired
-    private ImAccountService imAccountService;
+    private final AssoAccountResumeRepository assoAccountResumeRepository;
+    private final IMsgService msgService;
+    private final ICamelRepository camelRepository;
+    private final ImsAppParameterService imsAppParameterService;
+    private final ImsDomainService imsDomainService;
+    private final JobOfferApplicationRepository jobApplicationRepository;
+    private final KafkaRegisterAccountProducer kafkaRegisterAccountProducer;
+    private final QuizCandidateQuizService quizCandidateQuizService;
+    private final ImAccountService imAccountService;
 
-
-    public ResumeService(AppProperties appProperties) {
+    @Autowired
+    public ResumeService(AppProperties appProperties, AssoAccountResumeRepository assoAccountResumeRepository, IMsgService msgService, ICamelRepository camelRepository, ImsAppParameterService imsAppParameterService, ImsDomainService imsDomainService, JobOfferApplicationRepository jobApplicationRepository, KafkaRegisterAccountProducer kafkaRegisterAccountProducer, QuizCandidateQuizService quizCandidateQuizService, ImAccountService imAccountService) {
         this.appProperties = appProperties;
+        this.assoAccountResumeRepository = assoAccountResumeRepository;
+        this.msgService = msgService;
+        this.camelRepository = camelRepository;
+        this.imsAppParameterService = imsAppParameterService;
+        this.imsDomainService = imsDomainService;
+        this.jobApplicationRepository = jobApplicationRepository;
+        this.kafkaRegisterAccountProducer = kafkaRegisterAccountProducer;
+        this.quizCandidateQuizService = quizCandidateQuizService;
+        this.imAccountService = imAccountService;
     }
 
     @Override
@@ -130,7 +123,6 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
                                 .filter(resumeShareInfo -> resumeShareInfo.getSharedWith().equals(acc.getCode()))
                                 .findFirst();
 
-
                         try {
                             shareResumeNotification(resume, resumeOwner, acc);
                         } catch (JsonProcessingException e) {
@@ -155,18 +147,13 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     private void shareResumeNotification(Resume resume, String resumeOwner, AccountModelDto account) throws JsonProcessingException {
-        //Send email/notification to the board watchers
-        String resumeUrl = "https://localhost:4004/apps/resumes/view/";
-        try {
-            ResponseEntity<String> result = imsAppParameterService.getValueByDomainAndName(RequestContextDto.builder().build(),
-                    resume.getDomain(), AppParameterConstants.RESUME_VIEW_URL, true, "https://localhost:4004/apps/resumes/view/");
-            if (result.hasBody() && StringUtils.hasText(result.getBody())) {
-                resumeUrl = result.getBody() + resume.getId();
-            }
-        } catch (Exception e) {
-            log.error("Remote feign call failed : ", e);
-            //throw new RemoteCallFailedException(e);
-        }
+        final String defaultUrl = "https://localhost:4004/apps/resumes/view/";
+        String resumeUrl = Optional.ofNullable(imsAppParameterService.getValueByDomainAndName(RequestContextDto.builder().build(),
+                        resume.getDomain(), AppParameterConstants.RESUME_VIEW_URL, true, defaultUrl))
+                .filter(result -> result.hasBody() && StringUtils.hasText(result.getBody()))
+                .map(result -> result.getBody() + resume.getId())
+                .orElse(defaultUrl + resume.getId());  // Default URL fallback
+
 
         MailMessageDto mailMessageDto = MailMessageDto.builder()
                 .domain(resume.getDomain())
@@ -176,11 +163,6 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
                 .sent(true)
                 .build();
 
-        ResponseEntity<DomainDto> resultDomain = imsDomainService.getByName(RequestContextDto.builder().build());
-        DomainDto domain = null;
-        if (resultDomain.hasBody() && resultDomain.getBody() != null) {
-            domain = resultDomain.getBody();
-        }
         mailMessageDto.setVariables(MailMessageDto.getVariablesAsString(Map.of(
                 //Common vars
                 MsgTemplateVariables.V_USER_NAME, account.getCode(),
@@ -242,17 +224,13 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     @Override
-    public Resume findResumeByCode(String code) {
-        Optional<Resume> optional = repository().findByCodeIgnoreCase(code);
-        if (optional.isPresent()) {
-            Optional<AssoAccountResume> accountResume = assoAccountResumeRepository.findByResume_Code(code);
-            if (accountResume.isPresent()) {
-                completeSkills(optional.get(), accountResume.get().getAccountCode());
-            }
-            return optional.get();
-        } else {
-            throw new NotFoundException("Resume not found with CODE: " + code);
-        }
+    public Optional<Resume> findByCode(String code) {
+        Optional<Resume> optionalResume = repository().findByCodeIgnoreCase(code);
+        return optionalResume.map(resume -> {
+            assoAccountResumeRepository.findByResume_Code(code)
+                    .ifPresent(accountResume -> completeSkills(resume, accountResume.getAccountCode()));
+            return resume;
+        });
     }
 
     @Override
@@ -411,7 +389,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
 
     @Override
     public Resume beforeCreate(Resume resume) {
-        if (resume.getDetails() == null) {
+        if (Objects.isNull(resume.getDetails())) {
             resume.setDetails(ResumeDetails.builder().build());
         }
         if (CollectionUtils.isEmpty(resume.getTags())) {

@@ -17,6 +17,7 @@ import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.JobOfferRepository;
 import eu.isygoit.service.IJobOfferMultiFileService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class JobOfferMultiFileService extends MultiFileService<Long, JobOffer, J
 
     private final AppProperties appProperties;
 
+    @Autowired
     public JobOfferMultiFileService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }

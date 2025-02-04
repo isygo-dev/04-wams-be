@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Objects;
+
 /**
  * The type Feign config.
  */
@@ -24,15 +26,15 @@ public class FeignConfig {
         return requestTemplate -> {
             //requestTemplate.header("SHOULD_NOT_FILTER_KEY", AbstractJwtAuthFilter.SHOULD_NOT_FILTER_KEY);
             ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            if (requestAttributes == null) {
+            if (Objects.isNull(requestAttributes)) {
                 return;
             }
             HttpServletRequest request = requestAttributes.getRequest();
-            if (request == null) {
+            if (Objects.isNull(request)) {
                 return;
             }
             String jwtToken = request.getHeader(JwtService.AUTHORIZATION);
-            if (jwtToken == null) {
+            if (Objects.isNull(jwtToken)) {
                 return;
             }
 

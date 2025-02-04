@@ -23,7 +23,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param code the code
      * @return the employee
      */
-    Optional<Employee> findEmployeeByCode(String code);
+    Optional<Employee> findByCode(String code);
 
     /**
      * Find employee by domain list.
@@ -31,7 +31,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param domain the domain
      * @return the list
      */
-    List<Employee> findEmployeeByDomain(String domain);
+    List<Employee> findByDomain(String domain);
 
     /**
      * Update employee status employee.
@@ -40,7 +40,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param newStatus the new status
      * @return the employee
      */
-    Employee updateEmployeeStatus(Long id, IEnumBinaryStatus.Types newStatus);
+    Employee updateStatus(Long id, IEnumBinaryStatus.Types newStatus);
 
     /**
      * Gets object statistics.

@@ -35,7 +35,7 @@ public class AssoAccountResumeProcessor extends AbstractStringProcessor {
     public void performProcessor(Exchange exchange, String object) throws Exception {
         AssoAccountDto assoAccountDto = JsonHelper.fromJson(object, AssoAccountDto.class);
         String[] splitOrigin = assoAccountDto.getOrigin().split("-");
-        Resume resume = iResumeService.findResumeByCode(splitOrigin[1]);
+        Resume resume = iResumeService.findByCode(splitOrigin[1]);
         if ("RESUME".equals(splitOrigin[0])) {
             assoAccountResumeRepository.save(AssoAccountResume.builder().accountCode(assoAccountDto.getCode()).resume(resume).build());
         }

@@ -134,12 +134,12 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public Optional<Employee> findEmployeeByCode(String code) {
+    public Optional<Employee> findByCode(String code) {
         return employeeRepository.findByCodeIgnoreCase(code);
     }
 
     @Override
-    public List<Employee> findEmployeeByDomain(String domain) {
+    public List<Employee> findByDomain(String domain) {
         List<Employee> employees = employeeRepository.findByDomainIgnoreCase(domain);
         if (CollectionUtils.isEmpty(employees)) {
             throw new NotFoundException("Employee not found with domain: " + domain);
@@ -148,7 +148,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public Employee updateEmployeeStatus(Long id, IEnumBinaryStatus.Types newStatus) {
+    public Employee updateStatus(Long id, IEnumBinaryStatus.Types newStatus) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Employee not found with CODE: " + id));
 
@@ -187,7 +187,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
                 .flatMap(employee -> Optional.ofNullable(employee.getContracts()) // Handle null contracts
                         .orElseGet(Collections::emptyList) // Return an empty list if contracts is null
                         .stream()
-                        .filter(contract -> contract.getEndDate() == null || contract.getEndDate().isAfter(LocalDate.now())) // Get active contract
+                        .filter(contract -> Objects.isNull(contract.getEndDate()) || contract.getEndDate().isAfter(LocalDate.now())) // Get active contract
                         .filter(contract -> contract.getStartDate() != null) // Ensure start date is not null
                         .findFirst())
                 .map(contract -> {

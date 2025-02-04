@@ -29,42 +29,39 @@ import java.util.Optional;
 @SrvRepo(value = JobOfferApplicationRepository.class)
 public class JobOfferApplicationService extends CodifiableService<Long, JobOfferApplication, JobOfferApplicationRepository> implements IJobOfferApplicationService {
 
-    @Autowired
-    private ResumeRepository resumeRepository;
+    private final ResumeRepository resumeRepository;
+    private final JobOfferRepository jobOfferRepository;
 
     @Autowired
-    private JobOfferRepository jobOfferRepository;
+    public JobOfferApplicationService(ResumeRepository resumeRepository, JobOfferRepository jobOfferRepository) {
+        this.resumeRepository = resumeRepository;
+        this.jobOfferRepository = jobOfferRepository;
+    }
 
     @Override
     public JobOfferApplication beforeCreate(JobOfferApplication jobApplication) {
-        Optional<Resume> resume = resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode());
-        if (resume.isPresent()) {
-            jobApplication.setResume(resume.get());
-            jobApplication.setDomain(resume.get().getDomain());
-        }
+        resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode())
+                .ifPresent(resume -> {
+                    jobApplication.setResume(resume);
+                    jobApplication.setDomain(resume.getDomain());
+                });
 
-        Optional<JobOffer> jobOffer = jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode());
-        if (jobOffer.isPresent()) {
-            jobApplication.setJobOffer(jobOffer.get());
-        }
-        //init job application status
+        jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode())
+                .ifPresent(jobOffer -> jobApplication.setJobOffer(jobOffer));
+
         return super.beforeCreate(jobApplication);
     }
 
     @Override
     public JobOfferApplication beforeUpdate(JobOfferApplication jobApplication) {
-        if (jobApplication.getResume().getCode() != null) {
-            Optional<Resume> optional = resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode());
-            if (optional.isPresent()) {
-                jobApplication.setResume(optional.get());
-            }
-        }
-        if (jobApplication.getJobOffer().getCode() != null) {
-            Optional<JobOffer> optional = jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode());
-            if (optional.isPresent()) {
-                jobApplication.setJobOffer(optional.get());
-            }
-        }
+        resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode())
+                .ifPresent(resume -> {
+                    jobApplication.setResume(resume);
+                });
+
+        jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode())
+                .ifPresent(jobOffer -> jobApplication.setJobOffer(jobOffer));
+
         return super.beforeUpdate(jobApplication);
     }
 

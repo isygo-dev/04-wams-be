@@ -22,10 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -78,10 +75,10 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
                             //Parse skills
                             List<String> skillNames = resumeSkillsRepository.findDistinctSkillNames();
                             if (!CollectionUtils.isEmpty(skillNames)) {
-                                if (resume.getDetails() == null) {
+                                if (Objects.isNull(resume.getDetails())) {
                                     resume.setDetails(ResumeDetails.builder().skills(new ArrayList<>()).build());
                                 }
-                                if (resume.getDetails().getSkills() == null) {
+                                if (Objects.isNull(resume.getDetails().getSkills())) {
                                     resume.getDetails().setSkills(new ArrayList<>());
                                 }
 

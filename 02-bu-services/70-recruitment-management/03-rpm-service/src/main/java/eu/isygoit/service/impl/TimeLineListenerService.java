@@ -14,8 +14,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TimeLineListenerService implements ITimeLineListenerService {
+
+    private final ICamelRepository camelRepository;
+
     @Autowired
-    private ICamelRepository camelRepository;
+    public TimeLineListenerService(ICamelRepository camelRepository) {
+        this.camelRepository = camelRepository;
+    }
 
     @Override
     public void performPostPersistTL(ITLEntity entity) {

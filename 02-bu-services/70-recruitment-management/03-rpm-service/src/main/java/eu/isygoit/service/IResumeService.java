@@ -14,6 +14,7 @@ import eu.isygoit.model.ResumeShareInfo;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The interface Resume service.
@@ -64,7 +65,7 @@ public interface IResumeService extends ICrudServiceMethod<Long, Resume>, IFileS
      * @param code the code
      * @return the resume
      */
-    Resume findResumeByCode(String code);
+    Optional<Resume> findByCode(String code);
 
     /**
      * Gets global statistics.
