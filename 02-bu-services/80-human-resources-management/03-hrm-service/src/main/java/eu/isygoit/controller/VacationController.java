@@ -22,5 +22,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1/private/vacation")
 public class VacationController extends MappedCrudController<Long, Vacation, VacationDto, VacationDto, VacationService> {
 
-
 }

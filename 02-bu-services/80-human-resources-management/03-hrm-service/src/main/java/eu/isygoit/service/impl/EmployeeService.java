@@ -107,14 +107,11 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
 
     @Override
     public void afterDelete(Long id) {
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        if (optionalEmployee.isPresent()) {
-            Employee employee = optionalEmployee.get();
-            List<Contract> contracts = employee.getContracts();
-            for (Contract contract : contracts) {
-                contractRepository.delete(contract);
-            }
-        }
+        employeeRepository.findById(id).ifPresent(employee -> {
+            // Delete all contracts associated with the employee
+            contractRepository.deleteAll(employee.getContracts());
+        });
+
         super.afterDelete(id);
     }
 
@@ -137,23 +134,17 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public Employee findEmployeeByCode(String code) {
-        Optional<Employee> optionalEmployee = employeeRepository.findByCodeIgnoreCase(code);
-        if (optionalEmployee.isPresent()) {
-            return optionalEmployee.get();
-        } else {
-            throw new NotFoundException("Employee not found with CODE: " + code);
-        }
+    public Optional<Employee> findEmployeeByCode(String code) {
+        return employeeRepository.findByCodeIgnoreCase(code);
     }
 
     @Override
     public List<Employee> findEmployeeByDomain(String domain) {
-        List<Employee> employees = employeeRepository.findByDomainIgnoreCaseIn(Arrays.asList(domain));
-        if (!employees.isEmpty()) {
-            return employees;
-        } else {
+        List<Employee> employees = employeeRepository.findByDomainIgnoreCase(domain);
+        if (CollectionUtils.isEmpty(employees)) {
             throw new NotFoundException("Employee not found with domain: " + domain);
         }
+        return employees;
     }
 
     @Override

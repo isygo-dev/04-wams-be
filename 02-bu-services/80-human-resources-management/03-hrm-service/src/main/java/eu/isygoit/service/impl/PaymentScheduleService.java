@@ -21,8 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 
 /**
@@ -51,47 +53,67 @@ public class PaymentScheduleService extends CrudService<Long, PaymentSchedule, P
     @Override
     @Transactional
     public List<PaymentSchedule> calculatePaymentSchedule(Long contractId) {
-        Optional<Contract> optionalContract = contractRepository.findById(contractId);
         List<PaymentSchedule> paymentSchedules = new ArrayList<>();
-        if (optionalContract.isPresent()) {
-            Contract contract = optionalContract.get();
+
+        contractRepository.findById(contractId).ifPresent(contract -> {
             SalaryInformation salaryInformation = contract.getSalaryInformation();
             if (salaryInformation != null && salaryInformation.getPaymentSchedules().isEmpty()) {
                 LocalDate startDate = contract.getStartDate();
                 LocalDate endDate = contract.getEndDate();
                 int frequency = salaryInformation.getFrequency();
+
                 if (startDate != null && frequency > 0) {
+                    // Handle CDI contract with no end date
                     if (endDate == null && contract.getContract() == IEnumContractType.Types.CDI) {
-                        LocalDate currentDate = startDate;
-                        for (int i = 0; i < frequency; i++) {
-                            LocalDate dueDate = currentDate.with(TemporalAdjusters.lastDayOfMonth());
-                            PaymentSchedule paymentSchedule = PaymentSchedule.builder()
-                                    .dueDate(dueDate).paymentGrossAmount(salaryInformation.getGrossSalary() / frequency)
-                                    .paymentNetAmount(salaryInformation.getNetSalary() / frequency)
-                                    .build();
-                            paymentSchedules.add(paymentSchedule);
-                            currentDate = currentDate.plusMonths(1);
-                        }
-                    } else if (endDate != null && startDate != null) {
-                        long durationInDays = endDate.toEpochDay() - startDate.toEpochDay();
-                        double paymentAmount = salaryInformation.getGrossSalary() / frequency;
-                        long durationBetweenPayments = durationInDays / frequency;
-                        for (int i = 0; i < frequency; i++) {
-                            LocalDate dueDate = startDate.plusDays(durationBetweenPayments * i);
-                            PaymentSchedule paymentSchedule = PaymentSchedule.builder()
-                                    .dueDate(dueDate).paymentGrossAmount(paymentAmount)
-                                    .build();
-                            paymentSchedules.add(paymentSchedule);
-                        }
+                        createPaymentSchedulesForCDIContract(startDate, frequency, salaryInformation, paymentSchedules);
+                    }
+                    // Handle contract with a specific end date
+                    else if (endDate != null) {
+                        createPaymentSchedulesForContractWithEndDate(startDate, endDate, frequency, salaryInformation, paymentSchedules);
                     }
                 }
+
+                // Save schedules after calculation
                 salaryInformation.setPaymentSchedules(paymentSchedules);
                 repository().saveAll(paymentSchedules);
             }
-            if (salaryInformation != null && !salaryInformation.getPaymentSchedules().isEmpty()) {
-                return salaryInformation.getPaymentSchedules();
-            }
-        }
-        return paymentSchedules;
+        });
+
+        return paymentSchedules.isEmpty() ? Collections.emptyList() : paymentSchedules;
+    }
+
+    private void createPaymentSchedulesForCDIContract(LocalDate startDate, int frequency, SalaryInformation salaryInformation, List<PaymentSchedule> paymentSchedules) {
+        double grossAmountPerPayment = salaryInformation.getGrossSalary() / frequency;
+        double netAmountPerPayment = salaryInformation.getNetSalary() / frequency;
+
+        // Use Stream.iterate() to generate the payment schedules
+        Stream.iterate(startDate, currentDate -> currentDate.plusMonths(1))
+                .limit(frequency)
+                .forEach(currentDate -> {
+                    LocalDate dueDate = currentDate.with(TemporalAdjusters.lastDayOfMonth());
+                    PaymentSchedule paymentSchedule = PaymentSchedule.builder()
+                            .dueDate(dueDate)
+                            .paymentGrossAmount(grossAmountPerPayment)
+                            .paymentNetAmount(netAmountPerPayment)
+                            .build();
+                    paymentSchedules.add(paymentSchedule);
+                });
+    }
+
+    private void createPaymentSchedulesForContractWithEndDate(LocalDate startDate, LocalDate endDate, int frequency, SalaryInformation salaryInformation, List<PaymentSchedule> paymentSchedules) {
+        long durationInDays = endDate.toEpochDay() - startDate.toEpochDay();
+        double paymentAmount = salaryInformation.getGrossSalary() / frequency;
+        long durationBetweenPayments = durationInDays / frequency;
+
+        // Use Stream.iterate() to generate the payment schedules
+        Stream.iterate(startDate, currentDate -> currentDate.plusDays(durationBetweenPayments))
+                .limit(frequency)
+                .forEach(dueDate -> {
+                    PaymentSchedule paymentSchedule = PaymentSchedule.builder()
+                            .dueDate(dueDate)
+                            .paymentGrossAmount(paymentAmount)
+                            .build();
+                    paymentSchedules.add(paymentSchedule);
+                });
     }
 }

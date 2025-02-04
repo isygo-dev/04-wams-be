@@ -59,5 +59,4 @@ public class TravelIdentityInfoService extends ImageService<Long, TravelIdentity
     protected String getUploadDirectory() {
         return appProperties.getUploadDirectory();
     }
-
 }

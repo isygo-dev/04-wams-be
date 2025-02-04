@@ -19,10 +19,12 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -52,12 +54,9 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     public ResponseEntity<EmployeeDto> getEmployeeByCode(RequestContextDto requestContext,
                                                          String code) {
         try {
-            Employee employee = crudService().findEmployeeByCode(code);
-            if (employee != null) {
-                return ResponseEntity.ok(mapper().entityToDto(employee));
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return crudService().findEmployeeByCode(code)
+                    .map(employee -> ResponseEntity.ok(mapper().entityToDto(employee)))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (Exception e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -68,8 +67,10 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     public ResponseEntity<List<EmployeeDto>> getEmployeeByDomain(RequestContextDto requestContext, String domain) {
         try {
             List<Employee> employees = crudService().findEmployeeByDomain(domain);
-            List<EmployeeDto> employeeDtos = mapper().listEntityToDto(employees);
-            return ResponseEntity.ok(employeeDtos);
+            if(CollectionUtils.isEmpty(employees)){
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(mapper().listEntityToDto(employees));
         } catch (Exception e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

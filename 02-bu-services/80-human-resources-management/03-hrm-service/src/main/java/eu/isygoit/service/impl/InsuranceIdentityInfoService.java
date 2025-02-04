@@ -60,5 +60,4 @@ public class InsuranceIdentityInfoService extends ImageService<Long, InsuranceId
     protected String getUploadDirectory() {
         return appProperties.getUploadDirectory();
     }
-
 }

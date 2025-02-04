@@ -21,6 +21,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 /**
@@ -45,21 +47,25 @@ public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusS
     public List<PaymentBonusSchedule> calculateBonusPaymentSchedule(Long contractId) {
         Optional<Contract> optionalContract = contractRepository.findById(contractId);
         List<PaymentBonusSchedule> bonusSchedules = new ArrayList<>();
-        if (optionalContract.isPresent()) {
-            Contract contract = optionalContract.get();
+
+        optionalContract.ifPresent(contract -> {
             SalaryInformation salaryInformation = contract.getSalaryInformation();
             if (salaryInformation != null && !CollectionUtils.isEmpty(salaryInformation.getPrimes())) {
                 List<Prime> primes = salaryInformation.getPrimes();
+
                 primes.stream().forEach(prime -> {
                     double montant = prime.getAnnualMinAmount() / prime.getAnnualFrequency();
+
                     if (CollectionUtils.isEmpty(prime.getBonusSchedules())) {
                         List<PaymentBonusSchedule> primeBonusSchedules = new ArrayList<>();
-                        for (int i = 0; i < prime.getAnnualFrequency(); i++) {
-                            primeBonusSchedules.add(PaymentBonusSchedule.builder()
-                                    .paymentAmount(montant)
-                                    .isSubmited(false)
-                                    .build());
-                        }
+                        primeBonusSchedules.addAll(
+                                IntStream.range(0, prime.getAnnualFrequency())
+                                        .mapToObj(i -> PaymentBonusSchedule.builder()
+                                                .paymentAmount(montant)
+                                                .isSubmited(false)
+                                                .build())
+                                        .collect(Collectors.toList())
+                        );
                         prime.setBonusSchedules(primeBonusSchedules);
                         repository().saveAll(primeBonusSchedules);
                         bonusSchedules.addAll(primeBonusSchedules);
@@ -68,9 +74,8 @@ public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusS
                     }
                 });
             }
-        }
+        });
+
         return bonusSchedules;
     }
-
-
 }

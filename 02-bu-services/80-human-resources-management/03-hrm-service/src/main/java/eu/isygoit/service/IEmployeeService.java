@@ -11,6 +11,7 @@ import eu.isygoit.model.Employee;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The interface Employee service.
@@ -22,7 +23,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param code the code
      * @return the employee
      */
-    Employee findEmployeeByCode(String code);
+    Optional<Employee> findEmployeeByCode(String code);
 
     /**
      * Find employee by domain list.

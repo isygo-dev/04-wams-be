@@ -9,6 +9,7 @@ import java.util.List;
  * The interface Payment schedule service.
  */
 public interface IPaymentScheduleService extends ICrudServiceMethod<Long, PaymentSchedule> {
+
     /**
      * Calculate payment schedule list.
      *
@@ -16,5 +17,4 @@ public interface IPaymentScheduleService extends ICrudServiceMethod<Long, Paymen
      * @return the list
      */
     List<PaymentSchedule> calculatePaymentSchedule(Long contractId);
-
 }

@@ -7,6 +7,7 @@ import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.impl.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.exception.handler.EmployeeNotFoundException;
 import eu.isygoit.exception.handler.LeaveSummaryNotFoundException;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Contract;
@@ -63,22 +64,24 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
 
     @Override
     public Contract afterUpdate(Contract contract) {
-        Optional<Employee> optional = employeeRepository.findById(contract.getEmployee());
-        if (optional.isPresent()) {
-            Optional<LeaveSummary> leaveSummary = leaveSummaryRepository.findByCodeIgnoreCaseEmployeeAndYear(optional.get().getCode(),
-                    String.valueOf(LocalDate.now().getYear()));
-            if (leaveSummary.isPresent()) {
-                LeaveSummary leaveSummaryUpdated = leaveSummary.get();
-                if (contract.getHolidayInformation() != null) {
-                    leaveSummaryUpdated.setLeaveCount(contract.getHolidayInformation().getLegalLeaveCount());
-                    leaveSummaryUpdated.setRecoveryLeaveCount(contract.getHolidayInformation().getRecoveryLeaveCount());
-                }
+        // Retrieve employee and leave summary using Optional chaining
+        Employee employee = employeeRepository.findById(contract.getEmployee())
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + contract.getEmployee()));
 
-                leaveSummaryService.saveOrUpdate(leaveSummaryUpdated);
-            } else {
-                throw new LeaveSummaryNotFoundException("with employee Code: " + optional.get().getCode());
-            }
+        LeaveSummary leaveSummaryUpdated = leaveSummaryRepository.findByCodeIgnoreCaseEmployeeAndYear(employee.getCode(),
+                        String.valueOf(LocalDate.now().getYear()))
+                .orElseThrow(() -> new LeaveSummaryNotFoundException("with employee Code: " + employee.getCode()));
+
+        // Update leave summary if holiday information is provided
+        if (contract.getHolidayInformation() != null) {
+            leaveSummaryUpdated.setLeaveCount(contract.getHolidayInformation().getLegalLeaveCount());
+            leaveSummaryUpdated.setRecoveryLeaveCount(contract.getHolidayInformation().getRecoveryLeaveCount());
+
+            // Save or update leave summary
+            leaveSummaryService.saveOrUpdate(leaveSummaryUpdated);
         }
+
+        // Continue with the existing contract update logic
         return super.afterCreate(contract);
     }
 

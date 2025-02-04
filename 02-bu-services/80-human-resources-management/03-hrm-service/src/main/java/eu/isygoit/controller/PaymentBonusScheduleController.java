@@ -9,6 +9,7 @@ import eu.isygoit.dto.extendable.IdentifiableDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.PaymentBonusScheduleMapper;
 import eu.isygoit.model.PaymentBonusSchedule;
+import eu.isygoit.model.PaymentSchedule;
 import eu.isygoit.service.impl.PaymentScheduleBonusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,7 +59,11 @@ public class PaymentBonusScheduleController extends MappedCrudController<Long, P
     @GetMapping(path = "/calculate/{contractId}")
     public ResponseEntity<List<PaymentBonusScheduleDto>> calculateBonusPaymentSchedule(@PathVariable(name = RestApiConstants.CONTRACT_ID) Long contractId) {
         try {
-            return ResponseEntity.ok(paymentBonusScheduleMapper.listEntityToDto(crudService().calculateBonusPaymentSchedule(contractId)));
+            List<PaymentBonusSchedule> paymentBonusSchedules = crudService().calculateBonusPaymentSchedule(contractId);
+            if (CollectionUtils.isEmpty(paymentBonusSchedules)) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(mapper().listEntityToDto(paymentBonusSchedules));
         } catch (Exception e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

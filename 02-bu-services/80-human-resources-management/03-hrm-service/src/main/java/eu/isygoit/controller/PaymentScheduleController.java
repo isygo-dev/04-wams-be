@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,13 +61,14 @@ public class PaymentScheduleController extends MappedCrudController<Long, Paymen
     @GetMapping(path = "/calculate/{contractId}")
     public ResponseEntity<List<PaymentScheduleDto>> calculatePaymentSchedule(@PathVariable(name = RestApiConstants.CONTRACT_ID) Long contractId) {
         try {
-            return ResponseEntity.ok(mapper().listEntityToDto(paymentScheduleService.calculatePaymentSchedule(contractId)));
+            List<PaymentSchedule> paymentSchedules = paymentScheduleService.calculatePaymentSchedule(contractId);
+            if (CollectionUtils.isEmpty(paymentSchedules)) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(mapper().listEntityToDto(paymentSchedules));
         } catch (Exception e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
         }
-
     }
-
-
 }
