@@ -84,7 +84,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
             optional.ifPresentOrElse(postComment -> {
                         postComment.getUsersAccountCode().add(accountCode);
                     },
-                    () -> new PostCommentNotFoundException("with id " + commentId)
+                    () -> {throw new PostCommentNotFoundException("with id " + commentId);}
             );
 
             return ResponseFactory.ResponseOk(commentMapper.entityToDto(commentService.update(optional.get())));
@@ -149,7 +149,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
             optional.ifPresentOrElse(postComment -> {
                         postComment.getUsersAccountCode().remove(accountCode);
                     },
-                    () -> new PostCommentNotFoundException("with id " + commentId)
+                    () -> {throw new PostCommentNotFoundException("with id " + commentId);}
             );
 
             return ResponseFactory.ResponseOk(commentMapper.entityToDto(commentService.update(optional.get())));
