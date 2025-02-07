@@ -29,5 +29,18 @@ public interface SchemaColumnConstantName extends ComSchemaColumnConstantName {
      * The constant C_QUIZ_OPTION_CHECK.
      */
     String C_QUIZ_OPTION_CHECK = "CHECKED";
+    String DC_S="Document_Comment_Status";
+    String D_S="Document_Status";
+    String T_L="Template_language";
+    String T_V="Template_Visibility";
+    String T_S="Template_Status";
+    String A_URL="Author_URL";
+    String DC_T="Document_Comment_Text";
+    String C_SOURCE="source";
+    String C_AUTH="column_auhtor";
+    String C_CAT="Column_Category";
+    String C_DOC="Columns_Documents";
+    String C_SH_WTH="Column_Shared_With";
+    String C_TEMP_T="Columns_Template_tag";
 }
 

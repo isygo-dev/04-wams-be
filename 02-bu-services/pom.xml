@@ -25,14 +25,15 @@
     </properties>
 
     <modules>
-        <module>90-quiz-management</module>
-        <module>70-recruitment-management</module>
-        <module>75-link-management</module>
-        <module>80-human-resources-management</module>
-        <module>85-project-management</module>
-        <module>95-learning-management</module>
+<!--        <module>90-quiz-management</module>-->
+<!--        <module>70-recruitment-management</module>-->
+<!--        <module>75-link-management</module>-->
+<!--        <module>80-human-resources-management</module>-->
+<!--        <module>85-project-management</module>-->
+<!--        <module>95-learning-management</module>-->
+<!--        <module>99-data-integration</module>-->
         <module>96-smekit-management</module>
-        <module>99-data-integration</module>
+
     </modules>
 
     <build>

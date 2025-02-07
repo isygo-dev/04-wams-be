@@ -13,4 +13,6 @@ public interface SchemaConstantSize extends ComSchemaConstantSize {
      * The constant S_OPTION.
      */
     int S_OPTION = 256;
+    int URL = 128 ;
+    int SOURCE=64;
 }
