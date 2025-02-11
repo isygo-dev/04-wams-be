@@ -1,6 +1,8 @@
 package eu.isygoit.dto.data;
 
-public class SharedWithDto {
+import eu.isygoit.dto.extendable.AbstractAuditableDto;
+
+public class SharedWithDto extends AbstractAuditableDto {
     private  String userName;
     private   DocumentDto document;
 

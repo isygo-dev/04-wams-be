@@ -1,11 +1,12 @@
 package eu.isygoit.dto.data;
 
+import eu.isygoit.dto.extendable.AbstractAuditableDto;
 import eu.isygoit.enums.IEnumDocTempStatus;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public class DocumentDto {
+public class DocumentDto extends AbstractAuditableDto<Long> {
     private  String domain;
     private  String name;
     private String description;
