@@ -42,5 +42,8 @@ public interface SchemaColumnConstantName extends ComSchemaColumnConstantName {
     String C_DOC="Columns_Documents";
     String C_SH_WTH="Column_Shared_With";
     String C_TEMP_T="Columns_Template_tag";
+    String C_DOCUMENT_ID="C_DOCUMENT_ID";
+    String C_TEMPLATE_ID="C_TEMPLATE_ID";
+    String C_TAG_ID="C_TAG_ID";
 }
 

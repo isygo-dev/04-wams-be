@@ -28,5 +28,6 @@ public interface SchemaFkConstantName extends ComSchemaFkConstantName {
     String FK_DOCUMENTS_SHAREDWITH="FK_DOCUMENTS_SharedWith";
     String FK_DOCUMENTS_COMMENTS="FK_DOCUMENTS_comments";
     String FK_TAGS_REF_TEMPLATE_FILE="FK_TAGS_REF_template_FILE";
+    String FK_DOCCOMMENT_DOCUMENT="FK_DOCCOMMENT_DOCUMENT";
 
 }

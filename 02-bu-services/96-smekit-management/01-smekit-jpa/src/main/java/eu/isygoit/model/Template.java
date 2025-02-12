@@ -11,7 +11,9 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @SuperBuilder
@@ -21,8 +23,9 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = SchemaTableConstantName.T_TEMPLATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
-public class Template  extends AuditableEntity<Long> implements IFileEntity,ICodifiable, ISAASEntity{
+@SecondaryTable(name = SchemaTableConstantName.T_TEMPLATE_FILE,
+        pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID))
+public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICodifiable, ISAASEntity{
     @Id
     @SequenceGenerator(
             name = "template_sequence_generator",
@@ -97,10 +100,12 @@ public class Template  extends AuditableEntity<Long> implements IFileEntity,ICod
     @ManyToMany
     @JoinTable(
             name = SchemaColumnConstantName.C_TEMP_T,
-            joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_ID),
-            inverseJoinColumns = @JoinColumn(name = ComSchemaColumnConstantName.C_ID)
+            joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE_ID, referencedColumnName = SchemaColumnConstantName.C_ID),
+            inverseJoinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TAG_ID, referencedColumnName = ComSchemaColumnConstantName.C_ID)
     )
-    private List<Tag> tags ;
+    private List<Tag> tags;
+
+
 
 
 
@@ -121,5 +126,14 @@ public class Template  extends AuditableEntity<Long> implements IFileEntity,ICod
     private List<String> TemplatesTags;
     //END IFileEntity : SecondaryTable
 
+    @Override
+    public List<String> getTags() {
+        if (tags == null) {
+            return Collections.emptyList();
+        }
+        return tags.stream()
+                .map(Tag::getTagName)
+                .collect(Collectors.toList());
+    }
 
 }

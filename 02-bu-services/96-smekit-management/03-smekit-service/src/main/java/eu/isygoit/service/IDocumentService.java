@@ -1,4 +1,8 @@
 package eu.isygoit.service;
 
-public interface IDocumentService {
+import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.model.Document;
+import eu.isygoit.model.Quiz;
+
+public interface IDocumentService extends ICrudServiceMethod<Long, Document> {
 }

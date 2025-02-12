@@ -1,4 +1,8 @@
 package eu.isygoit.service;
 
-public interface IDocCommentsService {
+import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.model.DocComment;
+import eu.isygoit.model.Quiz;
+
+public interface IDocCommentsService extends ICrudServiceMethod<Long, DocComment> {
 }

@@ -18,5 +18,5 @@ public class AuthorDto extends AbstractAuditableDto<Long> {
     private String description;
     private String url;
     private String code;
-    private List<TemplateDto> templates;
+   // private List<TemplateDto> templates;
 }

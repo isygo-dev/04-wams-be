@@ -1,4 +1,8 @@
 package eu.isygoit.service;
 
-public interface ISharedWithService {
+import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.model.Quiz;
+import eu.isygoit.model.SharedWith;
+
+public interface ISharedWithService extends ICrudServiceMethod<Long, SharedWith> {
 }

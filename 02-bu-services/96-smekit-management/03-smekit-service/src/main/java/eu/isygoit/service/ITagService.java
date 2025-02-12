@@ -1,4 +1,8 @@
 package eu.isygoit.service;
 
-public interface ITagService {
+import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.model.Quiz;
+import eu.isygoit.model.Tag;
+
+public interface ITagService extends ICrudServiceMethod<Long, Tag> {
 }

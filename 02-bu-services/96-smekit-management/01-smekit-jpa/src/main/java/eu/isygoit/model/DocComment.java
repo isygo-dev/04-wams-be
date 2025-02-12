@@ -2,10 +2,7 @@ package eu.isygoit.model;
 
 import eu.isygoit.enums.IEnumDocCommentsStaus;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
-import eu.isygoit.model.schema.ComSchemaColumnConstantName;
-import eu.isygoit.model.schema.ComSchemaConstantSize;
-import eu.isygoit.model.schema.SchemaColumnConstantName;
-import eu.isygoit.model.schema.SchemaTableConstantName;
+import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -47,10 +44,6 @@ public class DocComment extends AuditableCancelableEntity<Long> {
     private IEnumDocCommentsStaus.Types type = IEnumDocCommentsStaus.Types.CLOSED;
 
     @ManyToOne
-    @JoinTable(
-            name = SchemaColumnConstantName.C_ID,
-            joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_ID),
-            inverseJoinColumns = @JoinColumn(name = ComSchemaColumnConstantName.C_ID)
-    )
-    private  Document document;
+    @JoinColumn(name = SchemaColumnConstantName.C_DOCUMENT_ID, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_DOCCOMMENT_DOCUMENT))
+    private Document document;
 }
