@@ -18,5 +18,5 @@ import org.springframework.web.bind.annotation.RestController;
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = AuthorMapper.class, minMapper = AuthorMapper.class, service = AuthorService.class)
 @RequestMapping(value = "/api/v1/private/Author")
 
-public class AuthorRestController extends MappedCrudController<Long, Author, AuthorDto,AuthorDto, AuthorService> {
+public class AuthorController extends MappedCrudController<Long, Author, AuthorDto,AuthorDto, AuthorService> {
 }

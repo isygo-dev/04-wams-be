@@ -38,7 +38,7 @@ public class Tag extends AuditableEntity<Long> {
     @Column(
             name = SchemaColumnConstantName.C_TAGS,
             length = SchemaConstantSize.tags,
-            updatable = false, nullable = false)
+            updatable = true, nullable = false)
      private String tagName;
 
     @ManyToMany(mappedBy = "tags")

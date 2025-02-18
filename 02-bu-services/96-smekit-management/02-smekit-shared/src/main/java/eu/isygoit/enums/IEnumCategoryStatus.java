@@ -1,13 +1,13 @@
 package eu.isygoit.enums;
 
-public interface IEnumTempCategoryStatus {
+public interface IEnumCategoryStatus {
     int STR_ENUM_SIZE = 10;
-    enum Types implements IEnum {
+    enum Status implements IEnum {
         ENABLED("Enabled"),
         DISABLED("Disabled");
         private final String meaning;
 
-        Types(String meaning) {
+        Status(String meaning) {
             this.meaning = meaning;
         }
 

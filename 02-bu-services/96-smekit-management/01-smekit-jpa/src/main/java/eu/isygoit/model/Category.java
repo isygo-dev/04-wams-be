@@ -1,7 +1,7 @@
 package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.enums.IEnumTempCategoryStatus;
+import eu.isygoit.enums.IEnumCategoryStatus;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -18,20 +18,20 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = SchemaTableConstantName.T_CATEGORY)
+@Table(name = SchemaTableConstantName.T_CATEGORY  )
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class TempCategory extends AuditableEntity<Long> implements ISAASEntity{
+public class Category extends AuditableEntity<Long> implements ISAASEntity{
     @Id
     @SequenceGenerator(name = "category_sequence_generator", sequenceName = "category_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence_generator")
     @Column(name = ComSchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    @ColumnDefault(DomainConstants.DEFAULT_DOMAIN_NAME)
+    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = ComSchemaColumnConstantName.C_DOMAIN, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private  String domain;
 
-    @Column(name = ComSchemaColumnConstantName.C_NAME, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    @Column(name = ComSchemaColumnConstantName.C_NAME, length = ComSchemaConstantSize.S_NAME, nullable = false)
     private String name;
 
     @Column(name = ComSchemaColumnConstantName.C_DESCRIPTION, length = ComSchemaConstantSize.DESCRIPTION)
@@ -41,8 +41,8 @@ public class TempCategory extends AuditableEntity<Long> implements ISAASEntity{
     @Builder.Default
     @ColumnDefault("'DISABLED'")
     @Enumerated(EnumType.STRING)
-    @Column(name = SchemaColumnConstantName.C_STATUS, length = IEnumTempCategoryStatus.STR_ENUM_SIZE, nullable = false)
-    private IEnumTempCategoryStatus.Types type = IEnumTempCategoryStatus.Types.DISABLED;
+    @Column(name = SchemaColumnConstantName.C_STATUS, length = IEnumCategoryStatus.STR_ENUM_SIZE, nullable = false)
+    private IEnumCategoryStatus.Status type = IEnumCategoryStatus.Status.DISABLED;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name =SchemaColumnConstantName.C_CAT , referencedColumnName = ComSchemaColumnConstantName.C_ID,

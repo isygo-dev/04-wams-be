@@ -12,13 +12,12 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class TemplateDto  extends AbstractAuditableDto<Long> implements IFileUploadDto {
+public class TemplateDto  extends AbstractAuditableDto<Long>   {
     private  String domain;
     private String name;
     private String description;
@@ -33,13 +32,13 @@ public class TemplateDto  extends AbstractAuditableDto<Long> implements IFileUpl
     private IEnumTemplateLanguage.Types typeTl ;
   //  private List<DocumentDto> documents;
     private AuthorDto author;
-    private TempCategoryDto category;
+    private CategoryDto category;
   //  private List<TagDto> tags ;
     //BEGIN IFileEntity : SecondaryTable / ResumeFile
     private String type;
   //  private List<String> TemplatesTags;
     //END IFileEntity : SecondaryTable
-    private MultipartFile file;
+ //   private MultipartFile file;
     private String originalFileName;
 
 

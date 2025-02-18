@@ -36,7 +36,7 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    @ColumnDefault(DomainConstants.DEFAULT_DOMAIN_NAME)
+    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private  String domain;
     @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
@@ -65,6 +65,7 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
     private String version;
 
 
+
     @Builder.Default
     @ColumnDefault("'EDITING'")
     @Enumerated(EnumType.STRING)
@@ -73,13 +74,13 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
 
 
     @Builder.Default
-    @ColumnDefault("'Private'")
+    @ColumnDefault("'PRV'")
     @Enumerated(EnumType.STRING)
     @Column(name = SchemaColumnConstantName.T_V, length = IEnumTemplateVisibility.STR_ENUM_SIZE, nullable = false)
     private IEnumTemplateVisibility.Types typeTv = IEnumTemplateVisibility.Types.PRV;
 
     @Builder.Default
-    @ColumnDefault("'English'")
+    @ColumnDefault("'EN'")
     @Enumerated(EnumType.STRING)
     @Column(name = SchemaColumnConstantName.T_L, length = IEnumTemplateLanguage.STR_ENUM_SIZE, nullable = false)
     private IEnumTemplateLanguage.Types typeTl = IEnumTemplateLanguage.Types.EN;
@@ -95,7 +96,7 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
 
     @ManyToOne
     @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
-    private TempCategory tempCategory;
+    private Category category;
 
     @ManyToMany
     @JoinTable(

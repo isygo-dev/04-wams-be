@@ -1,10 +1,9 @@
 package eu.isygoit.repository;
 
-import eu.isygoit.model.TempCategory;
-import org.springframework.data.jpa.repository.JpaRepository;
+import eu.isygoit.model.Category;
 import org.springframework.stereotype.Repository;
 
 @Repository
 
-public interface CategoryRepository  extends JpaPagingAndSortingSAASRepository<TempCategory,Long> {
+public interface CategoryRepository  extends JpaPagingAndSortingSAASRepository<Category,Long> {
 }

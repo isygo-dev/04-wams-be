@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 
-public interface DocumentRepository  extends JpaPagingAndSortingRepository<Document,Long> {
+public interface DocumentRepository  extends JpaPagingAndSortingCodifiableRepository<Document,Long> {
 }

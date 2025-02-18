@@ -23,7 +23,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = SchemaTableConstantName.T_DOCUMENT)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Document  extends AuditableEntity<Long> implements ISAASEntity {
+public class Document  extends AuditableEntity<Long> implements ISAASEntity, ICodifiable {
     @Id
         @SequenceGenerator(
             name = "document_sequence_generator",
@@ -36,11 +36,14 @@ public class Document  extends AuditableEntity<Long> implements ISAASEntity {
             updatable = false, nullable = false)
     private  Long id;
 
-    @ColumnDefault(DomainConstants.DEFAULT_DOMAIN_NAME)
+    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private  String domain;
 
-    @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+    private String code;
+
+    @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, updatable = true, nullable = false)
     private  String name;
 
     @Column(

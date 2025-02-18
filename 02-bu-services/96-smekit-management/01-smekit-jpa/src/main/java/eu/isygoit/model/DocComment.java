@@ -47,3 +47,9 @@ public class DocComment extends AuditableCancelableEntity<Long> {
     @JoinColumn(name = SchemaColumnConstantName.C_DOCUMENT_ID, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_DOCCOMMENT_DOCUMENT))
     private Document document;
 }
+
+
+
+
+
+

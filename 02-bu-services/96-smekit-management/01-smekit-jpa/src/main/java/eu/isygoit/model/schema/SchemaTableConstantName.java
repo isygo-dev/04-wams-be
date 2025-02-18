@@ -35,7 +35,7 @@ public interface SchemaTableConstantName extends ComSchemaTableConstantName {
     String T_TAG="T_Tag";
     String T_DOCUMENT="T_Document";
     String T_SHAREDWITH="T_SharedWith";
-    String T_DOCCOMMENT="T_DocComment";
+    String T_DOCCOMMENT="T_Document_Comment";
     String T_TEMPLATE_FILE ="T_TEMPLATE_FILE";
     String T_TEMPLATE_FILE_TAGS="T_template_FILE_TAGS";
 }
