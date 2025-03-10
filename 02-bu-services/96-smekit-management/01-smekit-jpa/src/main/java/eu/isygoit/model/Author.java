@@ -35,7 +35,7 @@ public class Author extends AuditableCancelableEntity <Long> implements ICodifia
     @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
     private String code;
 
-    @Column(name = ComSchemaColumnConstantName.C_NAME, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    @Column(name = ComSchemaColumnConstantName.C_NAME, length = ComSchemaConstantSize.S_NAME, updatable = true, nullable = false)
     private String name;
 
     @Column(name = ComSchemaColumnConstantName.C_DESCRIPTION, length = ComSchemaConstantSize.DESCRIPTION)
@@ -44,9 +44,9 @@ public class Author extends AuditableCancelableEntity <Long> implements ICodifia
     @Column(name = SchemaColumnConstantName.A_URL, length = SchemaConstantSize.URL)
     private String url;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL )
-    @JoinColumn(name = SchemaColumnConstantName.C_AUTH, referencedColumnName = ComSchemaColumnConstantName.C_ID
-            , foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_REF_AUTHOR))
-    private List<Template> templates;
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL )
+//    @JoinColumn(name = SchemaColumnConstantName.C_AUTH, referencedColumnName = ComSchemaColumnConstantName.C_ID
+//            , foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_REF_AUTHOR))
+//    private List<Template> templates;
 }
 

@@ -33,6 +33,7 @@ public class TemplateDto  extends AbstractAuditableDto<Long>   {
   //  private List<DocumentDto> documents;
     private AuthorDto author;
     private CategoryDto category;
+
   //  private List<TagDto> tags ;
     //BEGIN IFileEntity : SecondaryTable / ResumeFile
     private String type;

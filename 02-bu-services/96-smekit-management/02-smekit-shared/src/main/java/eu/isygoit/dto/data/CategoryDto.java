@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,6 @@ public class CategoryDto extends AbstractAuditableDto<Long> {
     private String name;
     private String description;
     private IEnumCategoryStatus.Status type = IEnumCategoryStatus.Status.DISABLED;
- //   private List<TemplateDto> templates ;
+//    private List<TemplateDto> templates ;
 
 }

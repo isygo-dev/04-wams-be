@@ -5,4 +5,5 @@ import eu.isygoit.model.Author;
 import eu.isygoit.model.Quiz;
 
 public interface IAutherService extends ICrudServiceMethod<Long, Author> {
+    String getUploadDirectory();
 }

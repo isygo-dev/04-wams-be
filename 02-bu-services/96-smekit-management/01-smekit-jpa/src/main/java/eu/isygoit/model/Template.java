@@ -96,7 +96,9 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
 
     @ManyToOne
     @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
+
     private Category category;
+
 
     @ManyToMany
     @JoinTable(

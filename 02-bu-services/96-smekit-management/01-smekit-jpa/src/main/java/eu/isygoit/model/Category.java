@@ -44,8 +44,8 @@ public class Category extends AuditableEntity<Long> implements ISAASEntity{
     @Column(name = SchemaColumnConstantName.C_STATUS, length = IEnumCategoryStatus.STR_ENUM_SIZE, nullable = false)
     private IEnumCategoryStatus.Status type = IEnumCategoryStatus.Status.DISABLED;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name =SchemaColumnConstantName.C_CAT , referencedColumnName = ComSchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
-    private List<Template> templates ;
+//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name =SchemaColumnConstantName.C_CAT , referencedColumnName = ComSchemaColumnConstantName.C_ID,
+//            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
+//    private List<Template> templates ;
 }
