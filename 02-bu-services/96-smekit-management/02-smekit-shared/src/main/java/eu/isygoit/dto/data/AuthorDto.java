@@ -1,5 +1,6 @@
 package eu.isygoit.dto.data;
 
+import eu.isygoit.dto.IImageUploadDto;
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,10 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AuthorDto extends AbstractAuditableDto<Long> {
-    private String name;
+public class AuthorDto extends AbstractAuditableDto<Long> implements IImageUploadDto {
+    private String firstname;
+    private String lastname;
     private String description;
-    private String url;
+    private  String domain;
     private String code;
-   // private List<TemplateDto> templates;
+    private String imagePath ;
 }

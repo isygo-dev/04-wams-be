@@ -18,5 +18,5 @@ import org.springframework.transaction.annotation.Transactional;
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = CategoryRepository.class)
-public class CategoryService extends CrudService <Long, Category, CategoryRepository>  implements ICategoryService {
+public class    CategoryService extends CrudService <Long, Category, CategoryRepository>  implements ICategoryService {
 }

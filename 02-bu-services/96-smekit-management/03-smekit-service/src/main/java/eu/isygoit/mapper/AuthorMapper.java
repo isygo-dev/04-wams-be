@@ -8,4 +8,8 @@ import org.mapstruct.NullValueCheckStrategy;
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, componentModel = "spring")
 
 public interface AuthorMapper extends EntityMapper<Author, AuthorDto>{
+
+
+
+
 }

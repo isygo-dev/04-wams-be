@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.CtrlDef;
-import eu.isygoit.com.rest.controller.impl.MappedCrudController;
+import eu.isygoit.com.rest.controller.impl.MappedImageController;
 import eu.isygoit.dto.data.AuthorDto;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
 import eu.isygoit.mapper.AuthorMapper;
@@ -18,5 +18,5 @@ import org.springframework.web.bind.annotation.RestController;
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = AuthorMapper.class, minMapper = AuthorMapper.class, service = AuthorService.class)
 @RequestMapping(value = "/api/v1/private/Author")
 
-public class    AuthorController extends MappedCrudController<Long, Author, AuthorDto,AuthorDto, AuthorService> {
+public class    AuthorImageController extends MappedImageController<Long, Author, AuthorDto,AuthorDto, AuthorService> {
 }

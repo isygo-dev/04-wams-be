@@ -7,11 +7,9 @@ import eu.isygoit.com.rest.service.impl.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.model.Category;
 import eu.isygoit.model.Template;
-import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.ComSchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
-import eu.isygoit.repository.CategoryRepository;
 import eu.isygoit.repository.TemplateRepository;
 import eu.isygoit.service.ITemplateService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +27,11 @@ import java.time.LocalDateTime;
 public class TemplateService  extends FileService<Long, Template, TemplateRepository> implements ITemplateService  {
     private final AppProperties appProperties;
     private final TemplateRepository templateRepository;
-    private final CategoryRepository categoryRepository;
 
 
-    public TemplateService(AppProperties appProperties, TemplateRepository templateRepository, CategoryRepository categoryRepository) {
+    public TemplateService(AppProperties appProperties, TemplateRepository templateRepository) {
         this.appProperties = appProperties;
         this.templateRepository = templateRepository;
-        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -48,7 +44,7 @@ public class TemplateService  extends FileService<Long, Template, TemplateReposi
         return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Template.class.getSimpleName())
-                .attribute(SchemaColumnConstantName.C_CODE)
+                .attribute(ComSchemaColumnConstantName.C_CODE)
                 .prefix("TMP")
                 .valueLength(6L)
                 .value(1L)
@@ -59,7 +55,6 @@ public class TemplateService  extends FileService<Long, Template, TemplateReposi
         template.setEditionDate(LocalDateTime.now());
         return templateRepository.save(template);
     }
-
 
 
 }

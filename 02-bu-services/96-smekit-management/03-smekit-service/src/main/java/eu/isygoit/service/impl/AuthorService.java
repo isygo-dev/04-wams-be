@@ -2,14 +2,16 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
+import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.impl.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Author;
 import eu.isygoit.model.Template;
-import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.ComSchemaColumnConstantName;
+import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.AuthorRepository;
 import eu.isygoit.service.IAutherService;
@@ -23,10 +25,11 @@ import org.springframework.transaction.annotation.Transactional;
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = AuthorRepository.class)
-public class AuthorService extends CodifiableService<Long, Author, AuthorRepository> implements IAutherService {
+@DmsLinkFileService(DmsLinkedFileService.class)
+public class AuthorService extends ImageService<Long, Author, AuthorRepository> implements IAutherService {
     private final AppProperties appProperties;
 
-    public AuthorService(AppProperties appProperties, AuthorRepository authorRepository) {
+    public AuthorService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
     @Override
@@ -39,10 +42,12 @@ public class AuthorService extends CodifiableService<Long, Author, AuthorReposit
         return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Template.class.getSimpleName())
-                .attribute(SchemaColumnConstantName.C_CODE)
+                .attribute(ComSchemaColumnConstantName.C_CODE)
                 .prefix("AUTH")
                 .valueLength(6L)
                 .value(1L)
                 .build();
     }
+
+
 }
