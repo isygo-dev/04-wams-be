@@ -47,7 +47,7 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
     @Column(name = SchemaColumnConstantName.C_DESCRIPTION, length = ComSchemaConstantSize.DESCRIPTION)
     private String description;
 
-    @Column(name = SchemaColumnConstantName.C_PATH, length = ComSchemaConstantSize.PATH)
+    @Column(name = SchemaColumnConstantName.C_PATH, length = SchemaConstantSize.PATH_TEMPLATE_FILE)
     private String path ;
 
     @Column(name = SchemaColumnConstantName.C_FILE_NAME, length = ComSchemaConstantSize.FILE_NAME)
@@ -96,8 +96,8 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
 
     @ManyToOne
     @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
-
     private Category category;
+
 
 
     @ManyToMany

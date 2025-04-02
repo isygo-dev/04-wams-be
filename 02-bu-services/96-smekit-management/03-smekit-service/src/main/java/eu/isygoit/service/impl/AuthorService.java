@@ -37,6 +37,7 @@ public class AuthorService extends ImageService<Long, Author, AuthorRepository> 
         return this.appProperties.getUploadDirectory();
     }
 
+
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()

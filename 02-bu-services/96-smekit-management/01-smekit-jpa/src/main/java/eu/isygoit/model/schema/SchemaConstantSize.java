@@ -15,4 +15,5 @@ public interface SchemaConstantSize extends ComSchemaConstantSize {
     int S_OPTION = 256;
     int URL = 128 ;
     int SOURCE=64;
+    int PATH_TEMPLATE_FILE=255;
 }

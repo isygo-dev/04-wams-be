@@ -6,10 +6,11 @@ import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.impl.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.model.AppNextCode;
-import eu.isygoit.model.Template;
+
+import eu.isygoit.model.*;
 import eu.isygoit.model.schema.ComSchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
+
 import eu.isygoit.repository.TemplateRepository;
 import eu.isygoit.service.ITemplateService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,15 +25,18 @@ import java.time.LocalDateTime;
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = TemplateRepository.class)
-public class TemplateService  extends FileService<Long, Template, TemplateRepository> implements ITemplateService  {
+public class TemplateService extends FileService<Long, Template, TemplateRepository> implements ITemplateService {
+
     private final AppProperties appProperties;
     private final TemplateRepository templateRepository;
 
-
-    public TemplateService(AppProperties appProperties, TemplateRepository templateRepository) {
+    public TemplateService(AppProperties appProperties,
+                           TemplateRepository templateRepository) {
         this.appProperties = appProperties;
         this.templateRepository = templateRepository;
+
     }
+
 
     @Override
     protected String getUploadDirectory() {
@@ -50,6 +54,7 @@ public class TemplateService  extends FileService<Long, Template, TemplateReposi
                 .value(1L)
                 .build();
     }
+
     @Transactional
     public Template updateTemplate(Template template) {
         template.setEditionDate(LocalDateTime.now());

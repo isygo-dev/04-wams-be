@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class TemplateDto  extends AbstractAuditableDto<Long>   {
+public class TemplateDto  extends AbstractAuditableDto<Long> implements IFileUploadDto {
     private  String domain;
     private String name;
     private String description;
@@ -31,15 +31,15 @@ public class TemplateDto  extends AbstractAuditableDto<Long>   {
     private IEnumTemplateVisibility.Types typeTv ;
     private IEnumTemplateLanguage.Types typeTl ;
   //  private List<DocumentDto> documents;
-    private AuthorDto author;
-    private CategoryDto category;
+    private Long authorId;
+    private Long categoryId;
 
   //  private List<TagDto> tags ;
     //BEGIN IFileEntity : SecondaryTable / ResumeFile
     private String type;
   //  private List<String> TemplatesTags;
     //END IFileEntity : SecondaryTable
- //   private MultipartFile file;
+    private MultipartFile file;
     private String originalFileName;
 
 
