@@ -9,7 +9,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,14 +32,20 @@ public class Tag extends AuditableEntity<Long> {
     @Column(
             name = SchemaColumnConstantName.C_ID,
             updatable = false, nullable = false)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @Column(
-            name = SchemaColumnConstantName.C_TAGS,
+            name = "tag_name",
             length = SchemaConstantSize.tags,
+            unique = true,
             updatable = true, nullable = false)
-     private String tagName;
+    @EqualsAndHashCode.Include
+    private String tagName;
 
     @ManyToMany(mappedBy = "tags")
-    private Set<Template> templates;
+    private Set<Template> templates = new HashSet<>();
+
+    @ManyToMany(mappedBy = "tags")
+    private Set<Category> categories = new HashSet<>();
 }

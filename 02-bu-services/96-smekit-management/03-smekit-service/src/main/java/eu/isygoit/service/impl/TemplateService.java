@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -59,6 +60,9 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
     public Template updateTemplate(Template template) {
         template.setEditionDate(LocalDateTime.now());
         return templateRepository.save(template);
+    }
+    public List<Template> getTemplatesByCategory(Long categoryId) {
+        return templateRepository.findByCategoryId(categoryId);
     }
 
 

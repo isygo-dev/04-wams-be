@@ -4,6 +4,7 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.com.rest.service.impl.FileImageService;
 import eu.isygoit.com.rest.service.impl.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = AuthorRepository.class)
 @DmsLinkFileService(DmsLinkedFileService.class)
-public class AuthorService extends ImageService<Long, Author, AuthorRepository> implements IAutherService {
+public class AuthorService extends FileImageService<Long, Author, AuthorRepository> implements IAutherService {
     private final AppProperties appProperties;
 
     public AuthorService(AppProperties appProperties) {

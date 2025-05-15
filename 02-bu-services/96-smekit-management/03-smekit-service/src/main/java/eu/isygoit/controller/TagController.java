@@ -17,5 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = TagMapped.class, minMapper = TagMapped.class, service = TagService.class)
 @RequestMapping(value = "/api/v1/private/tag")
 
-public class TagController extends MappedCrudController <Long , Tag, TagDto , TagDto , TagService> {
+public class TagController extends MappedCrudController <Long ,Tag,TagDto,TagDto,TagService> {
 }

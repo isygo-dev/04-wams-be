@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -38,20 +39,25 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 
     @PutMapping("update/{id}")
     public ResponseEntity<Template> updateTemplate(@PathVariable Long id, @RequestBody Template updatedTemplate) {
-        log.info("🔄 Mise à jour du template ID: {}", id);
+        log.info(" Mise à jour du template ID: {}", id);
 
         Template existingTemplate = templateService.findById(id);
         if (existingTemplate == null) {
-            log.warn("⚠️ Template ID {} introuvable.", id);
+            log.warn("⚠Template ID {} introuvable.", id);
             return ResponseEntity.notFound().build();
         }
 
         updatedTemplate.setId(id);
         Template savedTemplate = templateService.updateTemplate(updatedTemplate);
 
-        log.info("✅ Template ID {} mis à jour avec succès.", id);
+        log.info(" Template ID {} mis à jour avec succès.", id);
         return ResponseEntity.ok(savedTemplate);
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Template>> getTemplatesByCategory(@PathVariable Long categoryId) {
+        List<Template> templates = templateService.getTemplatesByCategory(categoryId);
+        return ResponseEntity.ok(templates);
+    }
 
 }
