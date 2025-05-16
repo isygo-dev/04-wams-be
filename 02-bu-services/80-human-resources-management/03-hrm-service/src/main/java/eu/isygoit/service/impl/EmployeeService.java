@@ -14,7 +14,7 @@ import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
 import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.*;
@@ -147,7 +147,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public Employee updateStatus(Long id, IEnumBinaryStatus.Types newStatus) {
+    public Employee updateStatus(Long id, IEnumEnabledBinaryStatus.Types newStatus) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Employee not found with CODE: " + id));
 
@@ -279,6 +279,6 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     private Long stat_GetActiveEmployeesCount(RequestContextDto requestContext) {
-        return repository().countByDomainIgnoreCaseAndEmployeeStatus(requestContext.getSenderDomain(), IEnumBinaryStatus.Types.ENABLED);
+        return repository().countByDomainIgnoreCaseAndEmployeeStatus(requestContext.getSenderDomain(), IEnumEnabledBinaryStatus.Types.ENABLED);
     }
 }

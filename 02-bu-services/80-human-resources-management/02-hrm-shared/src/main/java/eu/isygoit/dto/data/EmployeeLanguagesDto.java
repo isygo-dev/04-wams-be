@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.enums.IEnumLanguageLevelType;
+import eu.isygoit.enums.IEnumLanguageLevel;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
@@ -13,7 +13,7 @@ public class EmployeeLanguagesDto {
 
     private String languageName;
     @Nullable
-    private IEnumLanguageLevelType.Types level;
+    private IEnumLanguageLevel.Types level;
 }
 
 

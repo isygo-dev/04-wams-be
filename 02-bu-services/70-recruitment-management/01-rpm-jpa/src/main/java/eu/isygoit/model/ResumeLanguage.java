@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.enums.IEnumLanguageLevelType;
+import eu.isygoit.enums.IEnumLanguageLevel;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.model.schema.SchemaConstantSize;
@@ -36,7 +36,7 @@ public class ResumeLanguage extends AuditableEntity<Long> {
     @Builder.Default
     @ColumnDefault("'BEGINNER'")
     @Enumerated(EnumType.STRING)
-    @Column(name = SchemaColumnConstantName.C_LEVEL, length = IEnumLanguageLevelType.STR_ENUM_SIZE, nullable = false)
-    private IEnumLanguageLevelType.Types level = IEnumLanguageLevelType.Types.BEGINNER;
+    @Column(name = SchemaColumnConstantName.C_LEVEL, length = IEnumLanguageLevel.STR_ENUM_SIZE, nullable = false)
+    private IEnumLanguageLevel.Types level = IEnumLanguageLevel.Types.BEGINNER;
 
 }

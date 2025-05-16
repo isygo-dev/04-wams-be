@@ -3,7 +3,7 @@ package eu.isygoit.dto.data;
 import eu.isygoit.constants.AccountTypeConstants;
 import eu.isygoit.dto.IImageUploadDto;
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,5 +30,5 @@ public class MinEmployeeDto extends AbstractAuditableDto<Long> implements IImage
     @Builder.Default
     private String functionRole = AccountTypeConstants.DOMAIN_USER;
     @Builder.Default
-    private IEnumBinaryStatus.Types employeeStatus = IEnumBinaryStatus.Types.ENABLED;
+    private IEnumEnabledBinaryStatus.Types employeeStatus = IEnumEnabledBinaryStatus.Types.ENABLED;
 }

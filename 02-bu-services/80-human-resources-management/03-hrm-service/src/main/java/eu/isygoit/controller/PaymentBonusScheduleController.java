@@ -9,7 +9,6 @@ import eu.isygoit.dto.extendable.IdentifiableDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.PaymentBonusScheduleMapper;
 import eu.isygoit.model.PaymentBonusSchedule;
-import eu.isygoit.model.PaymentSchedule;
 import eu.isygoit.service.impl.PaymentScheduleBonusService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

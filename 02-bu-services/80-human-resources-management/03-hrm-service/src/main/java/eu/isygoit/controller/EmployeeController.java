@@ -9,7 +9,7 @@ import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.dto.data.MinEmployeeDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.EmployeeMapper;
 import eu.isygoit.model.Employee;
@@ -80,7 +80,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     @Override
     public ResponseEntity<EmployeeDto> updateEmployeeStatus(RequestContextDto requestContext,
                                                             Long id,
-                                                            IEnumBinaryStatus.Types newStatus) {
+                                                            IEnumEnabledBinaryStatus.Types newStatus) {
         log.info("update employee status");
         try {
             return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().updateStatus(id, newStatus)));

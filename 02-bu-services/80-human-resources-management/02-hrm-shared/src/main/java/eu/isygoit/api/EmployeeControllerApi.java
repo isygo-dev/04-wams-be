@@ -7,7 +7,7 @@ import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.dto.data.MinEmployeeDto;
 import eu.isygoit.dto.extendable.IdentifiableDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -42,7 +42,7 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
     @PutMapping(path = "/updateStatusEmployee")
     ResponseEntity<EmployeeDto> updateEmployeeStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
                                                      @RequestParam(name = RestApiConstants.ID) Long id,
-                                                     @RequestParam(name = RestApiConstants.NEW_STATUS) IEnumBinaryStatus.Types newStatus);
+                                                     @RequestParam(name = RestApiConstants.NEW_STATUS) IEnumEnabledBinaryStatus.Types newStatus);
 
     /**
      * Gets employee by code.

@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +25,6 @@ public class JobOfferApplicationDto extends AbstractAuditableDto<Long> {
     private IdCodeDto jobOffer;
     private List<JobOfferApplicationEventDto> jobApplicationEvents;
     @Builder.Default
-    private IEnumBinaryStatus.Types binaryStatusType = IEnumBinaryStatus.Types.ENABLED;
+    private IEnumEnabledBinaryStatus.Types binaryStatusType = IEnumEnabledBinaryStatus.Types.ENABLED;
 
 }

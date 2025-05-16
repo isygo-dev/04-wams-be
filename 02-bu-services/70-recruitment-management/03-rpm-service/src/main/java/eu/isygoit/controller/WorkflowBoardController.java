@@ -18,7 +18,7 @@ import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.WorkflowBoardMapper;
 import eu.isygoit.mapper.WorkflowStateMapper;
 import eu.isygoit.model.IBoardItem;
-import eu.isygoit.model.IStatable;
+import eu.isygoit.model.IStatusAssignable;
 import eu.isygoit.model.WorkflowBoard;
 import eu.isygoit.service.IWorkflowBoardService;
 import eu.isygoit.service.impl.WorkflowBoardService;
@@ -163,7 +163,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
     ResponseEntity<List<String>> getItemTypes(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
         try {
             List<String> list = this.exceptionHandler().getEntityMap().values().stream()
-                    .filter(c -> IStatable.class.isAssignableFrom(c))
+                    .filter(c -> IStatusAssignable.class.isAssignableFrom(c))
                     .map(aClass -> aClass.getName()).collect(Collectors.toUnmodifiableList());
             if (CollectionUtils.isEmpty(list)) {
                 return ResponseFactory.ResponseNoContent();

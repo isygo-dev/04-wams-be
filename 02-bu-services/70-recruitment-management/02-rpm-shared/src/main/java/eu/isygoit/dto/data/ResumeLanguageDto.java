@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
-import eu.isygoit.enums.IEnumLanguageLevelType;
+import eu.isygoit.enums.IEnumLanguageLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResumeLanguageDto extends AbstractAuditableDto<Long> {
+    
     private String name;
-    private IEnumLanguageLevelType.Types level;
-
+    private IEnumLanguageLevel.Types level;
 }

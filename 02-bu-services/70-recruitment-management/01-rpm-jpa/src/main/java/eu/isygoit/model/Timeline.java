@@ -20,7 +20,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_TIMELINE)
-public class Timeline extends AuditableEntity<Long> implements ISAASEntity, ICodifiable {
+public class Timeline extends AuditableEntity<Long> implements IDomainAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "timeline_sequence_generator", sequenceName = "timeline_sequence", allocationSize = 1)

@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_TRAVEL_IDENTITY_INFO)
-public class TravelIdentityInfo extends AuditableEntity<Long> implements IImageEntity, ISAASEntity, ICodifiable {
+public class TravelIdentityInfo extends AuditableEntity<Long> implements IImageEntity, IDomainAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "travel_identity_sequence_generator", sequenceName = "travel_identity_sequence", allocationSize = 1)

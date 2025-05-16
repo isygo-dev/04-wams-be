@@ -22,7 +22,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_INSURANCE_IDENTITY_INFO)
-public class InsuranceIdentityInfo extends AuditableEntity<Long> implements IImageEntity, ISAASEntity, ICodifiable {
+public class InsuranceIdentityInfo extends AuditableEntity<Long> implements IImageEntity, IDomainAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "insurance_identity_sequence_generator", sequenceName = "insurance_identity_sequence", allocationSize = 1)

@@ -5,7 +5,7 @@ import eu.isygoit.com.rest.service.IImageServiceMethods;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.model.Employee;
 
@@ -40,7 +40,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param newStatus the new status
      * @return the employee
      */
-    Employee updateStatus(Long id, IEnumBinaryStatus.Types newStatus);
+    Employee updateStatus(Long id, IEnumEnabledBinaryStatus.Types newStatus);
 
     /**
      * Gets object statistics.

@@ -1,6 +1,6 @@
 package eu.isygoit.repository;
 
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.model.Employee;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +18,5 @@ public interface EmployeeRepository extends JpaPagingAndSortingSAASCodifiableRep
      * @param employeeStatus the employee status
      * @return the long
      */
-    Long countByDomainIgnoreCaseAndEmployeeStatus(String senderDomain, IEnumBinaryStatus.Types employeeStatus);
+    Long countByDomainIgnoreCaseAndEmployeeStatus(String senderDomain, IEnumEnabledBinaryStatus.Types employeeStatus);
 }

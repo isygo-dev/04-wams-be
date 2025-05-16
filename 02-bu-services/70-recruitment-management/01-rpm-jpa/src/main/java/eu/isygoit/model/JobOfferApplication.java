@@ -1,7 +1,7 @@
 package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -33,7 +33,7 @@ import java.util.List;
 })
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_JOB_OFFER_APPLICATION + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
-public class JobOfferApplication extends AuditableCancelableEntity<Long> implements ISAASEntity, ICodifiable, IStatable<String>, IBoardItem<String> {
+public class JobOfferApplication extends AuditableCancelableEntity<Long> implements IDomainAssignable, ICodeAssignable, IStatusAssignable<String>, IBoardItem<String> {
 
     @Id
     @SequenceGenerator(name = "job_appli_sequence_generator", sequenceName = "job_appli_sequence", allocationSize = 1)
@@ -60,8 +60,8 @@ public class JobOfferApplication extends AuditableCancelableEntity<Long> impleme
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ENABLED'")
-    @Column(name = SchemaColumnConstantName.C_JOB_APPLICATION_STATUS, length = IEnumBinaryStatus.STR_ENUM_SIZE)
-    private IEnumBinaryStatus.Types binaryStatusType = IEnumBinaryStatus.Types.ENABLED;
+    @Column(name = SchemaColumnConstantName.C_JOB_APPLICATION_STATUS, length = IEnumEnabledBinaryStatus.STR_ENUM_SIZE)
+    private IEnumEnabledBinaryStatus.Types binaryStatusType = IEnumEnabledBinaryStatus.Types.ENABLED;
     @ManyToOne(fetch = FetchType.LAZY /* NO CASCADE */)
     @JoinColumn(name = SchemaColumnConstantName.C_JOB, referencedColumnName = SchemaColumnConstantName.C_CODE
             , foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_JOB_APP_REF_JOB))

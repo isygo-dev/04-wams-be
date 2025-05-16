@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_PERSONAL_IDENTITY_INFO)
-public class PersonalIdentityInfo extends AuditableEntity<Long> implements IImageEntity, ISAASEntity, ICodifiable {
+public class PersonalIdentityInfo extends AuditableEntity<Long> implements IImageEntity, IDomainAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "personal_identity_sequence_generator", sequenceName = "personal_identity_sequence", allocationSize = 1)

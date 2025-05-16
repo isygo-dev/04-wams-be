@@ -23,7 +23,7 @@ import org.hibernate.annotations.ColumnDefault;
 @AllArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_JOB_OFFER_TEMPLATE)
-public class JobOfferTemplate extends AuditableEntity<Long> implements ISAASEntity {
+public class JobOfferTemplate extends AuditableEntity<Long> implements IDomainAssignable {
 
     @Id
     @SequenceGenerator(name = "job_temp_sequence_generator", sequenceName = "job_temp_sequence", allocationSize = 1)
