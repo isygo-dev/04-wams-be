@@ -66,7 +66,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     public ResponseEntity<List<EmployeeDto>> getEmployeeByDomain(RequestContextDto requestContext, String domain) {
         try {
             List<Employee> employees = crudService().findByDomain(domain);
-            if(CollectionUtils.isEmpty(employees)){
+            if (CollectionUtils.isEmpty(employees)) {
                 return ResponseEntity.noContent().build();
             }
             return ResponseEntity.ok(mapper().listEntityToDto(employees));

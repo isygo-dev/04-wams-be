@@ -5,7 +5,6 @@ import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.impl.CrudService;
 import eu.isygoit.enums.IEnumContractType;
-import eu.isygoit.model.Contract;
 import eu.isygoit.model.PaymentSchedule;
 import eu.isygoit.model.SalaryInformation;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -20,7 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 

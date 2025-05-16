@@ -353,67 +353,67 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
     public JobOfferApplicationInterviewEventRequestDto editInterviewEvent(String code, String eventType, JobOfferApplicationInterviewEventRequestDto event) {
         jobApplicationRepository.findByCodeIgnoreCase(code)
                 .ifPresentOrElse(jobApp -> {
-                    jobApplicationEventRepository.findById(event.getId())
-                            .ifPresent(jobOfferApplicationEvent -> {
-                                Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(event.getId());
-                                try {
-                                    Optional.ofNullable(cmsCalendarEventService.eventByDomainAndCalendarAndCode(
-                                            RequestContextDto.builder().build(),
-                                            jobApp.getDomain(),
-                                            jobOfferApplicationEvent.getCalendar(), jobOfferApplicationEvent.getEventCode()))
-                                            .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
-                                            .map(result -> result.getBody())
-                                            .ifPresentOrElse(vCalendarEventDto1 -> {
-                                                        vCalendarEventDto1.setName(event.getTitle());
-                                                        vCalendarEventDto1.setTitle(event.getTitle());
-                                                        vCalendarEventDto1.setStartDate(event.getStartDateTime());
-                                                        vCalendarEventDto1.setEndDate(event.getEndDateTime());
-                                                        ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(//RequestContextDto.builder().build(),
-                                                                vCalendarEventDto1.getId(),
-                                                                vCalendarEventDto1);
-                                                        if (!updateResult.getStatusCode().is2xxSuccessful()) {
-                                                            log.warn("Interview update failed {}", event);
-                                                        }
-                                            },
-                                                    () -> {
-                                                        jobApplicationEventRepository.deleteById(event.getId());
-                                                        if(interviewOptional.isPresent()) {
-                                                            interviewEventRepository.deleteById(interviewOptional.get().getId());
-                                                        }
-                                                        throw new NotFoundException("Event not found with id : " + event.getId());
-                                                    });
-                                } catch (Exception e) {
-                                    log.error("Remote feign call failed : ", e);
-                                    //throw new RemoteCallFailedException(e);
-                                }
+                            jobApplicationEventRepository.findById(event.getId())
+                                    .ifPresent(jobOfferApplicationEvent -> {
+                                        Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(event.getId());
+                                        try {
+                                            Optional.ofNullable(cmsCalendarEventService.eventByDomainAndCalendarAndCode(
+                                                            RequestContextDto.builder().build(),
+                                                            jobApp.getDomain(),
+                                                            jobOfferApplicationEvent.getCalendar(), jobOfferApplicationEvent.getEventCode()))
+                                                    .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
+                                                    .map(result -> result.getBody())
+                                                    .ifPresentOrElse(vCalendarEventDto1 -> {
+                                                                vCalendarEventDto1.setName(event.getTitle());
+                                                                vCalendarEventDto1.setTitle(event.getTitle());
+                                                                vCalendarEventDto1.setStartDate(event.getStartDateTime());
+                                                                vCalendarEventDto1.setEndDate(event.getEndDateTime());
+                                                                ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(//RequestContextDto.builder().build(),
+                                                                        vCalendarEventDto1.getId(),
+                                                                        vCalendarEventDto1);
+                                                                if (!updateResult.getStatusCode().is2xxSuccessful()) {
+                                                                    log.warn("Interview update failed {}", event);
+                                                                }
+                                                            },
+                                                            () -> {
+                                                                jobApplicationEventRepository.deleteById(event.getId());
+                                                                if (interviewOptional.isPresent()) {
+                                                                    interviewEventRepository.deleteById(interviewOptional.get().getId());
+                                                                }
+                                                                throw new NotFoundException("Event not found with id : " + event.getId());
+                                                            });
+                                        } catch (Exception e) {
+                                            log.error("Remote feign call failed : ", e);
+                                            //throw new RemoteCallFailedException(e);
+                                        }
 
 
-                                if (interviewOptional.isPresent()) {
-                                    //TODO save dates into cms
-                                    jobOfferApplicationEvent = jobApplicationEventRepository.save(
-                                            JobOfferApplicationEvent.builder()
-                                                    .id(event.getId())
-                                                    .eventCode(jobOfferApplicationEvent.getEventCode())
-                                                    .calendar(jobOfferApplicationEvent.getCalendar())
-                                                    .type(jobOfferApplicationEvent.getType())
-                                                    .title(event.getTitle())
-                                                    .comment(event.getComment())
-                                                    .participants(event.getParticipants())
-                                                    .location(event.getLocation())
-                                                    .build()
-                                    );
+                                        if (interviewOptional.isPresent()) {
+                                            //TODO save dates into cms
+                                            jobOfferApplicationEvent = jobApplicationEventRepository.save(
+                                                    JobOfferApplicationEvent.builder()
+                                                            .id(event.getId())
+                                                            .eventCode(jobOfferApplicationEvent.getEventCode())
+                                                            .calendar(jobOfferApplicationEvent.getCalendar())
+                                                            .type(jobOfferApplicationEvent.getType())
+                                                            .title(event.getTitle())
+                                                            .comment(event.getComment())
+                                                            .participants(event.getParticipants())
+                                                            .location(event.getLocation())
+                                                            .build()
+                                            );
 
-                                    interviewEventRepository.save(
-                                            Interview.builder()
-                                                    .id(interviewOptional.get().getId())
-                                                    .jobApplicationEvent(jobOfferApplicationEvent)
-                                                    .quizCode(event.getQuizCode())
-                                                    .skills(interviewSkillsMapper.listDtoToEntity(event.getSkills()))
-                                                    .build()
-                                    );
-                                }
-                            });
-                },
+                                            interviewEventRepository.save(
+                                                    Interview.builder()
+                                                            .id(interviewOptional.get().getId())
+                                                            .jobApplicationEvent(jobOfferApplicationEvent)
+                                                            .quizCode(event.getQuizCode())
+                                                            .skills(interviewSkillsMapper.listDtoToEntity(event.getSkills()))
+                                                            .build()
+                                            );
+                                        }
+                                    });
+                        },
                         () -> {
                             throw new JobOfferAppNotFoundException("with code : " + code);
                         });

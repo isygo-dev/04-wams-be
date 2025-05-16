@@ -79,7 +79,9 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                                 ? (post.getUsersAccountCode().add(accountCode))
                                 : (post.getUsersAccountCode().remove(accountCode));
                     },
-                    () -> {throw new PostNotFoundException("with id " + postId);}
+                    () -> {
+                        throw new PostNotFoundException("with id " + postId);
+                    }
             );
 
             return ResponseFactory.ResponseOk(postMapper.entityToDto(postService.update(optional.get())));
@@ -148,7 +150,9 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                                 ? (accountList.add(accountCode))
                                 : (accountList.remove(accountCode));
                     },
-                    () -> {throw new PostNotFoundException("with id " + postId);}
+                    () -> {
+                        throw new PostNotFoundException("with id " + postId);
+                    }
             );
 
             return ResponseFactory.ResponseOk(postMapper.entityToDto(postService.update(optional.get())));

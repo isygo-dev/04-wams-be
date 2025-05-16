@@ -31,7 +31,6 @@ import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.remote.quiz.QuizCandidateQuizService;
 import eu.isygoit.repository.AssoAccountResumeRepository;
 import eu.isygoit.repository.JobOfferApplicationRepository;
-import eu.isygoit.repository.ResumeLinkedFileRepository;
 import eu.isygoit.repository.ResumeRepository;
 import eu.isygoit.service.IMsgService;
 import eu.isygoit.service.IResumeService;
