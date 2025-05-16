@@ -2,7 +2,7 @@ package eu.isygoit.async.camel.processor;
 
 import eu.isygoit.com.camel.processor.AbstractCamelProcessor;
 import eu.isygoit.dto.data.ResumeParseDto;
-import eu.isygoit.enums.IEnumFileType;
+import eu.isygoit.enums.IEnumFile;
 import eu.isygoit.enums.IEnumSkillLevelType;
 import eu.isygoit.model.Resume;
 import eu.isygoit.model.ResumeDetails;
@@ -52,7 +52,7 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
                 FilenameUtils.isExtension(resumeParseDto.getFile().getOriginalFilename().toLowerCase(), "pdf")) { //NOSONAR
             try {
                 ResponseEntity<Resource> result = dmsFileFileConverterService.convertPdf(//RequestContextDto.builder().build(),
-                        IEnumFileType.Types.TEXT, resumeParseDto.getFile());
+                        IEnumFile.Types.TEXT, resumeParseDto.getFile());
                 if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
                     Optional<Resume> optional = resumeRepository.findByCodeIgnoreCase(resumeParseDto.getCode());
                     if (optional.isPresent()) {

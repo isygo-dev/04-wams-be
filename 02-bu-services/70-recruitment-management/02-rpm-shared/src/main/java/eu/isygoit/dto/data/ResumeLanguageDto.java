@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResumeLanguageDto extends AbstractAuditableDto<Long> {
-    
+
     private String name;
     private IEnumLanguageLevel.Types level;
 }

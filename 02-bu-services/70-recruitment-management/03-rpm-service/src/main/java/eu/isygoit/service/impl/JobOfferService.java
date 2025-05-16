@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
 import eu.isygoit.constants.DomainConstants;
@@ -13,7 +13,7 @@ import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
 import eu.isygoit.dto.data.MailMessageDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
-import eu.isygoit.enums.IEnumMsgTemplateName;
+import eu.isygoit.enums.IEnumEmailTemplate;
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.exception.JobOfferNotFoundException;
 import eu.isygoit.exception.ShareJobNotificationException;
@@ -22,7 +22,6 @@ import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferDetails;
 import eu.isygoit.model.JobOfferShareInfo;
-import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.ims.ImsAppParameterService;
 import eu.isygoit.remote.ims.ImsDomainService;
@@ -52,7 +51,7 @@ import java.util.stream.Collectors;
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = JobOfferRepository.class)
-public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferRepository>
+public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOfferRepository>
         implements IJobOfferService {
 
     private final AppProperties appProperties;
@@ -75,8 +74,8 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
     }
 
     @Override
-    public Optional<NextCodeModel> initCodeGenerator() {
-        return Optional.ofNullable(AppNextCode.builder()
+    public AppNextCode initCodeGenerator() {
+        return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(JobOffer.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -84,7 +83,7 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build());
+                .build();
     }
 
     @Override
@@ -201,7 +200,7 @@ public class JobOfferService extends CodifiableService<Long, JobOffer, JobOfferR
                 .domain(jobOffer.getDomain())
                 .subject(EmailSubjects.SHARED_JOB_EMAIL_SUBJECT)
                 .toAddr(account.getEmail())
-                .templateName(IEnumMsgTemplateName.Types.JOB_OFFER_SHARED_TEMPLATE)
+                .templateName(IEnumEmailTemplate.Types.JOB_OFFER_SHARED_TEMPLATE)
                 .sent(true)
                 .build();
 

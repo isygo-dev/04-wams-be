@@ -4,7 +4,7 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.FileImageService;
+import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.exception.PostDeleteForbiddenException;
@@ -13,7 +13,6 @@ import eu.isygoit.helper.DateHelper;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Blog;
 import eu.isygoit.model.Post;
-import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -69,7 +68,7 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
     public void beforeDelete(Long id) {
         Optional<Post> optional = this.findById(id);
         if (optional.isPresent()) {
-            if (DateHelper.isInLastHours(optional.get().getCreateDate(), 24)) {
+            if (DateHelper.occurredInLastXHours(optional.get().getCreateDate(), 24)) {
                 throw new PostDeleteForbiddenException("With id " + id);
             }
         }
@@ -80,7 +79,7 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
     public Post beforeUpdate(Post post) {
         Optional<Post> optional = this.findById(post.getId());
         optional.ifPresent(oldPost -> {
-            if (DateHelper.isInLastHours(oldPost.getCreateDate(), 24)) {
+            if (DateHelper.occurredInLastXHours(oldPost.getCreateDate(), 24)) {
                 oldPost.setTalk(post.getTalk());
                 oldPost.setTitle(post.getTitle());
                 oldPost.setImagePath(post.getImagePath());
@@ -151,15 +150,15 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
     }
 
     @Override
-    public Optional<NextCodeModel> initCodeGenerator() {
-        return Optional.ofNullable(AppNextCode.builder()
+    public AppNextCode initCodeGenerator() {
+        return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Post.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("PST")
                 .valueLength(6L)
                 .value(1L)
-                .build());
+                .build();
     }
 
     @Override

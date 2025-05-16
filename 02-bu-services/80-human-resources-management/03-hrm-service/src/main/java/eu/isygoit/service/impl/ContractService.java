@@ -4,7 +4,7 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.FileService;
+import eu.isygoit.com.rest.service.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.exception.handler.EmployeeNotFoundException;
@@ -13,7 +13,6 @@ import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Contract;
 import eu.isygoit.model.Employee;
 import eu.isygoit.model.LeaveSummary;
-import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -30,7 +29,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * The type Contract service.
@@ -91,8 +89,8 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
     }
 
     @Override
-    public Optional<NextCodeModel> initCodeGenerator() {
-        return Optional.ofNullable(AppNextCode.builder()
+    public AppNextCode initCodeGenerator() {
+        return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Contract.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -100,7 +98,7 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build());
+                .build();
     }
 
     @Override

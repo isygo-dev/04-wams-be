@@ -4,20 +4,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.dto.common.*;
 import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
+import eu.isygoit.enums.IEnumEmailTemplate;
 import eu.isygoit.enums.IEnumInterviewSkillType;
 import eu.isygoit.enums.IEnumJobAppEventType;
-import eu.isygoit.enums.IEnumMsgTemplateName;
 import eu.isygoit.enums.IEnumPositionType;
 import eu.isygoit.exception.*;
 import eu.isygoit.mapper.InterviewSkillsMapper;
 import eu.isygoit.model.*;
-import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.cms.CmsCalendarEventService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -45,7 +44,7 @@ import java.util.stream.Stream;
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = WorkflowBoardRepository.class)
-public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard, WorkflowBoardRepository> implements IWorkflowBoardService {
+public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBoard, WorkflowBoardRepository> implements IWorkflowBoardService {
 
     private final AppProperties appProperties;
 
@@ -519,15 +518,15 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                 .toAddr(String.join(",",
                         Stream.concat(workflowBoard.getWatchers().stream(),
                                 workflowTransition.getWatchers().stream()).distinct().collect(Collectors.toUnmodifiableList())))
-                .templateName(IEnumMsgTemplateName.Types.WFB_UPDATED_TEMPLATE)
+                .templateName(IEnumEmailTemplate.Types.WFB_UPDATED_TEMPLATE)
                 .sent(true)
                 .variables(MailMessageDto.getVariablesAsString(variables))
                 .build();
     }
 
     @Override
-    public Optional<NextCodeModel> initCodeGenerator() {
-        return Optional.ofNullable(AppNextCode.builder()
+    public AppNextCode initCodeGenerator() {
+        return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(WorkflowBoard.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -535,6 +534,6 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build());
+                .build();
     }
 }

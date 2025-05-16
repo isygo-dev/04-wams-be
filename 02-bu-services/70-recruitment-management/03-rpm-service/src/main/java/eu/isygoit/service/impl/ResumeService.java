@@ -8,7 +8,7 @@ import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.camel.repository.ICamelRepository;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
-import eu.isygoit.com.rest.service.impl.FileImageService;
+import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
 import eu.isygoit.constants.DomainConstants;
@@ -17,11 +17,10 @@ import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
 import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
-import eu.isygoit.enums.IEnumMsgTemplateName;
+import eu.isygoit.enums.IEnumEmailTemplate;
 import eu.isygoit.enums.IEnumResumeStatType;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.*;
-import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.ims.ImAccountService;
@@ -87,15 +86,15 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     @Override
-    public Optional<NextCodeModel> initCodeGenerator() {
-        return Optional.ofNullable(AppNextCode.builder()
+    public AppNextCode initCodeGenerator() {
+        return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Resume.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("RES")
                 .valueLength(6L)
                 .value(1L)
-                .build());
+                .build();
     }
 
     @Override
@@ -158,7 +157,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
                 .domain(resume.getDomain())
                 .subject(EmailSubjects.SHARED_RESUME_EMAIL_SUBJECT)
                 .toAddr(account.getEmail())
-                .templateName(IEnumMsgTemplateName.Types.RESUME_SHARED_TEMPLATE)
+                .templateName(IEnumEmailTemplate.Types.RESUME_SHARED_TEMPLATE)
                 .sent(true)
                 .build();
 

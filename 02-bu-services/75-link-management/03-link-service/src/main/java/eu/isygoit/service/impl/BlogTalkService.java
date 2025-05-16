@@ -57,7 +57,7 @@ public class BlogTalkService extends CassandraCrudService<UUID, BlogTalk, BlogTa
     @Override
     public void beforeDelete(UUID id) {
         this.findById(id).ifPresent(blogTalk -> {
-            if (DateHelper.isInLastHours(blogTalk.getCreateDate(), 24)) {
+            if (DateHelper.occurredInLastXHours(blogTalk.getCreateDate(), 24)) {
                 throw new BlogTalkUpdateForbiddenException("With id " + id);
             }
         });
@@ -69,8 +69,8 @@ public class BlogTalkService extends CassandraCrudService<UUID, BlogTalk, BlogTa
     public BlogTalk beforeUpdate(BlogTalk blogTalk) {
         Optional<BlogTalk> optional = this.findById(blogTalk.getId());
         optional.ifPresent(oldblogTalk -> {
-            if (DateHelper.isInLastHours(oldblogTalk.getCreateDate(), 24)) {
-                blogTalk.setText(blogTalk.getText());
+            if (DateHelper.occurredInLastXHours(oldblogTalk.getCreateDate(), 24)) {
+                optional.get().setText(blogTalk.getText());
             }
         });
 

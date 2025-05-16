@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.exception.EmptyPathException;
@@ -13,7 +13,6 @@ import eu.isygoit.helper.FileHelper;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Quiz;
 import eu.isygoit.model.QuizQuestion;
-import eu.isygoit.model.extendable.NextCodeModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.QuizQuestionRepository;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -45,7 +43,7 @@ import java.util.Optional;
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = QuizRepository.class)
-public class QuizService extends CodifiableService<Long, Quiz, QuizRepository> implements IQuizService {
+public class QuizService extends CodeAssignableService<Long, Quiz, QuizRepository> implements IQuizService {
 
     private final AppProperties appProperties;
 
@@ -62,8 +60,8 @@ public class QuizService extends CodifiableService<Long, Quiz, QuizRepository> i
     }
 
     @Override
-    public Optional<NextCodeModel> initCodeGenerator() {
-        return Optional.ofNullable(AppNextCode.builder()
+    public AppNextCode initCodeGenerator() {
+        return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Quiz.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
@@ -71,7 +69,7 @@ public class QuizService extends CodifiableService<Long, Quiz, QuizRepository> i
                 .valueLength(6L)
                 .value(1L)
                 .increment(1)
-                .build());
+                .build();
     }
 
     @Override
@@ -97,11 +95,15 @@ public class QuizService extends CodifiableService<Long, Quiz, QuizRepository> i
         Optional<QuizQuestion> optional = quizQuestionRepository.findById(id);
         if (optional.isPresent()) {
             if (file != null && !file.isEmpty()) {
-                optional.get().setImagePath(FileHelper.storeMultipartFile(this.getUploadDirectory()
-                                + File.separator + domain
-                                + File.separator + QuizQuestion.class.getSimpleName().toLowerCase()
-                                + File.separator + "image",
-                        file.getOriginalFilename() + "_" + optional.get().getId(), file, "png").toString());
+                Path target = Path.of(appProperties.getUploadDirectory())
+                        .resolve(domain).resolve(QuizQuestion.class.getSimpleName().toLowerCase()).resolve("image");
+
+                Path imagePath = FileHelper.saveMultipartFile(target,
+                        file.getOriginalFilename() + "_" + optional.get().getId(),
+                        file,
+                        "png");
+
+                optional.get().setImagePath(imagePath.toString());
             } else {
                 log.warn("File is null or empty");
             }
