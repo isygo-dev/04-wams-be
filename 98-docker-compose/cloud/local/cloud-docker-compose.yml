@@ -13,7 +13,7 @@ services:
       timeout: 3s
       retries: 20
     volumes:
-      - config-data:/config:ro
+      - /c/docker/volumes/cloud/config-data:/config:ro
     networks:
       - cloud-net
 
@@ -32,7 +32,7 @@ services:
       timeout: 3s
       retries: 20
     volumes:
-      - discovery-data:/discovery:ro
+      - /c/docker/volumes/cloud/discovery-data:/discovery:ro
     networks:
       - cloud-net
 
@@ -53,7 +53,7 @@ services:
       timeout: 3s
       retries: 20
     volumes:
-      - gateway-data:/gateway:ro
+      - /c/docker/volumes/cloud/gateway-data:/gateway:ro
     networks:
       - cloud-net
 
