@@ -8,7 +8,7 @@ services:
       - "${KEY_PORT}:${KEY_PORT}"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://key-service:40403/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://key-service:40403/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 20
@@ -29,7 +29,7 @@ services:
       - "${IDENTITY_PORT}:${IDENTITY_PORT}"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://identity-service:40402/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://identity-service:40402/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 20
@@ -50,7 +50,7 @@ services:
       - "${MESSAGING_PORT}:${MESSAGING_PORT}"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://messaging-service:40404/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://messaging-service:40404/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 20
@@ -71,7 +71,7 @@ services:
       - "${DOCUMENT_PORT}:${DOCUMENT_PORT}"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://document-service:40405/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://document-service:40405/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 20
@@ -92,7 +92,7 @@ services:
       - "${STORAGE_PORT}:${STORAGE_PORT}"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://storage-service:40400/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://storage-service:40400/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 20
@@ -113,7 +113,7 @@ services:
       - "${CALENDAR_PORT}:${CALENDAR_PORT}"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://calendar-service:40407/actuator/health"]
+      test: [ "CMD", "curl", "-f", "http://calendar-service:40407/actuator/health" ]
       interval: 10s
       timeout: 3s
       retries: 20
