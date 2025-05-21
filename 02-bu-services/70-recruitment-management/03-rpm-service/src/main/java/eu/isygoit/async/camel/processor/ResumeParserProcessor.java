@@ -2,7 +2,7 @@ package eu.isygoit.async.camel.processor;
 
 import eu.isygoit.com.camel.processor.AbstractCamelProcessor;
 import eu.isygoit.dto.data.ResumeParseDto;
-import eu.isygoit.enums.IEnumFileType;
+import eu.isygoit.enums.IEnumFile;
 import eu.isygoit.enums.IEnumSkillLevelType;
 import eu.isygoit.model.Resume;
 import eu.isygoit.model.ResumeDetails;
@@ -22,10 +22,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The type Resume parser processor.
@@ -54,13 +52,13 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
                 FilenameUtils.isExtension(resumeParseDto.getFile().getOriginalFilename().toLowerCase(), "pdf")) { //NOSONAR
             try {
                 ResponseEntity<Resource> result = dmsFileFileConverterService.convertPdf(//RequestContextDto.builder().build(),
-                        IEnumFileType.Types.TEXT, resumeParseDto.getFile());
+                        IEnumFile.Types.TEXT, resumeParseDto.getFile());
                 if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
                     Optional<Resume> optional = resumeRepository.findByCodeIgnoreCase(resumeParseDto.getCode());
                     if (optional.isPresent()) {
                         Resume resume = optional.get();
                         try (Scanner scanner = new Scanner(result.getBody().getContentAsString(StandardCharsets.UTF_8))) {   //NOSONAR
-                            List<String> tokens = scanner.tokens().toList();
+                            List<String> tokens = scanner.tokens().collect(Collectors.toUnmodifiableList());
                             if (!CollectionUtils.isEmpty(tokens)) {
                                 tokens.stream().forEach(s -> {
                                     //get email
@@ -77,10 +75,10 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
                             //Parse skills
                             List<String> skillNames = resumeSkillsRepository.findDistinctSkillNames();
                             if (!CollectionUtils.isEmpty(skillNames)) {
-                                if (resume.getDetails() == null) {
+                                if (Objects.isNull(resume.getDetails())) {
                                     resume.setDetails(ResumeDetails.builder().skills(new ArrayList<>()).build());
                                 }
-                                if (resume.getDetails().getSkills() == null) {
+                                if (Objects.isNull(resume.getDetails().getSkills())) {
                                     resume.getDetails().setSkills(new ArrayList<>());
                                 }
 

@@ -1,12 +1,16 @@
-FROM openjdk:17-alpine
-ADD 01-wams-services/30-messaging-management/04-mms-service/target/*.jar service.jar
-ADD 01-wams-services/30-messaging-management/04-mms-service/target/uploads /uploads
-RUN ls -al /uploads/*
-ADD 01-wams-services/30-messaging-management/04-mms-service/target/camel /camel
-RUN ls -al /camel/*
-ADD 01-wams-services/30-messaging-management/04-mms-service/target/msgtemplate /msgtemplate
-RUN ls -al /msgtemplate/*
+FROM eclipse-temurin:17-jdk-alpine
+RUN apk add --no-cache curl
+
+# Copy built JAR and additional folders from the builder stage
+COPY 01-wams-services/30-messaging-management/04-mms-service/target/*.jar service.jar
+COPY 01-wams-services/30-messaging-management/04-mms-service/target/uploads /uploads
+COPY 01-wams-services/30-messaging-management/04-mms-service/target/camel /camel
+COPY 01-wams-services/30-messaging-management/04-mms-service/target/msgtemplate /msgtemplate
+
+# Download docker-compose-wait
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
 RUN chmod +x /wait
 
-CMD /wait && java -jar /service.jar
+EXPOSE 40404
+
+CMD /wait && java -jar service.jar

@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The type Quiz controller.
@@ -97,7 +98,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
         log.info("get quiz by code received");
         try {
             QuizDto quizDto = mapper().entityToDto(crudService().getQuizByCode(code));
-            if (quizDto == null) {
+            if (Objects.isNull(quizDto)) {
                 return ResponseFactory.ResponseNoContent();
             }
 

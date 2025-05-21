@@ -22,5 +22,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1/private/cin")
 public class PersonalIdentityInfoController extends MappedImageController<Long, PersonalIdentityInfo, PersonalIdentityInfoDto, PersonalIdentityInfoDto, PersonalIdentityInfoService> {
 
-
 }

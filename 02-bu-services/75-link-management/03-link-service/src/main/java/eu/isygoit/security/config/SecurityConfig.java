@@ -1,6 +1,6 @@
 package eu.isygoit.security.config;
 
-import eu.isygoit.filter.AbstractJwtAuthFilter;
+import eu.isygoit.filter.JwtKmsClientAuthFilter;
 import eu.isygoit.repository.ApiPermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final AbstractJwtAuthFilter jwtAuthFilter;
+    private final JwtKmsClientAuthFilter jwtAuthFilter;
     private final ApiPermissionRepository apiPermissionRepository;
 
     /**
@@ -113,6 +113,7 @@ public class SecurityConfig {
                         .allowedMethods("*")
                         .allowedHeaders("*")
                 ;
+
             }
         };
     }

@@ -11,6 +11,7 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.PostCommentDto;
 import eu.isygoit.dto.extendable.IdentifiableDto;
+import eu.isygoit.exception.PostCommentNotFoundException;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.PostCommentMapper;
 import eu.isygoit.model.PostComment;
@@ -29,6 +30,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The type Comment controller.
@@ -78,13 +80,16 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                                                             @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode
     ) {
         try {
-            final PostComment comment = commentService.findById(commentId);
-            final List<String> accountList = comment.getUsersAccountCode();
-            accountList.add(accountCode);
-            comment.setUsersAccountCode(accountList);
-            commentService.update(comment);
-            final PostCommentDto commentDto = commentMapper.entityToDto(comment);
-            return ResponseFactory.ResponseOk(commentDto);
+            final Optional<PostComment> optional = commentService.findById(commentId);
+            optional.ifPresentOrElse(postComment -> {
+                        postComment.getUsersAccountCode().add(accountCode);
+                    },
+                    () -> {
+                        throw new PostCommentNotFoundException("with id " + commentId);
+                    }
+            );
+
+            return ResponseFactory.ResponseOk(commentMapper.entityToDto(commentService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -110,7 +115,9 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
     public ResponseEntity<List<String>> getLikedCommentByCommentId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                                    @PathVariable(name = RestApiConstants.COMMENT_ID) Long commentId) {
         try {
-            return ResponseFactory.ResponseOk(commentService.findById(commentId).getUsersAccountCode());
+            return ResponseFactory.ResponseOk(commentService.findById(commentId)
+                    .orElseThrow(() -> new PostCommentNotFoundException("with id " + commentId))
+                    .getUsersAccountCode());
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -140,18 +147,20 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                                                                @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode
     ) {
         try {
-            final PostComment comment = commentService.findById(commentId);
-            final List<String> accountList = comment.getUsersAccountCode();
-            accountList.remove(accountCode);
-            comment.setUsersAccountCode(accountList);
-            commentService.update(comment);
-            final PostCommentDto commentDto = commentMapper.entityToDto(comment);
-            return ResponseFactory.ResponseOk(commentDto);
+            final Optional<PostComment> optional = commentService.findById(commentId);
+            optional.ifPresentOrElse(postComment -> {
+                        postComment.getUsersAccountCode().remove(accountCode);
+                    },
+                    () -> {
+                        throw new PostCommentNotFoundException("with id " + commentId);
+                    }
+            );
+
+            return ResponseFactory.ResponseOk(commentMapper.entityToDto(commentService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
         }
-
     }
 
 }

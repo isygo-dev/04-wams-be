@@ -9,7 +9,7 @@ import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.dto.data.MinEmployeeDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.EmployeeMapper;
 import eu.isygoit.model.Employee;
@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,12 +53,9 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     public ResponseEntity<EmployeeDto> getEmployeeByCode(RequestContextDto requestContext,
                                                          String code) {
         try {
-            Employee employee = crudService().findEmployeeByCode(code);
-            if (employee != null) {
-                return ResponseEntity.ok(mapper().entityToDto(employee));
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            return crudService().findByCode(code)
+                    .map(employee -> ResponseEntity.ok(mapper().entityToDto(employee)))
+                    .orElseGet(() -> ResponseEntity.notFound().build());
         } catch (Exception e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -67,9 +65,11 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     @Override
     public ResponseEntity<List<EmployeeDto>> getEmployeeByDomain(RequestContextDto requestContext, String domain) {
         try {
-            List<Employee> employees = crudService().findEmployeeByDomain(domain);
-            List<EmployeeDto> employeeDtos = mapper().listEntityToDto(employees);
-            return ResponseEntity.ok(employeeDtos);
+            List<Employee> employees = crudService().findByDomain(domain);
+            if (CollectionUtils.isEmpty(employees)) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(mapper().listEntityToDto(employees));
         } catch (Exception e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -80,10 +80,10 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     @Override
     public ResponseEntity<EmployeeDto> updateEmployeeStatus(RequestContextDto requestContext,
                                                             Long id,
-                                                            IEnumBinaryStatus.Types newStatus) {
+                                                            IEnumEnabledBinaryStatus.Types newStatus) {
         log.info("update employee status");
         try {
-            return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().updateEmployeeStatus(id, newStatus)));
+            return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().updateStatus(id, newStatus)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -98,7 +98,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
                     employee.setAccountCode(accountCode);
                     return employee;
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     /**

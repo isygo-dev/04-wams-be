@@ -32,7 +32,7 @@ import java.util.List;
 })
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_QUIZ + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
-public class Quiz extends AuditableCancelableEntity<Long> implements ISAASEntity, ICodifiable {
+public class Quiz extends AuditableCancelableEntity<Long> implements IDomainAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "quiz_sequence_generator", sequenceName = "quiz_sequence", allocationSize = 1)

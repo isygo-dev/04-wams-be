@@ -2,7 +2,7 @@ package eu.isygoit.model;
 
 import eu.isygoit.constants.AccountTypeConstants;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -34,7 +34,7 @@ import java.util.List;
 })
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_EMPLOYEE + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
-public class Employee extends AuditableCancelableEntity<Long> implements ISAASEntity, ICodifiable, IImageEntity, IMultiFileEntity<EmployeeLinkedFile> {
+public class Employee extends AuditableCancelableEntity<Long> implements IDomainAssignable, ICodeAssignable, IImageEntity, IMultiFileEntity<EmployeeLinkedFile> {
 
     @Id
     @SequenceGenerator(name = "employee_sequence_generator", sequenceName = "employee_sequence", allocationSize = 1)
@@ -77,8 +77,8 @@ public class Employee extends AuditableCancelableEntity<Long> implements ISAASEn
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ENABLED'")
-    @Column(name = SchemaColumnConstantName.C_EMPLOYEE_STATUS, length = IEnumBinaryStatus.STR_ENUM_SIZE, nullable = false)
-    private IEnumBinaryStatus.Types employeeStatus = IEnumBinaryStatus.Types.ENABLED;
+    @Column(name = SchemaColumnConstantName.C_EMPLOYEE_STATUS, length = IEnumEnabledBinaryStatus.STR_ENUM_SIZE, nullable = false)
+    private IEnumEnabledBinaryStatus.Types employeeStatus = IEnumEnabledBinaryStatus.Types.ENABLED;
     @Builder.Default
     @ColumnDefault("'true'")
     @Column(name = SchemaColumnConstantName.C_IS_LINKED_USER)

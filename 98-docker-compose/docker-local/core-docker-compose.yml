@@ -1,0 +1,141 @@
+version: '3.8'
+
+services:
+  key-service:
+    container_name: key-service
+    image: ${KEY_IMAGE}
+    ports:
+      - "${KEY_PORT}:${KEY_PORT}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://key-service:40403/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - /c/docker/volumes/core/kms-data/uploads:/uploads
+    networks:
+      - core-net
+      - cloud-net
+      - tools-net
+
+  identity-service:
+    container_name: identity-service
+    image: ${IDENTITY_IMAGE}
+    depends_on:
+      key-service:
+        condition: service_healthy
+    ports:
+      - "${IDENTITY_PORT}:${IDENTITY_PORT}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://identity-service:40402/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - /c/docker/volumes/core/ims-data/uploads:/uploads
+    networks:
+      - core-net
+      - cloud-net
+      - tools-net
+
+  messaging-service:
+    container_name: messaging-service
+    image: ${MESSAGING_IMAGE}
+    depends_on:
+      key-service:
+        condition: service_healthy
+    ports:
+      - "${MESSAGING_PORT}:${MESSAGING_PORT}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://messaging-service:40404/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - /c/docker/volumes/core/mms-data/uploads:/uploads
+    networks:
+      - core-net
+      - cloud-net
+      - tools-net
+
+  document-service:
+    container_name: document-service
+    image: ${DOCUMENT_IMAGE}
+    depends_on:
+      key-service:
+        condition: service_healthy
+    ports:
+      - "${DOCUMENT_PORT}:${DOCUMENT_PORT}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://document-service:40405/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - /c/docker/volumes/core/dms-data/uploads:/uploads
+    networks:
+      - core-net
+      - cloud-net
+      - tools-net
+
+  storage-service:
+    container_name: storage-service
+    image: ${STORAGE_IMAGE}
+    depends_on:
+      key-service:
+        condition: service_healthy
+    ports:
+      - "${STORAGE_PORT}:${STORAGE_PORT}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://storage-service:40400/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - /c/docker/volumes/core/sms-data/uploads:/uploads
+    networks:
+      - core-net
+      - cloud-net
+      - tools-net
+
+  calendar-service:
+    container_name: calendar-service
+    image: ${CALENDAR_IMAGE}
+    depends_on:
+      key-service:
+        condition: service_healthy
+    ports:
+      - "${CALENDAR_PORT}:${CALENDAR_PORT}"
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://calendar-service:40407/actuator/health" ]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - /c/docker/volumes/core/cms-data/uploads:/uploads
+    networks:
+      - core-net
+      - cloud-net
+      - tools-net
+
+volumes:
+  kms-data:
+  ims-data:
+  mms-data:
+  dms-data:
+  sms-data:
+  cms-data:
+
+networks:
+  core-net:
+    driver: bridge
+  cloud-net:
+    driver: bridge
+  tools-net:
+    driver: bridge

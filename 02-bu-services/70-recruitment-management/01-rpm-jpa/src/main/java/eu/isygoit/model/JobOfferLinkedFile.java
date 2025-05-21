@@ -21,7 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_JOB_OFFER_LINKED_FILE)
-public class JobOfferLinkedFile extends LinkedFileModel<Long> implements ISAASEntity {
+public class JobOfferLinkedFile extends LinkedFileModel<Long> implements IDomainAssignable {
 
     @Id
     @SequenceGenerator(name = "job_offer_multi_file_sequence_generator", sequenceName = "job_offer_multi_file_sequence", allocationSize = 1)

@@ -3,12 +3,10 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferApplication;
-import eu.isygoit.model.Resume;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.JobOfferApplicationRepository;
@@ -19,54 +17,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-/**
- * The type Job offer application service.
- */
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = JobOfferApplicationRepository.class)
-public class JobOfferApplicationService extends CodifiableService<Long, JobOfferApplication, JobOfferApplicationRepository> implements IJobOfferApplicationService {
+public class JobOfferApplicationService extends CodeAssignableService<Long, JobOfferApplication, JobOfferApplicationRepository> implements IJobOfferApplicationService {
+
+    private final ResumeRepository resumeRepository;
+    private final JobOfferRepository jobOfferRepository;
 
     @Autowired
-    private ResumeRepository resumeRepository;
-
-    @Autowired
-    private JobOfferRepository jobOfferRepository;
+    public JobOfferApplicationService(ResumeRepository resumeRepository, JobOfferRepository jobOfferRepository) {
+        this.resumeRepository = resumeRepository;
+        this.jobOfferRepository = jobOfferRepository;
+    }
 
     @Override
     public JobOfferApplication beforeCreate(JobOfferApplication jobApplication) {
-        Optional<Resume> resume = resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode());
-        if (resume.isPresent()) {
-            jobApplication.setResume(resume.get());
-            jobApplication.setDomain(resume.get().getDomain());
-        }
+        resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode())
+                .ifPresent(resume -> {
+                    jobApplication.setResume(resume);
+                    jobApplication.setDomain(resume.getDomain());
+                });
 
-        Optional<JobOffer> jobOffer = jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode());
-        if (jobOffer.isPresent()) {
-            jobApplication.setJobOffer(jobOffer.get());
-        }
-        //init job application status
+        jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode())
+                .ifPresent(jobOffer -> jobApplication.setJobOffer(jobOffer));
+
         return super.beforeCreate(jobApplication);
     }
 
     @Override
     public JobOfferApplication beforeUpdate(JobOfferApplication jobApplication) {
-        if (jobApplication.getResume().getCode() != null) {
-            Optional<Resume> optional = resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode());
-            if (optional.isPresent()) {
-                jobApplication.setResume(optional.get());
-            }
-        }
-        if (jobApplication.getJobOffer().getCode() != null) {
-            Optional<JobOffer> optional = jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode());
-            if (optional.isPresent()) {
-                jobApplication.setJobOffer(optional.get());
-            }
-        }
+        resumeRepository.findByCodeIgnoreCase(jobApplication.getResume().getCode())
+                .ifPresent(resume -> {
+                    jobApplication.setResume(resume);
+                });
+
+        jobOfferRepository.findByCodeIgnoreCase(jobApplication.getJobOffer().getCode())
+                .ifPresent(jobOffer -> jobApplication.setJobOffer(jobOffer));
+
         return super.beforeUpdate(jobApplication);
     }
 

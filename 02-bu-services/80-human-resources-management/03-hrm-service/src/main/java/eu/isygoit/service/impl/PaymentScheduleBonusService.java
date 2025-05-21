@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CrudService;
+import eu.isygoit.com.rest.service.CrudService;
 import eu.isygoit.model.Contract;
 import eu.isygoit.model.PaymentBonusSchedule;
 import eu.isygoit.model.Prime;
@@ -21,6 +21,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 /**
@@ -33,38 +35,47 @@ import java.util.Optional;
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = PaymentBonusScheduleRepository.class)
 public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusSchedule, PaymentBonusScheduleRepository> implements IPaymentScheduleBonusService {
+
+    private final ContractRepository contractRepository;
+
     @Autowired
-    private ContractRepository contractRepository;
+    public PaymentScheduleBonusService(ContractRepository contractRepository) {
+        this.contractRepository = contractRepository;
+    }
 
     @Override
     public List<PaymentBonusSchedule> calculateBonusPaymentSchedule(Long contractId) {
         Optional<Contract> optionalContract = contractRepository.findById(contractId);
         List<PaymentBonusSchedule> bonusSchedules = new ArrayList<>();
-        if (optionalContract.isPresent()) {
-            Contract contract = optionalContract.get();
+
+        optionalContract.ifPresent(contract -> {
             SalaryInformation salaryInformation = contract.getSalaryInformation();
             if (salaryInformation != null && !CollectionUtils.isEmpty(salaryInformation.getPrimes())) {
                 List<Prime> primes = salaryInformation.getPrimes();
-                primes.forEach(prime -> {
+
+                primes.stream().forEach(prime -> {
                     double montant = prime.getAnnualMinAmount() / prime.getAnnualFrequency();
+
                     if (CollectionUtils.isEmpty(prime.getBonusSchedules())) {
                         List<PaymentBonusSchedule> primeBonusSchedules = new ArrayList<>();
-                        for (int i = 0; i < prime.getAnnualFrequency(); i++) {
-                            PaymentBonusSchedule bonusSchedule = PaymentBonusSchedule.builder().paymentAmount(montant).isSubmited(false).build();
-                            primeBonusSchedules.add(bonusSchedule);
-                        }
+                        primeBonusSchedules.addAll(
+                                IntStream.range(0, prime.getAnnualFrequency())
+                                        .mapToObj(i -> PaymentBonusSchedule.builder()
+                                                .paymentAmount(montant)
+                                                .isSubmited(false)
+                                                .build())
+                                        .collect(Collectors.toList())
+                        );
                         prime.setBonusSchedules(primeBonusSchedules);
                         repository().saveAll(primeBonusSchedules);
                         bonusSchedules.addAll(primeBonusSchedules);
                     } else {
                         bonusSchedules.addAll(prime.getBonusSchedules());
                     }
-
                 });
             }
-        }
+        });
+
         return bonusSchedules;
     }
-
-
 }

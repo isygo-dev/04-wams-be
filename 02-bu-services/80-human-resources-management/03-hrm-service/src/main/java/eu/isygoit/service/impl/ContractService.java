@@ -4,9 +4,10 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.FileService;
+import eu.isygoit.com.rest.service.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.exception.handler.EmployeeNotFoundException;
 import eu.isygoit.exception.handler.LeaveSummaryNotFoundException;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Contract;
@@ -28,7 +29,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * The type Contract service.
@@ -43,40 +43,43 @@ import java.util.Optional;
 public class ContractService extends FileService<Long, Contract, ContractRepository> implements IContractService {
 
     private final AppProperties appProperties;
-    @Autowired
-    private ILeaveSummaryService leaveSummaryService;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
-    private LeaveSummaryRepository leaveSummaryRepository;
+    private final ILeaveSummaryService leaveSummaryService;
+    private final EmployeeRepository employeeRepository;
+    private final LeaveSummaryRepository leaveSummaryRepository;
 
     /**
      * Instantiates a new Contract service.
      *
      * @param appProperties the app properties
      */
-    public ContractService(AppProperties appProperties) {
+    @Autowired
+    public ContractService(AppProperties appProperties, ILeaveSummaryService leaveSummaryService, EmployeeRepository employeeRepository, LeaveSummaryRepository leaveSummaryRepository) {
         this.appProperties = appProperties;
+        this.leaveSummaryService = leaveSummaryService;
+        this.employeeRepository = employeeRepository;
+        this.leaveSummaryRepository = leaveSummaryRepository;
     }
 
     @Override
     public Contract afterUpdate(Contract contract) {
-        Optional<Employee> optional = employeeRepository.findById(contract.getEmployee());
-        if (optional.isPresent()) {
-            Optional<LeaveSummary> leaveSummary = leaveSummaryRepository.findByCodeIgnoreCaseEmployeeAndYear(optional.get().getCode(),
-                    String.valueOf(LocalDate.now().getYear()));
-            if (leaveSummary.isPresent()) {
-                LeaveSummary leaveSummaryUpdated = leaveSummary.get();
-                if (contract.getHolidayInformation() != null) {
-                    leaveSummaryUpdated.setLeaveCount(contract.getHolidayInformation().getLegalLeaveCount());
-                    leaveSummaryUpdated.setRecoveryLeaveCount(contract.getHolidayInformation().getRecoveryLeaveCount());
-                }
+        // Retrieve employee and leave summary using Optional chaining
+        Employee employee = employeeRepository.findById(contract.getEmployee())
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + contract.getEmployee()));
 
-                leaveSummaryService.saveOrUpdate(leaveSummaryUpdated);
-            } else {
-                throw new LeaveSummaryNotFoundException("with employee Code: " + optional.get().getCode());
-            }
+        LeaveSummary leaveSummaryUpdated = leaveSummaryRepository.findByCodeIgnoreCaseEmployeeAndYear(employee.getCode(),
+                        String.valueOf(LocalDate.now().getYear()))
+                .orElseThrow(() -> new LeaveSummaryNotFoundException("with employee Code: " + employee.getCode()));
+
+        // Update leave summary if holiday information is provided
+        if (contract.getHolidayInformation() != null) {
+            leaveSummaryUpdated.setLeaveCount(contract.getHolidayInformation().getLegalLeaveCount());
+            leaveSummaryUpdated.setRecoveryLeaveCount(contract.getHolidayInformation().getRecoveryLeaveCount());
+
+            // Save or update leave summary
+            leaveSummaryService.saveOrUpdate(leaveSummaryUpdated);
         }
+
+        // Continue with the existing contract update logic
         return super.afterCreate(contract);
     }
 
@@ -106,11 +109,10 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
 
     @Override
     public Contract beforeUpdate(Contract contract) {
-        Contract oldContract = this.findById(contract.getId());
-        if (CollectionUtils.isEmpty(oldContract.getTags())) {
-            oldContract.setTags(Arrays.asList("Contract" /*, contract.getType()*/));
+        if (CollectionUtils.isEmpty(contract.getTags())) {
+            contract.setTags(Arrays.asList("Contract" /*, contract.getType()*/));
         }
-        return super.beforeUpdate(oldContract);
+        return super.beforeUpdate(contract);
     }
 
     @Override

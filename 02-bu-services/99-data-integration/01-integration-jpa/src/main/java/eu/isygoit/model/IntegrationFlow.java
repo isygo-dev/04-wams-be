@@ -29,7 +29,7 @@ import java.util.List;
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID,
                 referencedColumnName = SchemaColumnConstantName.C_ID)
 )
-public class IntegrationFlow extends AuditableEntity<Long> implements ICodifiable, ISAASEntity, IFileEntity {
+public class IntegrationFlow extends AuditableEntity<Long> implements ICodeAssignable, IDomainAssignable, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "integration_flow_sequence_generator", sequenceName = "integration_flow_sequence", allocationSize = 1)

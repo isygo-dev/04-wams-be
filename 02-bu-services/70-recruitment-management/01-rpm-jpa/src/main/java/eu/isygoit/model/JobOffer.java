@@ -28,7 +28,7 @@ import java.util.List;
         })
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_JOB_OFFER + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
-public class JobOffer extends AuditableCancelableEntity<Long> implements ISAASEntity, ICodifiable, IMultiFileEntity<JobOfferLinkedFile> {
+public class JobOffer extends AuditableCancelableEntity<Long> implements IDomainAssignable, ICodeAssignable, IMultiFileEntity<JobOfferLinkedFile> {
 
     @Id
     @SequenceGenerator(name = "job_offer_sequence_generator", sequenceName = "job_offer_sequence", allocationSize = 1)

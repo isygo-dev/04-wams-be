@@ -37,7 +37,7 @@ import java.util.List;
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_CONTRACT + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
 public class Contract extends AuditableCancelableEntity<Long>
-        implements ISAASEntity, ICodifiable, IFileEntity {
+        implements IDomainAssignable, ICodeAssignable, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "contract_sequence_generator", sequenceName = "contract_sequence", allocationSize = 1)

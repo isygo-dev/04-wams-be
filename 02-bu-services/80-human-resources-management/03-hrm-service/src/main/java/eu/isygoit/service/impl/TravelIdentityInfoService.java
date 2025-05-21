@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.ImageService;
+import eu.isygoit.com.rest.service.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
@@ -30,7 +30,6 @@ public class TravelIdentityInfoService extends ImageService<Long, TravelIdentity
 
     private final AppProperties appProperties;
 
-
     /**
      * Instantiates a new Travel identity info service.
      *
@@ -39,7 +38,6 @@ public class TravelIdentityInfoService extends ImageService<Long, TravelIdentity
     public TravelIdentityInfoService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
-
 
     @Override
     public AppNextCode initCodeGenerator() {
@@ -58,5 +56,4 @@ public class TravelIdentityInfoService extends ImageService<Long, TravelIdentity
     protected String getUploadDirectory() {
         return appProperties.getUploadDirectory();
     }
-
 }

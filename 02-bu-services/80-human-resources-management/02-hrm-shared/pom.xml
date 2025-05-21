@@ -11,7 +11,7 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>human-resources-management-shared</artifactId>
-    <version>WB-1.0.271124-S0916</version>
+    <version>WB-1.0.250516-T0922</version>
     <packaging>jar</packaging>
     <name>human-resources-management-shared</name>
     <description>human-resources-management-shared</description>
@@ -19,7 +19,7 @@
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>human-resources-management</artifactId>
-        <version>WB-1.0.271124-S0916</version>
+        <version>WB-1.0.250516-T0922</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>service-stack-shared</artifactId>
-            <version>WS-1.0.271124-S0916</version>
+            <version>WS-1.0.250516-T0922</version>
         </dependency>
     </dependencies>
 

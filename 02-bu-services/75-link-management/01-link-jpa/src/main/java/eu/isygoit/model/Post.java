@@ -30,7 +30,7 @@ import java.util.List;
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_POST + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
 public class Post extends AuditableCancelableEntity<Long>
-        implements ISAASEntity, IImageEntity, IFileEntity, ICodifiable {
+        implements IDomainAssignable, IImageEntity, IFileEntity, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "post_sequence_generator", sequenceName = "post_sequence", allocationSize = 1)

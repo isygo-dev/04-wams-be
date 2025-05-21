@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CrudService;
+import eu.isygoit.com.rest.service.CrudService;
 import eu.isygoit.dto.data.QuizDto;
 import eu.isygoit.dto.data.QuizQuestionDto;
 import eu.isygoit.dto.data.QuizReportDto;
@@ -66,7 +66,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public boolean startCandidateAnswer(String quizCode, String accountCode, CandidateQuizAnswer answer) {
         //Check if Quiz is already started for candidate
         CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-        if (candidateQuiz == null) {
+        if (Objects.isNull(candidateQuiz)) {
             throw new CandidateQuizNotYetStartedException("with code: " + accountCode + "/" + quizCode);
         }
 
@@ -95,7 +95,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public boolean submitCandidateAnswer(String quizCode, String accountCode, CandidateQuizAnswer answer) {
         //Check if Quiz is already started for candidate
         CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-        if (candidateQuiz == null) {
+        if (Objects.isNull(candidateQuiz)) {
             throw new CandidateQuizNotYetStartedException("with code: " + accountCode + "/" + quizCode);
         }
 
@@ -129,7 +129,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
         answers.stream().forEach(candidateQuizAnswer -> {
             //Check if Quiz is already started for candidate otherwise start it (!! INTERVIEW)
             CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-            if (candidateQuiz == null) {
+            if (Objects.isNull(candidateQuiz)) {
                 this.startCandidateQuiz(quizCode, accountCode);
                 candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
             }
@@ -176,7 +176,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public boolean submitCandidateQuiz(String quizCode, String accountCode) {
         //Check if Quiz is not yet started for candidate => Exception
         CandidateQuiz candidateQuiz = this.findByQuizCodeAndAccountCode(quizCode, accountCode);
-        if (candidateQuiz == null) {
+        if (Objects.isNull(candidateQuiz)) {
             throw new CandidateQuizNotYetStartedException("with code: " + accountCode + "/" + quizCode);
         }
 
@@ -198,7 +198,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
                 completeAnswer.getSections().stream().forEach(quizSection -> {
                     quizSection.getQuestions().stream().forEach(quizQuestion -> {
                         List<CandidateQuizAnswer> answers = candidateQuiz.getAnswers().stream().filter(candidateQuizAnswer ->
-                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).collect(Collectors.toList());
+                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).collect(Collectors.toUnmodifiableList());
                         if (quizQuestion.getType() == IEnumQuestionType.Types.TAQ || quizQuestion.getType() == IEnumQuestionType.Types.CODE) {
                             if (!CollectionUtils.isEmpty(answers) && answers.size() == 1 && answers.get(0).getOption() == 0) {
                                 quizQuestion.setTextAnswer(answers.get(0).getAnswerText());
@@ -242,7 +242,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
                 completeAnswer.getSections().stream().forEach(quizSection -> {
                     quizSection.getQuestions().stream().forEach(quizQuestion -> {
                         List<CandidateQuizAnswer> answers = candidateQuiz.getAnswers().stream().filter(candidateQuizAnswer ->
-                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).collect(Collectors.toList());
+                                candidateQuizAnswer.getQuestion() != null && candidateQuizAnswer.getQuestion().equals(quizQuestion.getId())).collect(Collectors.toUnmodifiableList());
                         if (!CollectionUtils.isEmpty(answers) && answers.size() == 1 && answers.get(0).getOption() == 0) {
                             quizQuestion.setTextAnswer(answers.get(0).getAnswerText());
                             quizQuestion.setScore(answers.get(0).getScore());
@@ -301,7 +301,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
                         if (!optionalCandidateQuizAnswer.isPresent() || "interview".equals(quiz.getCategory())) {
                             questionsToComplete.add(quizQuestion);
                         } else {
-                            if (optionalCandidateQuizAnswer.get().getSubmitDate() == null) {
+                            if (Objects.isNull(optionalCandidateQuizAnswer.get().getSubmitDate())) {
                                 Long passed = DateHelper.between(optionalCandidateQuizAnswer.get().getStartDate(), new Date());
                                 quizQuestion.setRemainInSec(Math.max(0, quizQuestion.getDurationInSec() - passed));
                                 if (passed < quizQuestion.getDurationInSec() - 10) {
@@ -323,7 +323,7 @@ public class CandidateQuizService extends CrudService<Long, CandidateQuiz, Candi
     public List<QuizReportDto> getByCandidateAndTags(String accountCode, List<String> tags) {
         List<Quiz> elligibleQuizes = quizRepository.findByTagsIn(tags);
         if (CollectionUtils.isEmpty(elligibleQuizes)) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         List<QuizReportDto> candidateQuizs = new ArrayList<>();

@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.ImageService;
+import eu.isygoit.com.rest.service.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class InsuranceIdentityInfoService extends ImageService<Long, InsuranceIdentityInfo, InsuranceIdentityInfoRepository> implements IInsuranceIdentityInfoService {
 
     private final AppProperties appProperties;
-
 
     /**
      * Instantiates a new Insurance identity info service.
@@ -58,5 +57,4 @@ public class InsuranceIdentityInfoService extends ImageService<Long, InsuranceId
     protected String getUploadDirectory() {
         return appProperties.getUploadDirectory();
     }
-
 }

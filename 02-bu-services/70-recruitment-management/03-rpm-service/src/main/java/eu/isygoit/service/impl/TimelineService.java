@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CrudServiceUtils;
+import eu.isygoit.com.rest.service.CrudServiceUtils;
 import eu.isygoit.model.Timeline;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.TimelineRepository;
@@ -13,9 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * The type Timeline service.
- */
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)

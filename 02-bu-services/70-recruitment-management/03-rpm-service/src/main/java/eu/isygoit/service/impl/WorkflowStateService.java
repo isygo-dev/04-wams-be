@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.WorkflowState;
@@ -14,15 +14,12 @@ import eu.isygoit.service.IWorkflowStateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Workflow state service.
- */
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = WorkflowStateRepository.class)
-public class WorkflowStateService extends CodifiableService<Long, WorkflowState, WorkflowStateRepository>
+public class WorkflowStateService extends CodeAssignableService<Long, WorkflowState, WorkflowStateRepository>
         implements IWorkflowStateService {
 
     @Override

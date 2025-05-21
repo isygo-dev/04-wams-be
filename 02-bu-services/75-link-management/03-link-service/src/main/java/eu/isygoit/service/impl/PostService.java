@@ -4,7 +4,7 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.FileImageService;
+import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.exception.PostDeleteForbiddenException;
@@ -66,33 +66,39 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
 
     @Override
     public void beforeDelete(Long id) {
-        Post oldPost = this.findById(id);
-        if (DateHelper.isInLastHours(oldPost.getCreateDate(), 24)) {
-            throw new PostDeleteForbiddenException("With id " + id);
+        Optional<Post> optional = this.findById(id);
+        if (optional.isPresent()) {
+            if (DateHelper.occurredInLastXHours(optional.get().getCreateDate(), 24)) {
+                throw new PostDeleteForbiddenException("With id " + id);
+            }
         }
         super.beforeDelete(id);
     }
 
     @Override
     public Post beforeUpdate(Post post) {
-        Post oldPost = this.findById(post.getId());
-        if (DateHelper.isInLastHours(oldPost.getCreateDate(), 24)) {
-            oldPost.setTalk(post.getTalk());
-            oldPost.setTitle(post.getTitle());
-            oldPost.setImagePath(post.getImagePath());
-            oldPost.setOriginalFileName(post.getOriginalFileName());
-            oldPost.setExtension(post.getExtension());
-            oldPost.setType(post.getType());
-            if (CollectionUtils.isEmpty(oldPost.getTags())) {
-                oldPost.setTags(new ArrayList<>() {{
-                    add("Post");
-                    add(post.getType());
-                }});
+        Optional<Post> optional = this.findById(post.getId());
+        optional.ifPresent(oldPost -> {
+            if (DateHelper.occurredInLastXHours(oldPost.getCreateDate(), 24)) {
+                oldPost.setTalk(post.getTalk());
+                oldPost.setTitle(post.getTitle());
+                oldPost.setImagePath(post.getImagePath());
+                oldPost.setOriginalFileName(post.getOriginalFileName());
+                oldPost.setExtension(post.getExtension());
+                oldPost.setType(post.getType());
+                if (CollectionUtils.isEmpty(oldPost.getTags())) {
+                    oldPost.setTags(new ArrayList<>() {{
+                        add("Post");
+                        add(post.getType());
+                    }});
+                }
+
+            } else {
+                throw new PostUpdateForbiddenException("With id " + post.getId());
             }
-            return super.beforeUpdate(oldPost);
-        } else {
-            throw new PostUpdateForbiddenException("With id " + post.getId());
-        }
+        });
+
+        return super.beforeUpdate(optional.get());
     }
 
     @Override
@@ -161,7 +167,7 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
         if (!posts.isEmpty()) {
             return posts.toList();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
@@ -170,6 +176,6 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
         if (!posts.isEmpty()) {
             return posts.toList();
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

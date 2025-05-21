@@ -16,17 +16,14 @@ public class TimeLineListenerService implements ITimeLineListenerService {
 
     @Override
     public void performPostPersistTL(ITLEntity entity) {
-
     }
 
     @Override
     public void performPostRemoveTL(ITLEntity entity) {
-
     }
 
     @Override
     public void performPostUpdateTL(ITLEntity entity) {
-
     }
 }
 

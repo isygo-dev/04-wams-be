@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.enums.IEnumLanguageLevelType;
+import eu.isygoit.enums.IEnumLanguageLevel;
 import eu.isygoit.model.schema.ComSchemaConstantSize;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import jakarta.persistence.Column;
@@ -30,6 +30,6 @@ public class EmployeeLanguages {
     @Builder.Default
     @ColumnDefault("'BEGINNER'")
     @Enumerated(EnumType.STRING)
-    @Column(name = SchemaColumnConstantName.C_LEVEL, length = IEnumLanguageLevelType.STR_ENUM_SIZE, nullable = false)
-    private IEnumLanguageLevelType.Types level = IEnumLanguageLevelType.Types.BEGINNER;
+    @Column(name = SchemaColumnConstantName.C_LEVEL, length = IEnumLanguageLevel.STR_ENUM_SIZE, nullable = false)
+    private IEnumLanguageLevel.Types level = IEnumLanguageLevel.Types.BEGINNER;
 }

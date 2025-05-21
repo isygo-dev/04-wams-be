@@ -21,7 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_RESUME_LINKED_FILE)
-public class ResumeLinkedFile extends LinkedFileModel<Long> implements ISAASEntity {
+public class ResumeLinkedFile extends LinkedFileModel<Long> implements IDomainAssignable {
 
     @Id
     @SequenceGenerator(name = "resume_multi_file_sequence_generator", sequenceName = "resume_multi_file_sequence", allocationSize = 1)

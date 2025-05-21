@@ -38,7 +38,7 @@ public class XMLIntegrationFlowValidationController {
         try {
             String xmlContent = new String(xmlFile.getBytes());
             String xsdContent = new String(xsdFile.getBytes());
-            boolean isValid = XmlHelper.validateXml(xmlContent, xsdContent, "http://www.w3.org/2001/XMLSchema");
+            boolean isValid = XmlHelper.validateXmlContent(xmlContent, xsdContent, "http://www.w3.org/2001/XMLSchema");
 
             if (isValid) {
                 return ResponseEntity.ok("XML is valid.");

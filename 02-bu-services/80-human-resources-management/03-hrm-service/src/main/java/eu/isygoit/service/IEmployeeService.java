@@ -5,14 +5,13 @@ import eu.isygoit.com.rest.service.IImageServiceMethods;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
-import eu.isygoit.enums.IEnumBinaryStatus;
+import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.model.Employee;
-import eu.isygoit.model.EmployeeLinkedFile;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The interface Employee service.
@@ -24,7 +23,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param code the code
      * @return the employee
      */
-    Employee findEmployeeByCode(String code);
+    Optional<Employee> findByCode(String code);
 
     /**
      * Find employee by domain list.
@@ -32,7 +31,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param domain the domain
      * @return the list
      */
-    List<Employee> findEmployeeByDomain(String domain);
+    List<Employee> findByDomain(String domain);
 
     /**
      * Update employee status employee.
@@ -41,27 +40,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param newStatus the new status
      * @return the employee
      */
-    Employee updateEmployeeStatus(Long id, IEnumBinaryStatus.Types newStatus);
-
-    /**
-     * Upload additional file list.
-     *
-     * @param id    the id
-     * @param files the files
-     * @return the list
-     * @throws IOException the io exception
-     */
-    List<EmployeeLinkedFile> uploadAdditionalFile(Long id, MultipartFile[] files) throws IOException;
-
-    /**
-     * Delete additional file boolean.
-     *
-     * @param parentId the parent id
-     * @param fileId   the file id
-     * @return the boolean
-     * @throws IOException the io exception
-     */
-    boolean deleteAdditionalFile(Long parentId, Long fileId) throws IOException;
+    Employee updateStatus(Long id, IEnumEnabledBinaryStatus.Types newStatus);
 
     /**
      * Gets object statistics.

@@ -4,7 +4,7 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.MultiFileService;
+import eu.isygoit.com.rest.service.MultiFileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
@@ -16,12 +16,10 @@ import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.JobOfferRepository;
 import eu.isygoit.service.IJobOfferMultiFileService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The type Job offer multi file service.
- */
 @Slf4j
 @Service
 @Transactional
@@ -34,11 +32,7 @@ public class JobOfferMultiFileService extends MultiFileService<Long, JobOffer, J
 
     private final AppProperties appProperties;
 
-    /**
-     * Instantiates a new Job offer multi file service.
-     *
-     * @param appProperties the app properties
-     */
+    @Autowired
     public JobOfferMultiFileService(AppProperties appProperties) {
         this.appProperties = appProperties;
     }

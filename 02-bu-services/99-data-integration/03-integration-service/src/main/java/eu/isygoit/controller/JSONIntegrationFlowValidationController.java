@@ -41,7 +41,7 @@ public class JSONIntegrationFlowValidationController {
             File tempSchemaFile = File.createTempFile("schemaFile", ".json");
             jsonFile.transferTo(tempJsonFile);
             schemaFile.transferTo(tempSchemaFile);
-            Set<ValidationMessage> validationMessages = JsonHelper.validateJson(tempJsonFile, tempSchemaFile, schemaLanguage);
+            Set<ValidationMessage> validationMessages = JsonHelper.validateJson(tempSchemaFile.getPath(), tempJsonFile.getPath(), schemaLanguage);
             tempJsonFile.delete();
             tempSchemaFile.delete();
 

@@ -4,15 +4,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.SrvRepo;
-import eu.isygoit.com.rest.service.impl.CodifiableService;
+import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.dto.common.*;
 import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
+import eu.isygoit.enums.IEnumEmailTemplate;
 import eu.isygoit.enums.IEnumInterviewSkillType;
 import eu.isygoit.enums.IEnumJobAppEventType;
-import eu.isygoit.enums.IEnumMsgTemplateName;
 import eu.isygoit.enums.IEnumPositionType;
 import eu.isygoit.exception.*;
 import eu.isygoit.mapper.InterviewSkillsMapper;
@@ -38,389 +38,385 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * The type Workflow board service.
- */
 @Slf4j
 @Service
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = WorkflowBoardRepository.class)
-public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard, WorkflowBoardRepository> implements IWorkflowBoardService {
+public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBoard, WorkflowBoardRepository> implements IWorkflowBoardService {
 
     private final AppProperties appProperties;
 
-    @Autowired
-    private WorkflowBoardRepository workflowBoardRepository;
-    @Autowired
-    private WorkflowRepository workflowRepository;
-    @Autowired
-    private JobOfferApplicationEventRepository jobApplicationEventRepository;
-    @Autowired
-    private InterviewEventRepository interviewEventRepository;
-    @Autowired
-    private JobOfferApplicationRepository jobApplicationRepository;
-    @Autowired
-    private InterviewSkillsMapper interviewSkillsMapper;
-    @Autowired
-    private GenericRepository genericRepository;
-    @Autowired
-    private CmsCalendarEventService cmsCalendarEventService;
-    @Autowired
-    private IResumeService resumeService;
+    private final WorkflowBoardRepository workflowBoardRepository;
+    private final WorkflowRepository workflowRepository;
+    private final JobOfferApplicationEventRepository jobApplicationEventRepository;
+    private final InterviewEventRepository interviewEventRepository;
+    private final JobOfferApplicationRepository jobApplicationRepository;
+    private final InterviewSkillsMapper interviewSkillsMapper;
+    private final GenericRepository genericRepository;
+    private final CmsCalendarEventService cmsCalendarEventService;
+    private final IResumeService resumeService;
+
+    private final IMsgService msgService;
+
+    private final WorkflowStateRepository workflowStateRepository;
 
     @Autowired
-    private IMsgService msgService;
-
-    @Autowired
-    private WorkflowStateRepository workflowStateRepository;
-
-    /**
-     * Instantiates a new Workflow board service.
-     *
-     * @param appProperties the app properties
-     */
-    public WorkflowBoardService(AppProperties appProperties) {
+    public WorkflowBoardService(AppProperties appProperties, WorkflowBoardRepository workflowBoardRepository, WorkflowRepository workflowRepository, JobOfferApplicationEventRepository jobApplicationEventRepository, InterviewEventRepository interviewEventRepository, JobOfferApplicationRepository jobApplicationRepository, InterviewSkillsMapper interviewSkillsMapper, GenericRepository genericRepository, CmsCalendarEventService cmsCalendarEventService, IResumeService resumeService, IMsgService msgService, WorkflowStateRepository workflowStateRepository) {
         this.appProperties = appProperties;
+        this.workflowBoardRepository = workflowBoardRepository;
+        this.workflowRepository = workflowRepository;
+        this.jobApplicationEventRepository = jobApplicationEventRepository;
+        this.interviewEventRepository = interviewEventRepository;
+        this.jobApplicationRepository = jobApplicationRepository;
+        this.interviewSkillsMapper = interviewSkillsMapper;
+        this.genericRepository = genericRepository;
+        this.cmsCalendarEventService = cmsCalendarEventService;
+        this.resumeService = resumeService;
+        this.msgService = msgService;
+        this.workflowStateRepository = workflowStateRepository;
     }
 
     @Override
     public WorkflowBoard beforeCreate(WorkflowBoard workflowBoard) {
-        Optional<Workflow> optional = workflowRepository.findByCodeIgnoreCase(workflowBoard.getWorkflow().getCode());
-        if (optional.isPresent()) {
-            workflowBoard.setWorkflow(optional.get());
-        }
+        workflowRepository.findByCodeIgnoreCase(workflowBoard.getWorkflow().getCode())
+                .ifPresent(workflow -> workflowBoard.setWorkflow(workflow));
         return super.beforeCreate(workflowBoard);
     }
 
     @Override
     public WorkflowBoard beforeUpdate(WorkflowBoard workflowBoard) {
-        Optional<Workflow> optional = workflowRepository.findByCodeIgnoreCase(workflowBoard.getWorkflow().getCode());
-        if (optional.isPresent()) {
-            workflowBoard.setWorkflow(optional.get());
-        }
+        workflowRepository.findByCodeIgnoreCase(workflowBoard.getWorkflow().getCode())
+                .ifPresent(workflow -> workflowBoard.setWorkflow(workflow));
         return super.beforeUpdate(workflowBoard);
     }
 
     @Override
     public List<WorkflowState> getStates(String wbCode) {
-        Optional<WorkflowBoard> optional = this.workflowBoardRepository.findByCodeIgnoreCase(wbCode);
-        if (optional.isPresent()) {
-            WorkflowBoard workflowBoard = optional.get();
-            return workflowBoard.getWorkflow().getWorkflowStates();
-        }
-        throw new WorkflowBoardNotFoundException("with code " + wbCode);
+        return this.workflowBoardRepository.findByCodeIgnoreCase(wbCode)
+                .map(workflowBoard -> workflowBoard.getWorkflow().getWorkflowStates())
+                .orElseThrow(() -> new WorkflowBoardNotFoundException("with code " + wbCode));
     }
 
     @Override
     public List<IBoardItem> getItems(String domain, String wbCode) throws ClassNotFoundException {
-        Optional<WorkflowBoard> optional = this.workflowBoardRepository.findByCodeIgnoreCase(wbCode);
-        if (optional.isPresent()) {
-            WorkflowBoard workflowBoard = optional.get();
-            if (workflowBoard.getWorkflow() == null) {
-                throw new WorkflowNotParametrizeException("wb code " + wbCode);
-            }
+        WorkflowBoard workflowBoard = this.workflowBoardRepository
+                .findByCodeIgnoreCase(wbCode)
+                .orElseThrow(() -> new WorkflowBoardNotFoundException("with code " + wbCode));
 
-            if (CollectionUtils.isEmpty(workflowBoard.getWorkflow().getWorkflowStates())) {
-                throw new WorkflowStatesNotParametrizeException("wf code " + workflowBoard.getWorkflow().getCode());
-            }
+        Workflow workflow = Optional.ofNullable(workflowBoard.getWorkflow())
+                .orElseThrow(() -> new WorkflowNotParametrizeException("wb code " + wbCode));
 
-            Optional<WorkflowState> workflowStateOptional = workflowBoard.getWorkflow().getWorkflowStates().stream()
-                    .filter(workflowState -> workflowState.getPositionType().equals(IEnumPositionType.Types.INIT))
-                    .findFirst();
+        List<WorkflowState> workflowStates = Optional.ofNullable(workflow.getWorkflowStates())
+                .filter(ws -> !CollectionUtils.isEmpty(ws))  // using CollectionUtils.isEmpty
+                .orElseThrow(() -> new WorkflowStatesNotParametrizeException("wf code " + workflow.getCode()));
 
-            if (!workflowStateOptional.isPresent()) {
-                workflowStateOptional = workflowBoard.getWorkflow().getWorkflowStates().stream().findFirst();
-            }
+        WorkflowState initialState = workflowStates.stream()
+                .filter(ws -> ws.getPositionType().equals(IEnumPositionType.Types.INIT))
+                .findFirst()
+                .orElseGet(() -> workflowStates.get(0)); // Default to first state
 
-            JpaPagingAndSortingSAASRepository repository = (JpaPagingAndSortingSAASRepository) genericRepository.getRepository(workflowBoard.getItem());
-            Optional<WorkflowState> finalWorkflowStateOptional = workflowStateOptional;
-            return (List<IBoardItem>) repository.findByDomainIgnoreCaseIn(Arrays.asList(domain)).stream().map(o -> BoardItemModelDto.builder()
-                            .id(((IBoardItem) o).getId())
-                            .code(((IBoardItem) o).getCode())
-                            .state(((IBoardItem) o).getState() != null && stateExist((String) ((IBoardItem) o).getState()) ? (String) ((IBoardItem) o).getState() : finalWorkflowStateOptional.get().getCode())
-                            .itemName(((IBoardItem) o).getItemName())
-                            .createDate(((IBoardItem) o).getCreateDate())
-                            .updateDate(((IBoardItem) o).getUpdateDate())
-                            .imagePath(((IBoardItem) o).getImagePath())
-                            .itemImage(((IBoardItem) o).getItemImage())
-                            .events(((IBoardItem<?>) o).getEvents().stream()
-                                    .map(e -> {
-                                        if (isEventNonDeletedInCalendar(domain, e)) {
-                                            return MiniBoardEventDto.builder()
-                                                    .id(e.getId())
-                                                    .title(e.getTitle())
-                                                    .type(((Enum) e.getType()).name()).build();
-                                        } else {
-                                            return null;
-                                        }
-                                    })
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList())
-                            )
-                            .build())
-                    .toList();
-        } else {
-            throw new WorkflowBoardNotFoundException("with code " + wbCode);
-        }
+        JpaPagingAndSortingSAASRepository repository =
+                (JpaPagingAndSortingSAASRepository) genericRepository.getRepository(workflowBoard.getItem());
+
+        return (List<IBoardItem>) repository.findByDomainIgnoreCaseIn(Collections.singletonList(domain)).stream()
+                .map(obj -> {
+                    IBoardItem item = (IBoardItem) obj;
+                    String state = (item.getState() != null && stateExists((String) item.getState()))
+                            ? (String) item.getState()
+                            : initialState.getCode();
+
+                    List<MiniBoardEventDto> events = (List<MiniBoardEventDto>) item.getEvents().stream()
+                            .filter(e -> isEventNonDeletedInCalendar(domain, (IBoardEvent) e))
+                            .map(e -> MiniBoardEventDto.builder()
+                                    .id(((IBoardEvent) e).getId())
+                                    .title(((IBoardEvent) e).getTitle())
+                                    .type(((Enum<?>) ((IBoardEvent) e).getType()).name())
+                                    .build())
+                            .collect(Collectors.toList());
+
+                    return BoardItemModelDto.builder()
+                            .id(item.getId())
+                            .code(item.getCode())
+                            .state(state)
+                            .itemName(item.getItemName())
+                            .createDate(item.getCreateDate())
+                            .updateDate(item.getUpdateDate())
+                            .imagePath(item.getImagePath())
+                            .itemImage(item.getItemImage())
+                            .events(events)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
-    /**
-     * State exist boolean.
-     *
-     * @param code the code
-     * @return the boolean
-     */
-    boolean stateExist(String code) {
+    private boolean stateExists(String code) {
         Optional<WorkflowState> workflowStateOptional = workflowStateRepository.findByCodeIgnoreCase(code);
         return workflowStateOptional.isPresent();
     }
 
     private boolean isEventNonDeletedInCalendar(String domain, IBoardEvent boardEvent) {
         try {
-            ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByDomainAndCalendarAndCode(RequestContextDto.builder().build(),
-                    domain, boardEvent.getCalendar(), boardEvent.getEventCode());
-            if (!result.getStatusCode().is2xxSuccessful()) {
-                log.warn("Interview read failed {}", boardEvent);
-            }
-            VCalendarEventDto vCalendarEventDto = result.getBody();
-            if (vCalendarEventDto == null) {
-                //TODO delete element by type if doesn't exist
-                return false;
-            }
+            return Optional.ofNullable(
+                            cmsCalendarEventService.eventByDomainAndCalendarAndCode(
+                                    RequestContextDto.builder().build(), domain, boardEvent.getCalendar(), boardEvent.getEventCode()))
+                    .filter(response -> {
+                        if (!response.getStatusCode().is2xxSuccessful()) {
+                            log.warn("Interview read failed: {}", boardEvent);
+                            return false;
+                        }
+                        return true;
+                    })
+                    .map(ResponseEntity::getBody)
+                    .isPresent();
         } catch (Exception e) {
-            log.error("Remote feign call failed : ", e);
-            //throw new RemoteCallFailedException(e);
+            log.error("Remote feign call failed: ", e);
+            return false;
         }
-        return true;
     }
 
 
     @Override
     public AccountModelDto getCandidateData(String code) {
-        Optional<JobOfferApplication> jobApplicationOptional = jobApplicationRepository.findByCodeIgnoreCase(code);
-
-        if (jobApplicationOptional.isPresent()) {
-            Resume resume = jobApplicationOptional.get().getResume();
-            return AccountDto.builder()
-                    .id(resume.getId())
-                    .fullName(resume.getFullName())
-                    .code(resume.getCode())
-                    .email(resume.getEmail()).build();
-        }
-        throw new NotFoundException("Job application not found with code" + code);
+        return jobApplicationRepository.findByCodeIgnoreCase(code)
+                .map(jobOfferApplication -> AccountDto.builder()
+                        .id(jobOfferApplication.getResume().getId())
+                        .fullName(jobOfferApplication.getResume().getFullName())
+                        .code(jobOfferApplication.getResume().getCode())
+                        .email(jobOfferApplication.getResume().getEmail()).build())
+                .orElseThrow(() -> new NotFoundException("Job application not found with code" + code));
     }
 
     @Override
     public JobOfferApplicationInterviewEventRequestDto getInterviewEvent(String domain, String code, Long id) {
-        Optional<JobOfferApplicationEvent> jobApplicationEventOptional = jobApplicationEventRepository.findById(id);
-        Optional<JobOfferApplication> jobApplicationOptional = jobApplicationRepository.findByCodeIgnoreCase(code);
+        // Use orElseThrow to simplify handling of Optional values and eliminate nested ifPresent() checks
+        JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Job application event not found with id" + id));
 
-        if (jobApplicationEventOptional.isPresent() && jobApplicationOptional.isPresent()) {
-            JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventOptional.get();
-            Resume resume = jobApplicationOptional.get().getResume();
-            Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(id);
+        JobOfferApplication jobApplication = jobApplicationRepository.findByCodeIgnoreCase(code)
+                .orElseThrow(() -> new NotFoundException("Job application not found with code " + code));
 
-            JobOfferApplicationInterviewEventRequestDto interviewEventRequestDto = JobOfferApplicationInterviewEventRequestDto.builder()
-                    //TODO change with JWT token domain
-                    .id(id)
-                    .domain(domain)
-                    .title(jobApplicationEvent.getTitle())
-                    .type(IEnumJobAppEventType.Types.INTERVIEW)
-                    .startDateTime(new Date())
-                    .endDateTime(new Date())
-                    .participants(jobApplicationEvent.getParticipants())
-                    .location(jobApplicationEvent.getLocation())
-                    .candidate(CandidateDto.builder()
-                            .accountCode(resumeService.getResumeAccountCode(resume.getCode()))
-                            .id(resume.getId())
-                            .fullName(resume.getFullName())
-                            .code(resume.getCode())
-                            .email(resume.getEmail()).build())
-                    .comment(jobApplicationEvent.getComment()).build();
-            if (interviewOptional.isPresent()) {
-                Interview interview = interviewOptional.get();
-                interviewEventRequestDto.setQuizCode(interview.getQuizCode());
-                interviewEventRequestDto.setSkills(interviewSkillsMapper.listEntityToDto(interview.getSkills()));
-            }
-            try {
-                ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByDomainAndCalendarAndCode(RequestContextDto.builder().build(),
-                        interviewEventRequestDto.getDomain(), interviewEventRequestDto.getType().name(), jobApplicationEvent.getEventCode());
-                if (!result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
-                    log.warn("Interview creation failed");
-                }
-                VCalendarEventDto vCalendarEventDto = result.getBody();
-                if (vCalendarEventDto != null) {
-                    interviewEventRequestDto.setStartDateTime(vCalendarEventDto.getStartDate());
-                    interviewEventRequestDto.setEndDateTime(vCalendarEventDto.getEndDate());
-                } else {
-                    jobApplicationEventRepository.deleteById(jobApplicationEvent.getId());
-                    interviewEventRepository.deleteById(interviewOptional.get().getId());
+        // Build DTO
+        JobOfferApplicationInterviewEventRequestDto interviewEventRequestDto = JobOfferApplicationInterviewEventRequestDto.builder()
+                .id(id)
+                .domain(domain)
+                .title(jobApplicationEvent.getTitle())
+                .type(IEnumJobAppEventType.Types.INTERVIEW)
+                .startDateTime(new Date())
+                .endDateTime(new Date())
+                .participants(jobApplicationEvent.getParticipants())
+                .location(jobApplicationEvent.getLocation())
+                .candidate(CandidateDto.builder()
+                        .accountCode(resumeService.getResumeAccountCode(jobApplication.getResume().getCode()))
+                        .id(jobApplication.getResume().getId())
+                        .fullName(jobApplication.getResume().getFullName())
+                        .code(jobApplication.getResume().getCode())
+                        .email(jobApplication.getResume().getEmail())
+                        .build())
+                .comment(jobApplicationEvent.getComment())
+                .build();
 
-                }
-            } catch (Exception e) {
-                log.error("Remote feign call failed : ", e);
-                //throw new RemoteCallFailedException(e);
+        Optional<Interview> optionalInterview = interviewEventRepository.findByJobApplicationEvent_Id(id);  // null if no interview is found
+
+        // If there's an associated interview, set its details in the DTO
+        optionalInterview.ifPresent(interview -> {
+            interviewEventRequestDto.setQuizCode(interview.getQuizCode());
+            interviewEventRequestDto.setSkills(interviewSkillsMapper.listEntityToDto(interview.getSkills()));
+        });
+
+        // Call the CMS service and update DTO if successful
+        try {
+            ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByDomainAndCalendarAndCode(
+                    RequestContextDto.builder().build(),
+                    interviewEventRequestDto.getDomain(),
+                    interviewEventRequestDto.getType().name(),
+                    jobApplicationEvent.getEventCode());
+
+            if (!result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
+                log.warn("Interview creation failed");
             }
 
-            return interviewEventRequestDto;
+            VCalendarEventDto vCalendarEventDto = result.getBody();
+            if (vCalendarEventDto != null) {
+                interviewEventRequestDto.setStartDateTime(vCalendarEventDto.getStartDate());
+                interviewEventRequestDto.setEndDateTime(vCalendarEventDto.getEndDate());
+            } else {
+                // Cleanup if no valid calendar event is returned
+                jobApplicationEventRepository.deleteById(jobApplicationEvent.getId());
+                optionalInterview.ifPresent(interview -> {
+                    interviewEventRepository.deleteById(interview.getId());
+                });
+            }
+        } catch (Exception e) {
+            log.error("Remote feign call failed : ", e);
+            // Optional: Uncomment the next line to throw an exception
+            // throw new RemoteCallFailedException(e);
         }
-        throw new NotFoundException("Job application event not found with id" + id);
+
+        return interviewEventRequestDto;
     }
+
 
     @Override
     public JobOfferApplicationInterviewEventRequestDto addInterviewEvent(String domain, String code, String eventType, JobOfferApplicationInterviewEventRequestDto event) {
-        Optional<JobOfferApplication> jobApplication = jobApplicationRepository.findByCodeIgnoreCase(code);
-        VCalendarEventDto vCalendarEventDto = VCalendarEventDto.builder()
-                .name(event.getTitle())
-                .title(event.getTitle())
-                .domain(domain)
-                .calendar(event.getType().name())
-                .startDate(event.getStartDateTime())
-                .endDate(event.getEndDateTime())
-                .type(event.getType().name()).build();
-        try {
-            ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.saveEvent(//RequestContextDto.builder().build(),
-                    vCalendarEventDto);
-            if (!result.getStatusCode().is2xxSuccessful()) {
-                log.warn("Interview creation failed {}", event);
-            }
-            vCalendarEventDto = result.getBody();
-        } catch (Exception e) {
-            log.error("Remote feign call failed : ", e);
-            //throw new RemoteCallFailedException(e);
-        }
+        jobApplicationRepository.findByCodeIgnoreCase(code)
+                .ifPresentOrElse(jobApp -> {
+                            VCalendarEventDto vCalendarEventDto = VCalendarEventDto.builder()
+                                    .name(event.getTitle())
+                                    .title(event.getTitle())
+                                    .domain(domain)
+                                    .calendar(event.getType().name())
+                                    .startDate(event.getStartDateTime())
+                                    .endDate(event.getEndDateTime())
+                                    .type(event.getType().name()).build();
 
+                            try {
+                                vCalendarEventDto = Optional.ofNullable(cmsCalendarEventService.saveEvent(vCalendarEventDto))
+                                        .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
+                                        .map(result -> result.getBody())
+                                        .orElse(vCalendarEventDto);
+                            } catch (Exception e) {
+                                log.error("Remote feign call failed : ", e);
+                                //throw new RemoteCallFailedException(e);
+                            }
 
-        if (jobApplication.isPresent()) {
-            JobOfferApplication jobApp = jobApplication.get();
-            List<InterviewSkills> interviewSkillsList = new ArrayList<>();
-            if (jobApp.getJobOffer() != null && jobApp.getJobOffer().getDetails() != null && !CollectionUtils.isEmpty(jobApp.getJobOffer().getDetails().getHardSkills())) {
-                jobApp.getJobOffer().getDetails().getHardSkills().forEach(skill -> {
-                    interviewSkillsList.add(InterviewSkills.builder()
-                            .name(skill.getName())
-                            .type(IEnumInterviewSkillType.Types.JOB)
-                            .build());
-                });
-            }
+                            List<InterviewSkills> interviewSkillsList = new ArrayList<>();
 
-            if (jobApp.getJobOffer() != null && jobApp.getJobOffer().getDetails() != null && !CollectionUtils.isEmpty(jobApp.getJobOffer().getDetails().getSoftSkills())) {
-                jobApp.getJobOffer().getDetails().getSoftSkills().forEach(skill -> {
-                    interviewSkillsList.add(InterviewSkills.builder()
-                            .name(skill.getName())
-                            .type(IEnumInterviewSkillType.Types.JOB)
-                            .build());
-                });
-            }
+                            interviewSkillsList.addAll(Optional.ofNullable(jobApp.getJobOffer())
+                                    .map(JobOffer::getDetails)
+                                    .map(JobOfferDetails::getHardSkills)
+                                    .orElse(Collections.emptyList()) // Avoid null checks
+                                    .stream()
+                                    .map(skill -> InterviewSkills.builder()
+                                            .name(skill.getName())
+                                            .type(IEnumInterviewSkillType.Types.JOB)
+                                            .build())
+                                    .collect(Collectors.toList()));
 
-            if (jobApp.getResume() != null && jobApp.getResume().getDetails() != null && !CollectionUtils.isEmpty(jobApp.getResume().getDetails().getSkills())) {
-                jobApp.getResume().getDetails().getSkills().forEach(skill -> {
-                    interviewSkillsList.add(InterviewSkills.builder()
-                            .name(skill.getName())
-                            .type(IEnumInterviewSkillType.Types.RESUME)
-                            .build());
-                });
-            }
+                            interviewSkillsList.addAll(Optional.ofNullable(jobApp.getJobOffer())
+                                    .map(JobOffer::getDetails)
+                                    .map(JobOfferDetails::getSoftSkills)
+                                    .orElse(Collections.emptyList()) // Avoid null checks
+                                    .stream()
+                                    .map(skill -> InterviewSkills.builder()
+                                            .name(skill.getName())
+                                            .type(IEnumInterviewSkillType.Types.JOB)
+                                            .build())
+                                    .collect(Collectors.toList()));
 
-            JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventRepository.save(
-                    JobOfferApplicationEvent.builder()
-                            .eventCode(vCalendarEventDto.getCode())
-                            .calendar(vCalendarEventDto.getCalendar())
-                            .type(event.getType())
-                            .title(event.getTitle())
-                            .comment(event.getComment())
-                            .participants(event.getParticipants())
-                            .location(event.getLocation())
-                            .build()
-            );
+                            interviewSkillsList.addAll(Optional.ofNullable(jobApp.getResume())
+                                    .map(Resume::getDetails)
+                                    .map(ResumeDetails::getSkills)
+                                    .orElse(Collections.emptyList()) // Avoid null checks
+                                    .stream()
+                                    .map(skill -> InterviewSkills.builder()
+                                            .name(skill.getName())
+                                            .type(IEnumInterviewSkillType.Types.RESUME)
+                                            .build())
+                                    .collect(Collectors.toList()));
 
-            //Setting event to job application :
-            List<JobOfferApplicationEvent> jobApplicationEventList = new ArrayList<>(jobApplication.get().getJobApplicationEvents());
-            jobApplicationEventList.add(jobApplicationEvent);
-            jobApp.setJobApplicationEvents(jobApplicationEventList);
+                            JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventRepository.save(
+                                    JobOfferApplicationEvent.builder()
+                                            .eventCode(vCalendarEventDto.getCode())
+                                            .calendar(vCalendarEventDto.getCalendar())
+                                            .type(event.getType())
+                                            .title(event.getTitle())
+                                            .comment(event.getComment())
+                                            .participants(event.getParticipants())
+                                            .location(event.getLocation())
+                                            .build()
+                            );
 
-            interviewEventRepository.save(
-                    Interview.builder()
-                            .jobApplicationEvent(jobApplicationEvent)
-                            .skills(interviewSkillsList)
-                            .quizCode(event.getQuizCode())
-                            .build()
-            );
-            jobApplicationRepository.save(jobApp);
-            return event;
-        }
-        throw new NotFoundException("Job application not found with code : " + code);
+                            //Setting event to job application :
+                            List<JobOfferApplicationEvent> jobApplicationEventList = new ArrayList<>(jobApp.getJobApplicationEvents());
+                            jobApplicationEventList.add(jobApplicationEvent);
+                            jobApp.setJobApplicationEvents(jobApplicationEventList);
+
+                            interviewEventRepository.save(
+                                    Interview.builder()
+                                            .jobApplicationEvent(jobApplicationEvent)
+                                            .skills(interviewSkillsList)
+                                            .quizCode(event.getQuizCode())
+                                            .build()
+                            );
+                            jobApplicationRepository.save(jobApp);
+                        },
+                        () -> {
+                            new JobOfferAppNotFoundException("with code : " + code);
+                        });
+        return event;
     }
 
     @Override
     public JobOfferApplicationInterviewEventRequestDto editInterviewEvent(String code, String eventType, JobOfferApplicationInterviewEventRequestDto event) {
-        Optional<JobOfferApplication> jobApplication = jobApplicationRepository.findByCodeIgnoreCase(code);
-        if (jobApplication.isPresent()) {
-            Optional<JobOfferApplicationEvent> jobApplicationEventOptional = jobApplicationEventRepository.findById(event.getId());
-            if (jobApplicationEventOptional.isPresent()) {
-                JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventOptional.get();
-                Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(event.getId());
-                try {
-                    ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByDomainAndCalendarAndCode(
-                            RequestContextDto.builder().build(),
-                            jobApplication.get().getDomain(),
-                            jobApplicationEvent.getCalendar(), jobApplicationEvent.getEventCode());
-                    if (!result.getStatusCode().is2xxSuccessful()) {
-                        log.warn("Interview read failed {}", event);
-                    }
+        jobApplicationRepository.findByCodeIgnoreCase(code)
+                .ifPresentOrElse(jobApp -> {
+                            jobApplicationEventRepository.findById(event.getId())
+                                    .ifPresent(jobOfferApplicationEvent -> {
+                                        Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(event.getId());
+                                        try {
+                                            Optional.ofNullable(cmsCalendarEventService.eventByDomainAndCalendarAndCode(
+                                                            RequestContextDto.builder().build(),
+                                                            jobApp.getDomain(),
+                                                            jobOfferApplicationEvent.getCalendar(), jobOfferApplicationEvent.getEventCode()))
+                                                    .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
+                                                    .map(result -> result.getBody())
+                                                    .ifPresentOrElse(vCalendarEventDto1 -> {
+                                                                vCalendarEventDto1.setName(event.getTitle());
+                                                                vCalendarEventDto1.setTitle(event.getTitle());
+                                                                vCalendarEventDto1.setStartDate(event.getStartDateTime());
+                                                                vCalendarEventDto1.setEndDate(event.getEndDateTime());
+                                                                ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(//RequestContextDto.builder().build(),
+                                                                        vCalendarEventDto1.getId(),
+                                                                        vCalendarEventDto1);
+                                                                if (!updateResult.getStatusCode().is2xxSuccessful()) {
+                                                                    log.warn("Interview update failed {}", event);
+                                                                }
+                                                            },
+                                                            () -> {
+                                                                jobApplicationEventRepository.deleteById(event.getId());
+                                                                if (interviewOptional.isPresent()) {
+                                                                    interviewEventRepository.deleteById(interviewOptional.get().getId());
+                                                                }
+                                                                throw new NotFoundException("Event not found with id : " + event.getId());
+                                                            });
+                                        } catch (Exception e) {
+                                            log.error("Remote feign call failed : ", e);
+                                            //throw new RemoteCallFailedException(e);
+                                        }
 
-                    VCalendarEventDto vCalendarEventDto = result.getBody();
-                    if (vCalendarEventDto != null) {
-                        vCalendarEventDto.setName(event.getTitle());
-                        vCalendarEventDto.setTitle(event.getTitle());
-                        vCalendarEventDto.setStartDate(event.getStartDateTime());
-                        vCalendarEventDto.setEndDate(event.getEndDateTime());
-                        ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(//RequestContextDto.builder().build(),
-                                vCalendarEventDto.getId(),
-                                vCalendarEventDto);
-                        if (!updateResult.getStatusCode().is2xxSuccessful()) {
-                            log.warn("Interview update failed {}", event);
-                        }
-                    } else {
-                        jobApplicationEventRepository.deleteById(event.getId());
-                        interviewEventRepository.deleteById(interviewOptional.get().getId());
-                        throw new NotFoundException("Event not found with id : " + event.getId());
-                    }
-                } catch (Exception e) {
-                    log.error("Remote feign call failed : ", e);
-                    //throw new RemoteCallFailedException(e);
-                }
 
+                                        if (interviewOptional.isPresent()) {
+                                            //TODO save dates into cms
+                                            jobOfferApplicationEvent = jobApplicationEventRepository.save(
+                                                    JobOfferApplicationEvent.builder()
+                                                            .id(event.getId())
+                                                            .eventCode(jobOfferApplicationEvent.getEventCode())
+                                                            .calendar(jobOfferApplicationEvent.getCalendar())
+                                                            .type(jobOfferApplicationEvent.getType())
+                                                            .title(event.getTitle())
+                                                            .comment(event.getComment())
+                                                            .participants(event.getParticipants())
+                                                            .location(event.getLocation())
+                                                            .build()
+                                            );
 
-                if (interviewOptional.isPresent()) {
-                    //TODO save dates into cms
-                    jobApplicationEvent = jobApplicationEventRepository.save(
-                            JobOfferApplicationEvent.builder()
-                                    .id(event.getId())
-                                    .eventCode(jobApplicationEvent.getEventCode())
-                                    .calendar(jobApplicationEvent.getCalendar())
-                                    .type(jobApplicationEvent.getType())
-                                    .title(event.getTitle())
-                                    .comment(event.getComment())
-                                    .participants(event.getParticipants())
-                                    .location(event.getLocation())
-                                    .build()
-                    );
-
-                    interviewEventRepository.save(
-                            Interview.builder()
-                                    .id(interviewOptional.get().getId())
-                                    .jobApplicationEvent(jobApplicationEvent)
-                                    .quizCode(event.getQuizCode())
-                                    .skills(interviewSkillsMapper.listDtoToEntity(event.getSkills()))
-                                    .build()
-                    );
-                    return event;
-                }
-            }
-        }
-        throw new NotFoundException("Job application not found with code : " + code);
+                                            interviewEventRepository.save(
+                                                    Interview.builder()
+                                                            .id(interviewOptional.get().getId())
+                                                            .jobApplicationEvent(jobOfferApplicationEvent)
+                                                            .quizCode(event.getQuizCode())
+                                                            .skills(interviewSkillsMapper.listDtoToEntity(event.getSkills()))
+                                                            .build()
+                                            );
+                                        }
+                                    });
+                        },
+                        () -> {
+                            throw new JobOfferAppNotFoundException("with code : " + code);
+                        });
+        return event;
     }
 
 
@@ -429,7 +425,7 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
         return workflowBoardRepository.findByCodeIgnoreCase(domain)
                 .stream().filter(wfb -> wfb.getWorkflow().getCode().equals(workflowCode))
                 .flatMap(workflowBoard -> workflowBoard.getWatchers().stream()).distinct()
-                .toList();
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -451,7 +447,7 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
 
         //Check existence and get workflow
         Workflow workflow = workflowBoard.getWorkflow();
-        if (workflow == null) {
+        if (Objects.isNull(workflow)) {
             throw new WorkflowBoardWithNoWorkflowException("with code " + bpmEventRequest.getWbCode());
         }
 
@@ -521,8 +517,8 @@ public class WorkflowBoardService extends CodifiableService<Long, WorkflowBoard,
                 .subject(EmailSubjects.ITEM_STATUS_CHANGED_EMAIL_SUBJECT)
                 .toAddr(String.join(",",
                         Stream.concat(workflowBoard.getWatchers().stream(),
-                                workflowTransition.getWatchers().stream()).distinct().toList()))
-                .templateName(IEnumMsgTemplateName.Types.WFB_UPDATED_TEMPLATE)
+                                workflowTransition.getWatchers().stream()).distinct().collect(Collectors.toUnmodifiableList())))
+                .templateName(IEnumEmailTemplate.Types.WFB_UPDATED_TEMPLATE)
                 .sent(true)
                 .variables(MailMessageDto.getVariablesAsString(variables))
                 .build();

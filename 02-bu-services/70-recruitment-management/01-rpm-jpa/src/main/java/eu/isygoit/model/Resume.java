@@ -54,7 +54,7 @@ import java.util.List;
         condition = SchemaColumnConstantName.C_DOMAIN + "= :domain and " + SchemaColumnConstantName.C_FIRST_NAME + "= :firstName"
 )
 public class Resume extends AuditableCancelableEntity<Long>
-        implements ISAASEntity, ICodifiable, ITLEntity, IFileEntity, IMultiFileEntity<ResumeLinkedFile>, IImageEntity {
+        implements IDomainAssignable, ICodeAssignable, ITLEntity, IFileEntity, IMultiFileEntity<ResumeLinkedFile>, IImageEntity {
 
     @Id
     @SequenceGenerator(name = "resume_sequence_generator", sequenceName = "resume_sequence", allocationSize = 1)
