@@ -29,4 +29,18 @@ public interface SchemaTableConstantName extends ComSchemaTableConstantName {
      * The constant T_CANDIDATE_QUIZ_ANSWER.
      */
     String T_CANDIDATE_QUIZ_ANSWER = "T_CANDIDATE_QUIZ_ANSWER";
+    String T_TEMPLATE ="T_Template";
+    String T_AUTHOR ="T_AUTHOR";
+    String T_CATEGORY="T_Category";
+    String T_TAG="T_Tag";
+    String T_DOCUMENT="T_Document";
+    String T_SHAREDWITH="T_SharedWith";
+    String T_DOCCOMMENT="T_Document_Comment";
+    String T_TEMPLATE_FILE ="T_TEMPLATE_FILE";
+    String T_TEMPLATE_FILE_TAGS="T_template_FILE_TAGS";
+    String T_CATEGORY_TAG="T_CATEGORY_TAG";
+    String T_AUTHOR_FILE="T_AUTHOR_FILE";
+    String T_AUTHOR_FILE_TAGS="T_AUTHOR_FILE_TAGS";
+    String T_FAVORITE_TEMPLATE="T_FAVORITE_TEMPLATE";
+    String T_USER_TEMPLATE_PREFERENCE="T_USER_TEMPLATE_PREFERENCE";
 }
