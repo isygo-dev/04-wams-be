@@ -1,5 +1,7 @@
 package eu.isygoit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.enums.*;
 import eu.isygoit.model.jakarta.AuditableEntity;
@@ -12,7 +14,9 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -88,17 +92,23 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name =SchemaColumnConstantName.C_DOC , referencedColumnName = SchemaColumnConstantName.C_ID,
             foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_DOCUMENTS))
+    @JsonIgnore
     private List<Document> documents;
 
     @ManyToOne
     @JoinColumn(name = SchemaColumnConstantName.C_AUTH, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_REF_AUTHOR))
+    @JsonIgnoreProperties({"templates", "hibernateLazyInitializer", "handler"})
     private Author author;
 
     @ManyToOne
+
     @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
+    @JsonIgnore
     private Category category;
 
-
+    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<TemplateFavorite> favorites = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -106,9 +116,11 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
             joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE_ID, referencedColumnName = SchemaColumnConstantName.C_ID),
             inverseJoinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TAG_ID, referencedColumnName = ComSchemaColumnConstantName.C_ID)
     )
+    @JsonIgnoreProperties({"templates", "hibernateLazyInitializer", "handler"})
     private List<Tag> tags;
 
-
+//    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<UserTemplatePreference> userPreferences = new HashSet<>();
 
 
 

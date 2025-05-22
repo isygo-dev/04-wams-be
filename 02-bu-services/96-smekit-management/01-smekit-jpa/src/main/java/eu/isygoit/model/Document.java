@@ -57,6 +57,16 @@ public class Document  extends AuditableEntity<Long> implements ISAASEntity, ICo
     @ColumnDefault("'false'")
     private Boolean shared = Boolean.FALSE;
 
+//    @Column(name = "is_template_copy", nullable = false)
+//    @Builder.Default
+//    private Boolean isTemplateCopy = false;
+//
+//    @Column(name = "original_document_id")
+//    private Long originalDocumentId;
+//
+//    @Column(name = "content", columnDefinition = "TEXT")
+//    private String content;
+
     @Builder.Default
     @ColumnDefault("'EDITING'")
     @Enumerated(EnumType.STRING)

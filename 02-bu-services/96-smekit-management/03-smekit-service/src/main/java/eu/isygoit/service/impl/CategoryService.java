@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,13 +42,16 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
     private final ITagService tagService;
     private  final TemplateRepository templateRepository ;
 
+    private  final  CategoryRepository categoryRepository;
     @Autowired
     private TagRepository tagRepository;
 
-    public CategoryService(AppProperties appProperties, ITagService tagService, TemplateRepository templateRepository) {
+    public CategoryService(AppProperties appProperties, ITagService tagService, TemplateRepository templateRepository, CategoryRepository categoryRepository, TagRepository tagRepository) {
         this.appProperties = appProperties;
         this.tagService = tagService;
         this.templateRepository = templateRepository;
+        this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
     }
 
     public String getUploadDirectory() {
@@ -218,4 +224,6 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
         }
         return templateRepository.countByCategoryId(categoryId);
     }
+
+
 }

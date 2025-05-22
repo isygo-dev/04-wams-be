@@ -46,5 +46,11 @@ public interface SchemaColumnConstantName extends ComSchemaColumnConstantName {
     String C_TEMPLATE_ID="C_TEMPLATE_ID";
     String C_TAG_ID="C_TAG_ID";
     String C_AUTHOR="C_AUTHOR";
+    String C_CREATED_AT="C_CREATED_AT";
+    String C_CUSTOM_NAME="C_CUSTOM_NAME";
+    String C_USAGE_COUNT="C_USAGE_COUNT";
+    String C_LAST_USED="C_LAST_USED";
+    String C_IS_FAVORITE="C_IS_FAVORITE";
+    String C_NOTES="C_NOTES";
 }
 

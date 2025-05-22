@@ -9,8 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @SuperBuilder
@@ -32,4 +37,5 @@ public class TemplateFile  extends FileEntity<Long> implements IFileEntity  {
             foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_TEMPLATE_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
-}
+
+   }

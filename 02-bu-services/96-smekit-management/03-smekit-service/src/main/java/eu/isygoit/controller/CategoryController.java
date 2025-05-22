@@ -56,20 +56,5 @@ public class CategoryController extends MappedCrudController<Long, Category, Cat
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping("/template-counts")
-    @Operation(summary = "Obtenir le nombre de templates par catégorie",
-            description = "Renvoie une map avec l'ID de catégorie comme clé et le nombre de templates comme valeur")
-    public ResponseEntity<Map<Long, Integer>> getTemplateCounts() {
-        Map<Long, Integer> counts = categoryService.countTemplatesByCategory();
-        return ResponseEntity.ok(counts);
-    }
 
-    @GetMapping("/template-count")
-    @Operation(summary = "Obtenir le nombre de templates pour une catégorie spécifique",
-            description = "Renvoie le nombre de templates pour l'ID de catégorie spécifié ou tous les templates si aucun ID n'est spécifié")
-    public ResponseEntity<Integer> getTemplateCountForCategory(
-            @RequestParam(value = "categoryId", required = false) Long categoryId) {
-        int count = categoryService.countTemplatesForCategory(categoryId);
-        return ResponseEntity.ok(count);
-    }
 }

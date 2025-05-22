@@ -7,6 +7,7 @@ import eu.isygoit.com.rest.service.impl.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 
+import eu.isygoit.enums.IEnumDocTempStatus;
 import eu.isygoit.model.*;
 import eu.isygoit.model.schema.ComSchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -64,6 +66,7 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
     public List<Template> getTemplatesByCategory(Long categoryId) {
         return templateRepository.findByCategoryId(categoryId);
     }
+
 
 
 }

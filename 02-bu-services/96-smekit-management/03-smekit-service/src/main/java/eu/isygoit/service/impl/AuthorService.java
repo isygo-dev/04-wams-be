@@ -5,7 +5,6 @@ import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.impl.FileImageService;
-import eu.isygoit.com.rest.service.impl.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
@@ -20,6 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 @Slf4j
 @Service
 @Transactional
@@ -29,9 +33,11 @@ import org.springframework.transaction.annotation.Transactional;
 @DmsLinkFileService(DmsLinkedFileService.class)
 public class AuthorService extends FileImageService<Long, Author, AuthorRepository> implements IAutherService {
     private final AppProperties appProperties;
+    private final AuthorRepository authorRepository;
 
-    public AuthorService(AppProperties appProperties) {
+    public AuthorService(AppProperties appProperties, AuthorRepository authorRepository) {
         this.appProperties = appProperties;
+        this.authorRepository = authorRepository;
     }
     @Override
     public String getUploadDirectory() {
@@ -51,5 +57,33 @@ public class AuthorService extends FileImageService<Long, Author, AuthorReposito
                 .build();
     }
 
+    public double getMonthlyTrend(LocalDate referenceDate) {
+        Date startOfMonth = convertToDate(referenceDate.withDayOfMonth(1).atStartOfDay());
+        Date startOfLastMonth = convertToDate(referenceDate.withDayOfMonth(1).minusMonths(1).atStartOfDay());
+        Date endOfLastMonth = convertToDate(referenceDate.withDayOfMonth(1).atStartOfDay().minusSeconds(1));
+
+        long currentMonthCount = authorRepository.countByCreateDateBetween(
+                startOfMonth,
+                new Date()
+        );
+
+        long lastMonthCount = authorRepository.countByCreateDateBetween(
+                startOfLastMonth,
+                endOfLastMonth
+        );
+
+        return calculateTrend(currentMonthCount, lastMonthCount);
+    }
+
+    private Date convertToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    private double calculateTrend(long currentCount, long previousCount) {
+        if (previousCount == 0) {
+            return currentCount > 0 ? 100.0 : 0.0;
+        }
+        return ((double) (currentCount - previousCount) / previousCount) * 100;
+    }
 
 }
