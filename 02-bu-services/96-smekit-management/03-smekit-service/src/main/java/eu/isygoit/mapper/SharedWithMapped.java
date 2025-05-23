@@ -6,6 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
 
 @Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, componentModel = "spring")
-public  interface SharedWithMapped extends EntityMapper<SharedWith, SharedWithDto>{
+public interface SharedWithMapped extends EntityMapper<SharedWith, SharedWithDto> {
 
 }

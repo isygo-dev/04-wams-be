@@ -6,19 +6,16 @@ import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
-
-import eu.isygoit.enums.IEnumDocTempStatus;
-import eu.isygoit.model.*;
-import eu.isygoit.model.schema.ComSchemaColumnConstantName;
+import eu.isygoit.model.AppNextCode;
+import eu.isygoit.model.Template;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
-
 import eu.isygoit.repository.TemplateRepository;
 import eu.isygoit.service.ITemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -51,7 +48,7 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
         return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
                 .entity(Template.class.getSimpleName())
-                .attribute(ComSchemaColumnConstantName.C_CODE)
+                .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("TMP")
                 .valueLength(6L)
                 .value(1L)
@@ -63,10 +60,10 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
         template.setEditionDate(LocalDateTime.now());
         return templateRepository.save(template);
     }
+
     public List<Template> getTemplatesByCategory(Long categoryId) {
         return templateRepository.findByCategoryId(categoryId);
     }
-
 
 
 }

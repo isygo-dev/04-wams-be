@@ -2,6 +2,7 @@ package eu.isygoit.enums;
 
 public interface IEnumTemplateLanguage {
     int STR_ENUM_SIZE = 5;
+
     enum Types implements IEnum {
         EN("English"),
         FR("French"),

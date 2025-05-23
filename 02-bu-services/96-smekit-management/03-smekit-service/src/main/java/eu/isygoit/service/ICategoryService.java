@@ -6,6 +6,7 @@ import eu.isygoit.model.Category;
 import java.util.Map;
 
 public interface ICategoryService extends ICrudServiceMethod<Long, Category> {
-    int countTemplatesForCategory(Long categoryId) ;
+    int countTemplatesForCategory(Long categoryId);
+
     Map<Long, Integer> countTemplatesByCategory();
 }

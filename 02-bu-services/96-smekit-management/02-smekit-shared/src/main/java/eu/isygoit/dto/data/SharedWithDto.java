@@ -12,10 +12,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 
-public class SharedWithDto extends AbstractAuditableDto <Long>{
-    private  String userName;
-    private  String documentCode;
+public class SharedWithDto extends AbstractAuditableDto<Long> {
+    private String userName;
+    private String documentCode;
 
     @JsonIgnore
-    private DocumentDto document ;
+    private DocumentDto document;
 }

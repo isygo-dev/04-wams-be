@@ -9,14 +9,12 @@ import eu.isygoit.mapper.CategoryMapper;
 import eu.isygoit.model.Category;
 import eu.isygoit.service.ICategoryService;
 import eu.isygoit.service.impl.CategoryService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Validated
@@ -29,6 +27,7 @@ public class CategoryController extends MappedCrudController<Long, Category, Cat
     public CategoryController(ICategoryService categoryService) {
         this.categoryService = categoryService;
     }
+
     @PostMapping("/{categoryId}/tags")
     public ResponseEntity<CategoryDto> addTagsToCategory(
             @PathVariable Long categoryId,

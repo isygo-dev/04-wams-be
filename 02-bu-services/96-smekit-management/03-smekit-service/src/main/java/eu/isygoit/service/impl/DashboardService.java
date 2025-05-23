@@ -5,7 +5,6 @@ import eu.isygoit.enums.IEnumDocTempStatus;
 import eu.isygoit.model.Author;
 import eu.isygoit.model.Category;
 import eu.isygoit.model.Template;
-import eu.isygoit.model.TemplateFavorite;
 import eu.isygoit.repository.AuthorRepository;
 import eu.isygoit.repository.CategoryRepository;
 import eu.isygoit.repository.TemplateRepository;

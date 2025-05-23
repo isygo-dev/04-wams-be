@@ -4,14 +4,16 @@ import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,37 +27,37 @@ import java.util.List;
 @SecondaryTable(name = SchemaTableConstantName.T_AUTHOR_FILE,
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID))
 @SQLDelete(sql = "UPDATE " + SchemaTableConstantName.T_AUTHOR + " SET " +
-        ComSchemaColumnConstantName.C_CHECK_CANCEL + " = true, " +
-        ComSchemaColumnConstantName.C_CANCEL_DATE + " = CURRENT_TIMESTAMP WHERE id = ?")
-@Where(clause = ComSchemaColumnConstantName.C_CHECK_CANCEL + " = false")
+        SchemaColumnConstantName.C_CHECK_CANCEL + " = true, " +
+        SchemaColumnConstantName.C_CANCEL_DATE + " = CURRENT_TIMESTAMP WHERE id = ?")
+@Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + " = false")
 public class Author extends AuditableCancelableEntity<Long> implements ICodeAssignable, IDomainAssignable, IImageEntity, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "author_sequence_generator", sequenceName = "author_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "author_sequence_generator")
-    @Column(name = ComSchemaColumnConstantName.C_ID, updatable = false, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = ComSchemaColumnConstantName.C_DOMAIN, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private String domain;
 
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, updatable = false, nullable = false)
     private String code;
 
-    @Column(name = ComSchemaColumnConstantName.C_PHOTO)
+    @Column(name = SchemaColumnConstantName.C_PHOTO)
     private String imagePath;
 
-    @Column(name = ComSchemaColumnConstantName.C_FIRST_NAME, length = ComSchemaConstantSize.S_NAME, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_FIRST_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
     private String firstname;
 
-    @Column(name = ComSchemaColumnConstantName.C_LAST_NAME, length = ComSchemaConstantSize.S_NAME)
+    @Column(name = SchemaColumnConstantName.C_LAST_NAME, length = SchemaConstantSize.S_NAME)
     private String lastname;
 
-    @Column(name = ComSchemaColumnConstantName.C_EMAIL, length = ComSchemaConstantSize.EMAIL)
+    @Column(name = SchemaColumnConstantName.C_EMAIL, length = SchemaConstantSize.EMAIL)
     private String email;
 
-    @Column(name = ComSchemaColumnConstantName.C_PHONE_NUMBER, length = ComSchemaConstantSize.PHONE_NUMBER)
+    @Column(name = SchemaColumnConstantName.C_PHONE_NUMBER, length = SchemaConstantSize.PHONE_NUMBER)
     private String phone;
 
     // IFileEntity fields

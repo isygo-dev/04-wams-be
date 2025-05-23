@@ -11,11 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 @Slf4j
 @Validated
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = TagMapped.class, minMapper = TagMapped.class, service = TagService.class)
 @RequestMapping(value = "/api/v1/private/tag")
 
-public class TagController extends MappedCrudController <Long ,Tag,TagDto,TagDto,TagService> {
+public class TagController extends MappedCrudController<Long, Tag, TagDto, TagDto, TagService> {
 }

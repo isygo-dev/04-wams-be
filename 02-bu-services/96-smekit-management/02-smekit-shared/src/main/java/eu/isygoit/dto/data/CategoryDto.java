@@ -15,12 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 
-public class CategoryDto extends  AbstractAuditableDto<Long> implements IImageUploadDto {
+public class CategoryDto extends AbstractAuditableDto<Long> implements IImageUploadDto {
     private String domain;
     private String name;
     private String description;
     private IEnumCategoryStatus.Status type = IEnumCategoryStatus.Status.DISABLED;
-    private String imagePath ;
+    private String imagePath;
     private List<TagDto> tagName;
     //    private List<TemplateDto> templates ;
 

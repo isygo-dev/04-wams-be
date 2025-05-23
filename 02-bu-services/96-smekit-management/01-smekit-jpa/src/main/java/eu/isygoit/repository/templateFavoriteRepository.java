@@ -1,13 +1,14 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.TemplateFavorite;
-import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Repository
 public interface templateFavoriteRepository extends JpaPagingAndSortingRepository<TemplateFavorite, Long> {
     List<TemplateFavorite> findByUserIdentifier(String userIdentifier);
@@ -21,6 +22,7 @@ public interface templateFavoriteRepository extends JpaPagingAndSortingRepositor
             @Param("userIdentifier") String userIdentifier,
             @Param("templateId") Long templateId
     );
+
     @Query("SELECT CASE WHEN COUNT(tf) > 0 THEN true ELSE false END " +
             "FROM TemplateFavorite tf " +
             "WHERE tf.userIdentifier = :userIdentifier " +

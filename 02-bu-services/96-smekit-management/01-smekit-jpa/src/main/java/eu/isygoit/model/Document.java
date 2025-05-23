@@ -10,9 +10,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -23,32 +21,32 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = SchemaTableConstantName.T_DOCUMENT)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Document  extends AuditableEntity<Long> implements IDomainAssignable, ICodeAssignable {
+public class Document extends AuditableEntity<Long> implements IDomainAssignable, ICodeAssignable {
     @Id
-        @SequenceGenerator(
+    @SequenceGenerator(
             name = "document_sequence_generator",
             sequenceName = "document_sequence",
             allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE,
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "document_sequence_generator")
-        @Column(
+    @Column(
             name = SchemaColumnConstantName.C_ID,
             updatable = false, nullable = false)
-    private  Long id;
+    private Long id;
 
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
-    private  String domain;
+    private String domain;
 
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, updatable = false, nullable = false)
     private String code;
 
     @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, updatable = true, nullable = false)
-    private  String name;
+    private String name;
 
     @Column(
             name = SchemaColumnConstantName.C_DESCRIPTION,
-            length = ComSchemaConstantSize.DESCRIPTION)
+            length = SchemaConstantSize.DESCRIPTION)
     private String description;
 
     private LocalDateTime editionDate;
@@ -75,14 +73,14 @@ public class Document  extends AuditableEntity<Long> implements IDomainAssignabl
 
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name =SchemaColumnConstantName.C_SH_WTH , referencedColumnName = SchemaColumnConstantName.C_ID,
+    @JoinColumn(name = SchemaColumnConstantName.C_SH_WTH, referencedColumnName = SchemaColumnConstantName.C_ID,
             foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_DOCUMENTS_SHAREDWITH))
-    private  Set<SharedWith> sharedWithUsers ;
+    private Set<SharedWith> sharedWithUsers;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name =SchemaColumnConstantName.C_COMMENT , referencedColumnName = SchemaColumnConstantName.C_ID,
+    @JoinColumn(name = SchemaColumnConstantName.C_COMMENT, referencedColumnName = SchemaColumnConstantName.C_ID,
             foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_DOCUMENTS_COMMENTS))
-    private  Set<DocComment> comments;
+    private Set<DocComment> comments;
 
     @ManyToOne
     @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_DOCUMENTS))

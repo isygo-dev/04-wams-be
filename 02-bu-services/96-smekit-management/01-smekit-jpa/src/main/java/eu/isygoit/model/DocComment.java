@@ -20,7 +20,7 @@ import org.hibernate.annotations.Where;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = SchemaTableConstantName.T_DOCCOMMENT)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@SQLDelete(sql = "update " + SchemaTableConstantName.T_DOCCOMMENT + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
+@SQLDelete(sql = "update " + SchemaTableConstantName.T_DOCCOMMENT + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + SchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
 
 public class DocComment extends AuditableCancelableEntity<Long> {
@@ -30,11 +30,11 @@ public class DocComment extends AuditableCancelableEntity<Long> {
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = SchemaColumnConstantName.DC_T, length = ComSchemaConstantSize.COMMENT)
-    private  String text;
+    @Column(name = SchemaColumnConstantName.DC_T, length = SchemaConstantSize.COMMENT)
+    private String text;
 
-    @Column(name = SchemaColumnConstantName.C_USER_NAME, length = ComSchemaConstantSize.S_NAME)
-    private  String user;
+    @Column(name = SchemaColumnConstantName.C_USER_NAME, length = SchemaConstantSize.S_NAME)
+    private String user;
 
 
     @Builder.Default

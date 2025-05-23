@@ -2,8 +2,8 @@ package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.jakarta.AuditableEntity;
-import eu.isygoit.model.schema.ComSchemaColumnConstantName;
-import eu.isygoit.model.schema.ComSchemaConstantSize;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.SchemaConstantSize;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "T_TEMPLATE_FAVORITE")
-public class TemplateFavorite extends AuditableEntity<Long>  implements IDomainAssignable {
+public class TemplateFavorite extends AuditableEntity<Long> implements IDomainAssignable {
     @Id
     @SequenceGenerator(
             name = "templateFav_sequence_generator",
@@ -39,9 +39,8 @@ public class TemplateFavorite extends AuditableEntity<Long>  implements IDomainA
     private Template template;
 
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = ComSchemaColumnConstantName.C_DOMAIN, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)
-    private  String domain;
-
+    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    private String domain;
 
 
 }

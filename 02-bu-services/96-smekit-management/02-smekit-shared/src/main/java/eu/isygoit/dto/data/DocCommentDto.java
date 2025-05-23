@@ -13,9 +13,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 
 public class DocCommentDto extends AbstractAuditableDto<Long> {
-    private  String text;
-    private  String user;
+    private String text;
+    private String user;
     private IEnumDocCommentsStaus.Types type = IEnumDocCommentsStaus.Types.CLOSED;
-    private  DocumentDto document;
+    private DocumentDto document;
 
 }

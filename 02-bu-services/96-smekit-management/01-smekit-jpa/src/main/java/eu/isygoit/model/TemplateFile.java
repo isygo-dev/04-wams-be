@@ -9,13 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @SuperBuilder
@@ -23,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_TEMPLATE_FILE)
-public class TemplateFile  extends FileEntity<Long> implements IFileEntity  {
+public class TemplateFile extends FileEntity<Long> implements IFileEntity {
     @Id
     @SequenceGenerator(name = "template_file_sequence_generator", sequenceName = "template_file_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_file_sequence_generator")
@@ -38,4 +33,4 @@ public class TemplateFile  extends FileEntity<Long> implements IFileEntity  {
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
 
-   }
+}

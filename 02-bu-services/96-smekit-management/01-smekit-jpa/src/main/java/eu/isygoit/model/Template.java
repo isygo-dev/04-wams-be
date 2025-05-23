@@ -3,7 +3,9 @@ package eu.isygoit.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.enums.*;
+import eu.isygoit.enums.IEnumDocTempStatus;
+import eu.isygoit.enums.IEnumTemplateLanguage;
+import eu.isygoit.enums.IEnumTemplateVisibility;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SecondaryTable(name = SchemaTableConstantName.T_TEMPLATE_FILE,
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID))
-public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICodeAssignable, IDomainAssignable{
+public class Template extends AuditableEntity<Long> implements IFileEntity, ICodeAssignable, IDomainAssignable {
     @Id
     @SequenceGenerator(
             name = "template_sequence_generator",
@@ -42,22 +44,22 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
 
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
-    private  String domain;
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+    private String domain;
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, updatable = false, nullable = false)
     private String code;
     @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private String name;
 
-    @Column(name = SchemaColumnConstantName.C_DESCRIPTION, length = ComSchemaConstantSize.DESCRIPTION)
+    @Column(name = SchemaColumnConstantName.C_DESCRIPTION, length = SchemaConstantSize.DESCRIPTION)
     private String description;
 
     @Column(name = SchemaColumnConstantName.C_PATH, length = SchemaConstantSize.PATH_TEMPLATE_FILE)
-    private String path ;
+    private String path;
 
-    @Column(name = SchemaColumnConstantName.C_FILE_NAME, length = ComSchemaConstantSize.FILE_NAME)
-    private String fileName ;
+    @Column(name = SchemaColumnConstantName.C_FILE_NAME, length = SchemaConstantSize.FILE_NAME)
+    private String fileName;
 
-    @Column(name = SchemaColumnConstantName.C_EXTENSION, length = ComSchemaConstantSize.EXTENSION_SIZE)
+    @Column(name = SchemaColumnConstantName.C_EXTENSION, length = SchemaConstantSize.EXTENSION_SIZE)
     private String extension;
 
     private LocalDateTime editionDate;
@@ -67,7 +69,6 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
 
     @Column(name = SchemaColumnConstantName.C_VERSION, length = SchemaConstantSize.VERSION)
     private String version;
-
 
 
     @Builder.Default
@@ -90,7 +91,7 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
     private IEnumTemplateLanguage.Types typeTl = IEnumTemplateLanguage.Types.EN;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name =SchemaColumnConstantName.C_DOC , referencedColumnName = SchemaColumnConstantName.C_ID,
+    @JoinColumn(name = SchemaColumnConstantName.C_DOC, referencedColumnName = SchemaColumnConstantName.C_ID,
             foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_DOCUMENTS))
     @JsonIgnore
     private List<Document> documents;
@@ -114,14 +115,13 @@ public  class Template  extends AuditableEntity<Long> implements IFileEntity,ICo
     @JoinTable(
             name = SchemaColumnConstantName.C_TEMP_T,
             joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE_ID, referencedColumnName = SchemaColumnConstantName.C_ID),
-            inverseJoinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TAG_ID, referencedColumnName = ComSchemaColumnConstantName.C_ID)
+            inverseJoinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TAG_ID, referencedColumnName = SchemaColumnConstantName.C_ID)
     )
     @JsonIgnoreProperties({"templates", "hibernateLazyInitializer", "handler"})
     private List<Tag> tags;
 
 //    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<UserTemplatePreference> userPreferences = new HashSet<>();
-
 
 
     //BEGIN IFileEntity : SecondaryTable / ResumeFile

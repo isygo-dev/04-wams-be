@@ -5,13 +5,12 @@ import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.FileImageService;
-import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
 import eu.isygoit.model.Author;
 import eu.isygoit.model.Template;
-import eu.isygoit.model.schema.ComSchemaColumnConstantName;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.AuthorRepository;
@@ -40,6 +39,7 @@ public class AuthorService extends FileImageService<Long, Author, AuthorReposito
         this.appProperties = appProperties;
         this.authorRepository = authorRepository;
     }
+
     @Override
     public String getUploadDirectory() {
         return this.appProperties.getUploadDirectory();
@@ -50,8 +50,8 @@ public class AuthorService extends FileImageService<Long, Author, AuthorReposito
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
                 .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
-                .entity(Template.class.getSimpleName())
-                .attribute(ComSchemaColumnConstantName.C_CODE)
+                .entity(Author.class.getSimpleName())
+                .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("AUTH")
                 .valueLength(6L)
                 .value(1L)
@@ -86,5 +86,4 @@ public class AuthorService extends FileImageService<Long, Author, AuthorReposito
         }
         return ((double) (currentCount - previousCount) / previousCount) * 100;
     }
-
 }

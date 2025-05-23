@@ -23,9 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,9 +37,9 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
     private final AppProperties appProperties;
     private final ITagService tagService;
-    private  final TemplateRepository templateRepository ;
+    private final TemplateRepository templateRepository;
 
-    private  final  CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
     @Autowired
     private TagRepository tagRepository;
 
@@ -110,7 +107,7 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
     public Category addTagsToCategory(Long categoryId, List<TagDto> tagDtos) {
         Optional<Category> optional = findById(categoryId);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Set<Tag> existingTags = optional.get().getTags() != null ? optional.get().getTags() : new HashSet<>();
 
             for (TagDto tagDto : tagDtos) {
@@ -132,7 +129,7 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
     public Category setTagsForCategory(Long categoryId, List<TagDto> tagDtos) {
         Optional<Category> optional = findById(categoryId);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Set<Tag> newTags = new HashSet<>();
 
             for (TagDto tagDto : tagDtos) {
@@ -162,7 +159,7 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
     public Category removeTagFromCategory(Long categoryId, Long tagId) {
         Optional<Category> optional = findById(categoryId);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Set<Tag> existingTags = optional.get().getTags();
 
             if (existingTags != null) {
@@ -187,7 +184,7 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
     public Category updateFromDto(Long id, CategoryDto dto) {
         Optional<Category> optional = findById(id);
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             if (dto.getName() != null) {
                 optional.get().setName(dto.getName());
             }
@@ -217,6 +214,7 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
         throw new ResourceNotFoundException("Category not found with id: " + id);
     }
+
     @Override
     public Map<Long, Integer> countTemplatesByCategory() {
         Map<Long, Integer> templateCountMap = templateRepository.countTemplatesByCategory().stream()
@@ -229,6 +227,7 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
 
         return templateCountMap;
     }
+
     @Override
     public int countTemplatesForCategory(Long categoryId) {
         if (categoryId == null) {
@@ -236,6 +235,4 @@ public class CategoryService extends ImageService<Long, Category, CategoryReposi
         }
         return templateRepository.countByCategoryId(categoryId);
     }
-
-
 }

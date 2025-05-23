@@ -2,6 +2,7 @@ package eu.isygoit.enums;
 
 public interface IEnumCategoryStatus {
     int STR_ENUM_SIZE = 10;
+
     enum Status implements IEnum {
         ENABLED("Enabled"),
         DISABLED("Disabled");
@@ -15,4 +16,4 @@ public interface IEnumCategoryStatus {
             return meaning;
         }
     }
-    }
+}

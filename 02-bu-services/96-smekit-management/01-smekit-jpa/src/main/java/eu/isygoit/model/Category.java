@@ -3,18 +3,18 @@ package eu.isygoit.model;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.enums.IEnumCategoryStatus;
 import eu.isygoit.model.jakarta.AuditableEntity;
-import eu.isygoit.model.schema.*;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.SchemaConstantSize;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.SchemaTableConstantName;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @SuperBuilder
@@ -22,30 +22,28 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = SchemaTableConstantName.T_CATEGORY  )
+@Table(name = SchemaTableConstantName.T_CATEGORY)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Category extends AuditableEntity<Long> implements IDomainAssignable,IImageEntity {
+public class Category extends AuditableEntity<Long> implements IDomainAssignable, IImageEntity {
     @Id
     @SequenceGenerator(name = "category_sequence_generator", sequenceName = "category_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence_generator")
-    @Column(name = ComSchemaColumnConstantName.C_ID, updatable = false, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = ComSchemaColumnConstantName.C_DOMAIN, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)
-    private  String domain;
+    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    private String domain;
 
-    @Column(name = ComSchemaColumnConstantName.C_NAME, length = ComSchemaConstantSize.S_NAME, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
     private String name;
 
-    @Column(name = ComSchemaColumnConstantName.C_DESCRIPTION, length = ComSchemaConstantSize.DESCRIPTION)
+    @Column(name = SchemaColumnConstantName.C_DESCRIPTION, length = SchemaConstantSize.DESCRIPTION)
     private String description;
 
 
-    @Column(name = ComSchemaColumnConstantName.C_PHOTO)
+    @Column(name = SchemaColumnConstantName.C_PHOTO)
     private String imagePath;
-
-
 
 
     @Builder.Default
@@ -69,10 +67,9 @@ public class Category extends AuditableEntity<Long> implements IDomainAssignable
 
 
 //    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name =SchemaColumnConstantName.C_CAT , referencedColumnName = ComSchemaColumnConstantName.C_ID,
+//    @JoinColumn(name =SchemaColumnConstantName.C_CAT , referencedColumnName = SchemaColumnConstantName.C_ID,
 //            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
 //    private List<Template> templates ;
-
 
 
 }

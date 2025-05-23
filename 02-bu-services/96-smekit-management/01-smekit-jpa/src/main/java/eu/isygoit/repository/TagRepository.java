@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Repository
 
-public interface TagRepository  extends JpaPagingAndSortingRepository <Tag,Long> {
+public interface TagRepository extends JpaPagingAndSortingRepository<Tag, Long> {
     Optional<Tag> findByTagName(String tagName);
 
 

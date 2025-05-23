@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = AuthorMapper.class, minMapper = AuthorMapper.class, service = AuthorService.class)
-@RequestMapping(value = "/api/v1/private/Author")
+@RequestMapping(value = "/api/v1/private/author")
 
-public class    AuthorImageController extends MappedImageController<Long, Author, AuthorDto,AuthorDto, AuthorService> {
+public class AuthorImageController extends MappedImageController<Long, Author, AuthorDto, AuthorDto, AuthorService> {
 }

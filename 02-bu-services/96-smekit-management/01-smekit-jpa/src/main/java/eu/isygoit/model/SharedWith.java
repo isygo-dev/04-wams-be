@@ -9,8 +9,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
-
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -27,9 +25,9 @@ public class SharedWith extends AuditableEntity<Long> {
     private Long id;
 
     @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
-    private  String userName;
+    private String userName;
 
     @ManyToOne
     @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = "fk_template_category"))
-    private   Document document;
+    private Document document;
 }

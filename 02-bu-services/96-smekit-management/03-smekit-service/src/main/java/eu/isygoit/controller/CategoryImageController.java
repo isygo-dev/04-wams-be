@@ -17,5 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = CategoryMapper.class, minMapper = CategoryMapper.class, service = CategoryService.class)
 @RequestMapping(value = "/api/v1/private/category")
-public class CategoryImageController extends MappedImageController<Long, Category, CategoryDto,CategoryDto, CategoryService> {
+public class CategoryImageController extends MappedImageController<Long, Category, CategoryDto, CategoryDto, CategoryService> {
 }

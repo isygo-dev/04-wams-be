@@ -1,7 +1,5 @@
 package eu.isygoit.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.isygoit.annotation.CtrlDef;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
@@ -70,7 +68,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
         return ResponseEntity.ok(savedTemplate);
     }
 
-//    @GetMapping("/category/{categoryId}")
+    //    @GetMapping("/category/{categoryId}")
 //    public ResponseEntity<String> getTemplatesByCategory(@PathVariable Long categoryId) throws JsonProcessingException {
 //        List<Template> templates = templateRepository.findByCategoryId(categoryId);
 //        String json = new ObjectMapper().writeValueAsString(templates); // Manual JSON serialization
@@ -79,25 +77,24 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 //                .body(json);
 //    }
 //
-@GetMapping("/category/{categoryId}")
-public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Long categoryId) {
-    try {
-        log.info("Fetching templates for category ID: {}", categoryId);
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Long categoryId) {
+        try {
+            log.info("Fetching templates for category ID: {}", categoryId);
 
-        List<Template> templates = templateService.getTemplatesByCategory(categoryId);
-        List<TemplateDto> templateDtos = templates.stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+            List<Template> templates = templateService.getTemplatesByCategory(categoryId);
+            List<TemplateDto> templateDtos = templates.stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
 
-        log.info("Successfully fetched {} templates for category ID: {}", templateDtos.size(), categoryId);
-        return ResponseEntity.ok(templateDtos);
+            log.info("Successfully fetched {} templates for category ID: {}", templateDtos.size(), categoryId);
+            return ResponseEntity.ok(templateDtos);
 
-    } catch (Exception e) {
-        log.error("Error fetching templates for category {}: {}", categoryId, e.getMessage(), e);
-        return ResponseEntity.internalServerError().build();
+        } catch (Exception e) {
+            log.error("Error fetching templates for category {}: {}", categoryId, e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
-}
-
 
 
 //    @PostMapping("/pinned/{templateId}")
@@ -170,4 +167,4 @@ public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Lo
     }
 
 
-    }
+}

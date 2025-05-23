@@ -11,11 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 @Slf4j
 @Validated
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = DocumentMapper.class, minMapper = DocumentMapper.class, service = DocumentService.class)
 @RequestMapping(value = "/api/v1/private/document")
 
-public class DocumentController extends MappedCrudController<Long, Document, DocumentDto,DocumentDto, DocumentService> {
+public class DocumentController extends MappedCrudController<Long, Document, DocumentDto, DocumentDto, DocumentService> {
 }

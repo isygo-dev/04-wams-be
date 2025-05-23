@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_AUTHOR_FILE)
-public class AuthorFile extends FileEntity<Long> implements IFileEntity  {
+public class AuthorFile extends FileEntity<Long> implements IFileEntity {
     @Id
     @SequenceGenerator(name = "author_file_sequence_generator", sequenceName = "author_file_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "author_file_sequence_generator")

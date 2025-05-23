@@ -15,18 +15,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 @Slf4j
 @Validated
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = SharedWithMapped.class, minMapper = SharedWithMapped.class, service = SharedWithService.class)
 @RequestMapping(value = "/api/v1/private/sharedWith")
 
-public class SharedWithController extends MappedCrudController<Long, SharedWith , SharedWithDto,SharedWithDto,SharedWithService> {
+public class SharedWithController extends MappedCrudController<Long, SharedWith, SharedWithDto, SharedWithDto, SharedWithService> {
 
     @Autowired
-    private DocumentRepository documentService ;
+    private DocumentRepository documentService;
     @Autowired
     private DocumentMapper documentMapper;
+
     @Override
     public SharedWithDto beforeCreate(SharedWithDto object) {
         documentService.findByCodeIgnoreCase(object.getDocumentCode())

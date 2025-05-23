@@ -7,8 +7,8 @@ import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.model.Template;
 import eu.isygoit.model.TemplateFavorite;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
-import eu.isygoit.repository.templateFavoriteRepository;
 import eu.isygoit.repository.TemplateRepository;
+import eu.isygoit.repository.templateFavoriteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +73,4 @@ public class TemplateFavoriteService {
         }
         return favoriteRepository.countByUserIdentifier(userIdentifier);
     }
-
-
 }
