@@ -17,6 +17,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = DocumentMapper.class, minMapper = DocumentMapper.class, service = DocumentService.class)
 @RequestMapping(value = "/api/v1/private/document")
-
 public class DocumentController extends MappedCrudController<Long, Document, DocumentDto, DocumentDto, DocumentService> {
 }

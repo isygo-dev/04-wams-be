@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = SharedWithMapped.class, minMapper = SharedWithMapped.class, service = SharedWithService.class)
 @RequestMapping(value = "/api/v1/private/sharedWith")
-
 public class SharedWithController extends MappedCrudController<Long, SharedWith, SharedWithDto, SharedWithDto, SharedWithService> {
 
     @Autowired

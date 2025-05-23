@@ -22,6 +22,7 @@ import java.util.List;
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = CategoryMapper.class, minMapper = CategoryMapper.class, service = CategoryService.class)
 @RequestMapping(value = "/api/v1/private/category")
 public class CategoryController extends MappedCrudController<Long, Category, CategoryDto, CategoryDto, CategoryService> {
+
     private final ICategoryService categoryService;
 
     public CategoryController(ICategoryService categoryService) {

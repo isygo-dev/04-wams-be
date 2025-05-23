@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/private/dashboard")
 @RequiredArgsConstructor
 public class DashboardController {
-    private final DashboardService dashboardService;
 
+    private final DashboardService dashboardService;
 
     @GetMapping("/stats")
     public DashboardStatsDTO getDashboardStats(@RequestParam(required = false) String userIdentifier) {

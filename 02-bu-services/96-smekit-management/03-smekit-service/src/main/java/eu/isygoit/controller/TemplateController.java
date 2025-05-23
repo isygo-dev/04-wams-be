@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @RestController
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = TemplateMapper.class, minMapper = TemplateMapper.class, service = TemplateService.class)
 @RequestMapping(value = "/api/v1/private/template")
-
 public class TemplateController extends MappedCrudController<Long, Template, TemplateDto, TemplateDto, TemplateService> {
     private final TemplateService templateService;
     private final TemplateFavoriteService favoriteService;
