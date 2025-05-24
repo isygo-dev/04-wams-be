@@ -2,7 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CrudServiceUtils;
 import eu.isygoit.model.Timeline;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -17,8 +17,8 @@ import java.util.List;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = TimelineRepository.class)
-public class TimelineService extends CrudServiceUtils<Timeline, TimelineRepository> implements ITimeLineService {
+@ServRepo(value = TimelineRepository.class)
+public class TimelineService extends CrudServiceUtils<Long, Timeline, TimelineRepository> implements ITimeLineService {
 
     @Override
     public List<Timeline> getTimelineByDomainAndCode(String code, String domain) {

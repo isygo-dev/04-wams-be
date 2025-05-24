@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -41,7 +41,7 @@ import java.util.Optional;
 @DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = PostRepository.class)
+@ServRepo(value = PostRepository.class)
 public class PostService extends FileImageService<Long, Post, PostRepository>
         implements IPostService {
 

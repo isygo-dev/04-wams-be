@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.camel.repository.ICamelRepository;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
 @DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = ResumeRepository.class)
+@ServRepo(value = ResumeRepository.class)
 public class ResumeService extends FileImageService<Long, Resume, ResumeRepository>
         implements IResumeService {
 

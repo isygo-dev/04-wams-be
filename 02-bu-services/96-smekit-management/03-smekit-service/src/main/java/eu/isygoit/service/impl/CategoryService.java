@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.dto.data.CategoryDto;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = CategoryRepository.class)
+@ServRepo(value = CategoryRepository.class)
 @DmsLinkFileService(DmsLinkedFileService.class)
 public class CategoryService extends ImageService<Long, Category, CategoryRepository> implements ICategoryService {
 

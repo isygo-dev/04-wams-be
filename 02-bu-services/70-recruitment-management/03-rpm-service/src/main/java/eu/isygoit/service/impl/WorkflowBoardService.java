@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = WorkflowBoardRepository.class)
+@ServRepo(value = WorkflowBoardRepository.class)
 public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBoard, WorkflowBoardRepository> implements IWorkflowBoardService {
 
     private final AppProperties appProperties;

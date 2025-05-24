@@ -1,9 +1,6 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.*;
 import eu.isygoit.com.rest.service.MultiFileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -13,6 +10,7 @@ import eu.isygoit.model.EmployeeLinkedFile;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
+import eu.isygoit.repository.EmployeeLinkedFileRepository;
 import eu.isygoit.repository.EmployeeRepository;
 import eu.isygoit.service.IEmployeeMultiFileService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = EmployeeRepository.class)
-public class EmployeeMultiFileService extends MultiFileService<Long, Employee, EmployeeLinkedFile, EmployeeRepository>
+@ServRepo(value = EmployeeRepository.class)
+@ServLinkFileRepo(value = EmployeeLinkedFileRepository.class)
+public class EmployeeMultiFileService extends MultiFileService<Long, Employee, EmployeeLinkedFile, EmployeeRepository, EmployeeLinkedFileRepository>
         implements IEmployeeMultiFileService {
 
     private final AppProperties appProperties;

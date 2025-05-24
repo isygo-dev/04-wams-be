@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -39,7 +39,7 @@ import java.util.Arrays;
 @CodeGenLocal(value = NextCodeService.class)
 @DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = ContractRepository.class)
+@ServRepo(value = ContractRepository.class)
 public class ContractService extends FileService<Long, Contract, ContractRepository> implements IContractService {
 
     private final AppProperties appProperties;

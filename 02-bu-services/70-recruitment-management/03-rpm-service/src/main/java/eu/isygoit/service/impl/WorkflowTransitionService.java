@@ -2,7 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.model.AppNextCode;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = WorkflowTransitionRepository.class)
+@ServRepo(value = WorkflowTransitionRepository.class)
 public class WorkflowTransitionService extends CodeAssignableService<Long, WorkflowTransition, WorkflowTransitionRepository>
         implements IWorkflowTransitionService {
 

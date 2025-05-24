@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.service.ImageService;
@@ -48,7 +48,7 @@ import java.util.*;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = EmployeeRepository.class)
+@ServRepo(value = EmployeeRepository.class)
 @DmsLinkFileService(DmsLinkedFileService.class)
 public class EmployeeService extends ImageService<Long, Employee, EmployeeRepository> implements IEmployeeService {
 

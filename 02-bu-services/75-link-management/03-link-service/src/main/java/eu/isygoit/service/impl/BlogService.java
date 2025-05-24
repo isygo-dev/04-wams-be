@@ -1,6 +1,6 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.cassandra.CassandraCrudService;
 import eu.isygoit.model.Blog;
 import eu.isygoit.repository.BlogRepository;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-@SrvRepo(value = BlogRepository.class)
+@ServRepo(value = BlogRepository.class)
 public class BlogService extends CassandraCrudService<Long, Blog, BlogRepository> implements IBlogService {
 
 }

@@ -2,7 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.FileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -24,7 +24,7 @@ import java.util.List;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = TemplateRepository.class)
+@ServRepo(value = TemplateRepository.class)
 public class TemplateService extends FileService<Long, Template, TemplateRepository> implements ITemplateService {
 
     private final AppProperties appProperties;

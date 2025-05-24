@@ -3,7 +3,7 @@ package eu.isygoit.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = JobOfferRepository.class)
+@ServRepo(value = JobOfferRepository.class)
 public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOfferRepository>
         implements IJobOfferService {
 

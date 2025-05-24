@@ -1,9 +1,6 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.*;
 import eu.isygoit.com.rest.service.MultiFileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.DomainConstants;
@@ -13,6 +10,7 @@ import eu.isygoit.model.JobOfferLinkedFile;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
+import eu.isygoit.repository.JobOfferLinkedFileRepository;
 import eu.isygoit.repository.JobOfferRepository;
 import eu.isygoit.service.IJobOfferMultiFileService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 @DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = JobOfferRepository.class)
-public class JobOfferMultiFileService extends MultiFileService<Long, JobOffer, JobOfferLinkedFile, JobOfferRepository>
+@ServRepo(value = JobOfferRepository.class)
+@ServLinkFileRepo(value = JobOfferLinkedFileRepository.class)
+public class JobOfferMultiFileService extends MultiFileService<Long, JobOffer, JobOfferLinkedFile, JobOfferRepository, JobOfferLinkedFileRepository>
         implements IJobOfferMultiFileService {
 
     private final AppProperties appProperties;

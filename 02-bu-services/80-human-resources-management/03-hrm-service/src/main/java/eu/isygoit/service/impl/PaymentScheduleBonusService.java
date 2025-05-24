@@ -2,7 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CrudService;
 import eu.isygoit.model.Contract;
 import eu.isygoit.model.PaymentBonusSchedule;
@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = PaymentBonusScheduleRepository.class)
+@ServRepo(value = PaymentBonusScheduleRepository.class)
 public class PaymentScheduleBonusService extends CrudService<Long, PaymentBonusSchedule, PaymentBonusScheduleRepository> implements IPaymentScheduleBonusService {
 
     private final ContractRepository contractRepository;

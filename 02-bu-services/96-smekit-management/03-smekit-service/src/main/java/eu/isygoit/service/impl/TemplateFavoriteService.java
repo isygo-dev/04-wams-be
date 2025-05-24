@@ -2,7 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.model.Template;
 import eu.isygoit.model.TemplateFavorite;
@@ -20,7 +20,7 @@ import java.util.List;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = TemplateRepository.class)
+@ServRepo(value = TemplateRepository.class)
 public class TemplateFavoriteService {
     private final templateFavoriteRepository favoriteRepository;
     private final TemplateRepository templateRepository;

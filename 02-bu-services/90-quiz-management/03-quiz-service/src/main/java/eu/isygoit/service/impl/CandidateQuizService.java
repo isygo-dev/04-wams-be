@@ -2,7 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CrudService;
 import eu.isygoit.dto.data.QuizDto;
 import eu.isygoit.dto.data.QuizQuestionDto;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@SrvRepo(value = CandidateQuizRepository.class)
+@ServRepo(value = CandidateQuizRepository.class)
 public class CandidateQuizService extends CrudService<Long, CandidateQuiz, CandidateQuizRepository> implements ICandidateQuizService {
 
     @Autowired

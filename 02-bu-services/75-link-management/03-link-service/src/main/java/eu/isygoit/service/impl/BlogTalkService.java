@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
 import com.datastax.oss.driver.api.core.uuid.Uuids;
-import eu.isygoit.annotation.SrvRepo;
+import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.cassandra.CassandraCrudService;
 import eu.isygoit.exception.BlogTalkUpdateForbiddenException;
 import eu.isygoit.helper.DateHelper;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @Transactional
-@SrvRepo(value = BlogTalkRepository.class)
+@ServRepo(value = BlogTalkRepository.class)
 public class BlogTalkService extends CassandraCrudService<UUID, BlogTalk, BlogTalkRepository>
         implements IBlogTalkService {
 
