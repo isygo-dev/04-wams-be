@@ -43,7 +43,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     public ResponseEntity<QuizDto> getCandidateQuiz(RequestContextDto requestContext,
                                                     String quizCode, String accountCode) {
         try {
-            return ResponseFactory.ResponseOk(crudService().getCandidateQuiz(quizCode, accountCode));
+            return ResponseFactory.responseOk(crudService().getCandidateQuiz(quizCode, accountCode));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -54,7 +54,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     public ResponseEntity<Boolean> submitCandidateQuiz(RequestContextDto requestContext,
                                                        String quizCode, String accountCode) {
         try {
-            return ResponseFactory.ResponseOk(crudService().submitCandidateQuiz(quizCode, accountCode));
+            return ResponseFactory.responseOk(crudService().submitCandidateQuiz(quizCode, accountCode));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -65,7 +65,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     public ResponseEntity<Long> startCandidateQuiz(RequestContextDto requestContext,
                                                    String quizCode, String accountCode) {
         try {
-            return ResponseFactory.ResponseOk(crudService().startCandidateQuiz(quizCode, accountCode));
+            return ResponseFactory.responseOk(crudService().startCandidateQuiz(quizCode, accountCode));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -76,7 +76,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     public ResponseEntity<Boolean> submitCandidateQuizAnswer(//RequestContextDto requestContext,
                                                              String quizCode, String accountCode, CandidateQuizAnswerDto answer) {
         try {
-            return ResponseFactory.ResponseOk(crudService().submitCandidateAnswer(quizCode, accountCode,
+            return ResponseFactory.responseOk(crudService().submitCandidateAnswer(quizCode, accountCode,
                     candidateQuizAnswerMapper.dtoToEntity(answer)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -87,7 +87,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     @Override
     public ResponseEntity<Boolean> submitCandidateQuizAnswerList(String quizCode, String accountCode, List<CandidateQuizAnswerDto> answers) {
         try {
-            return ResponseFactory.ResponseOk(crudService().submitCandidateAnswers(quizCode, accountCode,
+            return ResponseFactory.responseOk(crudService().submitCandidateAnswers(quizCode, accountCode,
                     candidateQuizAnswerMapper.listDtoToEntity(answers)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -99,7 +99,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     public ResponseEntity<Boolean> startCandidateQuizAnswer(//RequestContextDto requestContext,
                                                             String quizCode, String accountCode, CandidateQuizAnswerDto answer) {
         try {
-            return ResponseFactory.ResponseOk(crudService().startCandidateAnswer(quizCode, accountCode,
+            return ResponseFactory.responseOk(crudService().startCandidateAnswer(quizCode, accountCode,
                     candidateQuizAnswerMapper.dtoToEntity(answer)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -113,9 +113,9 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
         try {
             QuizDto completeAnswer = crudService().getCompleteAnswer(quizCode, accountCode);
             if (completeAnswer != null) {
-                return ResponseFactory.ResponseOk(completeAnswer);
+                return ResponseFactory.responseOk(completeAnswer);
             } else {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -129,9 +129,9 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
         try {
             QuizDto completeAnswer = crudService().getCompleteAnswerClean(quizCode, accountCode);
             if (completeAnswer != null) {
-                return ResponseFactory.ResponseOk(completeAnswer);
+                return ResponseFactory.responseOk(completeAnswer);
             } else {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -145,9 +145,9 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
         try {
             QuizReportDto quizReport = crudService().getReport(quizCode, accountCode);
             if (quizReport != null) {
-                return ResponseFactory.ResponseOk(quizReport);
+                return ResponseFactory.responseOk(quizReport);
             } else {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -161,9 +161,9 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
         try {
             List<QuizReportDto> list = crudService().getByCandidateAndTags(accountCode, tags);
             if (!CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseOk(list);
+                return ResponseFactory.responseOk(list);
             } else {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -174,7 +174,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     @Override
     public ResponseEntity<Long> getCountRealizedTestByAccount(String accountCode) {
         try {
-            return ResponseFactory.ResponseOk(crudService().getCountRealizedTestByAccount(accountCode));
+            return ResponseFactory.responseOk(crudService().getCountRealizedTestByAccount(accountCode));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

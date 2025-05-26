@@ -39,7 +39,7 @@ public class ContractController extends MappedCrudController<Long, Contract, Min
                                                             Long id, Boolean isLocked) {
         log.info("update contrat status");
         try {
-            return ResponseFactory.ResponseOk(mapper().entityToDto(contractService.updateContractStatus(id, isLocked)));
+            return ResponseFactory.responseOk(mapper().entityToDto(contractService.updateContractStatus(id, isLocked)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

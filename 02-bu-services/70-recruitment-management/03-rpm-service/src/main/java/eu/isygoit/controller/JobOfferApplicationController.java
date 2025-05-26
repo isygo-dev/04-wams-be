@@ -67,10 +67,10 @@ public class JobOfferApplicationController extends MappedCrudController<Long, Jo
         try {
             List<JobOfferDto> jobOffers = jobOfferMapper.listEntityToDto(jobOfferService.findJobOffersNotAssignedToResume(resumeCode));
             if (jobOffers.isEmpty()) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
 
-            return ResponseFactory.ResponseOk(jobOffers);
+            return ResponseFactory.responseOk(jobOffers);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

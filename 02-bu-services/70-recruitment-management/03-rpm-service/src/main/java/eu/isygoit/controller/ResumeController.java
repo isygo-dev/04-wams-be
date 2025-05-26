@@ -72,7 +72,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
                                                                 @Valid @RequestBody ShareResumeRequestDto shareResumeRequestDto) {
         log.info("share resume ");
         try {
-            return ResponseFactory.ResponseOk(resumeShareInfoMapper.listEntityToDto(crudService().shareWithAccounts(
+            return ResponseFactory.responseOk(resumeShareInfoMapper.listEntityToDto(crudService().shareWithAccounts(
                     id, shareResumeRequestDto.getResumeOwner(), shareResumeRequestDto.getAccountsCode())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -120,7 +120,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
         log.info("update resume review");
         try {
             ResumeShareInfo resumeDto = resumeSharedInfoRepository.save(resumeShareInfo);
-            return ResponseFactory.ResponseOk(resumeDto);
+            return ResponseFactory.responseOk(resumeDto);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -147,7 +147,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
         try {
             ResumeDto resumeDto = mapper().entityToDto(crudService().getResumeByAccountCode(requestContext.getSenderUser()));
             if (resumeDto != null) {
-                return ResponseFactory.ResponseOk(resumeDto);
+                return ResponseFactory.responseOk(resumeDto);
             }
             return ResponseEntity.noContent().build();
         } catch (Throwable e) {
@@ -179,7 +179,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             if (!StringUtils.hasText(resumeDto.getDomain())) {
                 resumeDto.setDomain(requestContext.getSenderDomain());
             }
-            return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().createResumeForAccount(requestContext.getSenderUser(),
+            return ResponseFactory.responseOk(mapper().entityToDto(crudService().createResumeForAccount(requestContext.getSenderUser(),
                     mapper().dtoToEntity(resumeDto))));
         } catch (Exception ex) {
             return getBackExceptionResponse(ex);
@@ -207,7 +207,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             @Valid @RequestBody ResumeDto resumeDto) {
         try {
             crudService().createAccount(mapper().dtoToEntity(resumeDto));
-            return ResponseFactory.ResponseOk(Boolean.TRUE);
+            return ResponseFactory.responseOk(Boolean.TRUE);
         } catch (Exception ex) {
             return getBackExceptionResponse(ex);
         }

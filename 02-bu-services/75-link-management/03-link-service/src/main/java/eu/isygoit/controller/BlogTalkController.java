@@ -61,9 +61,9 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
         try {
             List<BlogTalk> list = this.crudService().findByBlogId(blogId, page, size);
             if (!CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseOk(this.mapper().listEntityToDto(list));
+                return ResponseFactory.responseOk(this.mapper().listEntityToDto(list));
             } else {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
         } catch (Exception ex) {
             return getBackExceptionResponse(ex);
@@ -91,9 +91,9 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
         try {
             List<BlogTalk> list = this.crudService().findByBlogId(blogId);
             if (!CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseOk(this.mapper().listEntityToDto(list));
+                return ResponseFactory.responseOk(this.mapper().listEntityToDto(list));
             } else {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
         } catch (Exception ex) {
             return getBackExceptionResponse(ex);

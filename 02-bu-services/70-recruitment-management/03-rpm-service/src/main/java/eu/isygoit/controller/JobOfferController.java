@@ -65,7 +65,7 @@ public class JobOfferController extends MappedCrudController<Long, JobOffer, Job
                                                             @Valid @RequestBody ShareJobRequestDto shareJobRequestDto) {
         log.info("share job ");
         try {
-            return ResponseFactory.ResponseOk(jobShareInfoMapper.listEntityToDto(crudService().shareJob(id, shareJobRequestDto.getJobOwner(), shareJobRequestDto.getAccountsCode())));
+            return ResponseFactory.responseOk(jobShareInfoMapper.listEntityToDto(crudService().shareJob(id, shareJobRequestDto.getJobOwner(), shareJobRequestDto.getAccountsCode())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

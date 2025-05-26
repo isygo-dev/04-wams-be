@@ -67,10 +67,10 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
             List<IntegrationElementDto> list = integrationElementMapper.listEntityToDto(this.crudService().findAllIntegratedElements(flowId));
 
             if (CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
 
-            return ResponseFactory.ResponseOk(list);
+            return ResponseFactory.responseOk(list);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -98,7 +98,7 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
         log.info("Find integrated element by id request received", IntegrationElement.class.getSimpleName());
         try {
             IntegrationElementDto element = integrationElementMapper.entityToDto(this.crudService().findIntegratedElementById(elementId));
-            return ResponseFactory.ResponseOk(element);
+            return ResponseFactory.responseOk(element);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

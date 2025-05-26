@@ -84,7 +84,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                     }
             );
 
-            return ResponseFactory.ResponseOk(postMapper.entityToDto(postService.update(optional.get())));
+            return ResponseFactory.responseOk(postMapper.entityToDto(postService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -111,7 +111,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
     public ResponseEntity<List<String>> getUsersLikedPostByPostId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                                   @PathVariable(name = RestApiConstants.POST_ID) Long postId) {
         try {
-            return ResponseFactory.ResponseOk(postService.findById(postId)
+            return ResponseFactory.responseOk(postService.findById(postId)
                     .orElseThrow(() -> new PostNotFoundException("with id " + postId))
                     .getUsersAccountCode());
         } catch (Throwable e) {
@@ -155,7 +155,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                     }
             );
 
-            return ResponseFactory.ResponseOk(postMapper.entityToDto(postService.update(optional.get())));
+            return ResponseFactory.responseOk(postMapper.entityToDto(postService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -192,11 +192,11 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
             }
 
             if (CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
 
             this.afterFindAll(requestContext, list);
-            return ResponseFactory.ResponseOk(list);
+            return ResponseFactory.responseOk(list);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

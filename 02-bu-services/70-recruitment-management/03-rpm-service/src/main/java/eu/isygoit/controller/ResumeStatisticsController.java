@@ -58,7 +58,7 @@ public class ResumeStatisticsController extends ControllerExceptionHandler {
             , @RequestParam(name = RestApiConstants.STAT_TYPE) IEnumResumeStatType.Types statType) {
         log.info("Get global statistics");
         try {
-            return ResponseFactory.ResponseOk(resumeService.getGlobalStatistics(statType, requestContext));
+            return ResponseFactory.responseOk(resumeService.getGlobalStatistics(statType, requestContext));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -85,7 +85,7 @@ public class ResumeStatisticsController extends ControllerExceptionHandler {
                                                       @RequestParam(name = RestApiConstants.CODE) String code) {
         log.info("Get object statistics with code: ", code);
         try {
-            return ResponseFactory.ResponseOk(resumeService.getObjectStatistics(code, requestContext));
+            return ResponseFactory.responseOk(resumeService.getObjectStatistics(code, requestContext));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

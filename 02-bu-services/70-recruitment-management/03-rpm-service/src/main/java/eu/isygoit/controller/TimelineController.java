@@ -67,9 +67,9 @@ public class TimelineController extends ControllerExceptionHandler {
         try {
             List<TimelineDto> timeline = timelineMapper.listEntityToDto(timelineService.getTimelineByDomainAndCode(code, domain));
             if (timeline.isEmpty()) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
-            return ResponseFactory.ResponseOk(timeline);
+            return ResponseFactory.responseOk(timeline);
         } catch (Exception ex) {
             return getBackExceptionResponse(ex);
         }

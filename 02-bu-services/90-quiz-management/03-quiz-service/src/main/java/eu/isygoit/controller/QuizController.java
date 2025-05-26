@@ -70,7 +70,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     public ResponseEntity<QuizQuestionDto> uploadQuestionImage(RequestContextDto requestContext, Long id, MultipartFile file) {
         log.info("Upload question image request received");
         try {
-            return ResponseFactory.ResponseOk(quizQuestionMapper.entityToDto(crudService().uploadQuestionImage(id,
+            return ResponseFactory.responseOk(quizQuestionMapper.entityToDto(crudService().uploadQuestionImage(id,
                     requestContext.getSenderDomain(), file)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
@@ -84,9 +84,9 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
         try {
             List<Quiz> list = crudService().getQuizCodesByCategory(category);
             if (CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
-            return ResponseFactory.ResponseOk(quizListMapper.listEntityToDto(list));
+            return ResponseFactory.responseOk(quizListMapper.listEntityToDto(list));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -99,10 +99,10 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
         try {
             QuizDto quizDto = mapper().entityToDto(crudService().getQuizByCode(code));
             if (Objects.isNull(quizDto)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
 
-            return ResponseFactory.ResponseOk(this.afterFindById(quizDto));
+            return ResponseFactory.responseOk(this.afterFindById(quizDto));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

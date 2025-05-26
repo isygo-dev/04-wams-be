@@ -89,7 +89,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                     }
             );
 
-            return ResponseFactory.ResponseOk(commentMapper.entityToDto(commentService.update(optional.get())));
+            return ResponseFactory.responseOk(commentMapper.entityToDto(commentService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -115,7 +115,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
     public ResponseEntity<List<String>> getLikedCommentByCommentId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                                    @PathVariable(name = RestApiConstants.COMMENT_ID) Long commentId) {
         try {
-            return ResponseFactory.ResponseOk(commentService.findById(commentId)
+            return ResponseFactory.responseOk(commentService.findById(commentId)
                     .orElseThrow(() -> new PostCommentNotFoundException("with id " + commentId))
                     .getUsersAccountCode());
         } catch (Throwable e) {
@@ -156,7 +156,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                     }
             );
 
-            return ResponseFactory.ResponseOk(commentMapper.entityToDto(commentService.update(optional.get())));
+            return ResponseFactory.responseOk(commentMapper.entityToDto(commentService.update(optional.get())));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

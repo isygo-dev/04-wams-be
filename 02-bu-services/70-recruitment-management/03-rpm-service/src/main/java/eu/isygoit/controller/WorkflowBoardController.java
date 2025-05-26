@@ -78,9 +78,9 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     .peek(workflowStateDto -> workflowStateDto.setWbCode(wbCode))
                     .collect(Collectors.toUnmodifiableList());
             if (CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
-            return ResponseFactory.ResponseOk(list);
+            return ResponseFactory.responseOk(list);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -109,9 +109,9 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
         try {
             List<IBoardItem> list = workflowBoardService.getItems(requestContext.getSenderDomain(), wbCode);
             if (CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
-            return ResponseFactory.ResponseOk(list);
+            return ResponseFactory.responseOk(list);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -137,7 +137,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
     ResponseEntity<AccountModelDto> getJobApplicationCandidate(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                                @PathVariable(name = RestApiConstants.CODE) String code) {
         try {
-            return ResponseFactory.ResponseOk(workflowBoardService.getCandidateData(code));
+            return ResponseFactory.responseOk(workflowBoardService.getCandidateData(code));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -166,9 +166,9 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     .filter(c -> IStatusAssignable.class.isAssignableFrom(c))
                     .map(aClass -> aClass.getName()).collect(Collectors.toUnmodifiableList());
             if (CollectionUtils.isEmpty(list)) {
-                return ResponseFactory.ResponseNoContent();
+                return ResponseFactory.responseNoContent();
             }
-            return ResponseFactory.ResponseOk(list);
+            return ResponseFactory.responseOk(list);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -194,7 +194,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
     ResponseEntity<BpmEventResponseDto> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                     @Valid @RequestBody BpmEventRequestDto bpmEventRequest) {
         try {
-            return ResponseFactory.ResponseOk(workflowBoardService.performEvent(bpmEventRequest));
+            return ResponseFactory.responseOk(workflowBoardService.performEvent(bpmEventRequest));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -222,7 +222,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                                                                          @PathVariable(name = RestApiConstants.CODE) String code,
                                                                          @PathVariable(name = RestApiConstants.ID) Long id) {
         try {
-            return ResponseFactory.ResponseOk(workflowBoardService.getInterviewEvent(requestContext.getSenderDomain(), code, id));
+            return ResponseFactory.responseOk(workflowBoardService.getInterviewEvent(requestContext.getSenderDomain(), code, id));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -252,7 +252,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                                   @PathVariable(name = RestApiConstants.CODE) String code,
                                   @Valid @RequestBody JobOfferApplicationInterviewEventRequestDto event) {
         try {
-            return ResponseFactory.ResponseOk(workflowBoardService.addInterviewEvent(requestContext.getSenderDomain(), code, eventType, event));
+            return ResponseFactory.responseOk(workflowBoardService.addInterviewEvent(requestContext.getSenderDomain(), code, eventType, event));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -282,7 +282,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                                   @PathVariable(name = RestApiConstants.CODE) String code,
                                   @Valid @RequestBody JobOfferApplicationInterviewEventRequestDto event) {
         try {
-            return ResponseFactory.ResponseOk(workflowBoardService.editInterviewEvent(code, eventType, event));
+            return ResponseFactory.responseOk(workflowBoardService.editInterviewEvent(code, eventType, event));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -309,7 +309,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
     ResponseEntity<List<String>> getAvailableWorkflowEmails(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
                                                             @RequestParam(name = RestApiConstants.WF_CODE) String wfCode) {
         try {
-            return ResponseFactory.ResponseOk(crudService().getBoardWatchersByWorkflow(wfCode, requestContext.getSenderDomain()));
+            return ResponseFactory.responseOk(crudService().getBoardWatchersByWorkflow(wfCode, requestContext.getSenderDomain()));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

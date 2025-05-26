@@ -58,7 +58,7 @@ public class JobOfferStatisticsController extends ControllerExceptionHandler {
             , @RequestParam(name = RestApiConstants.STAT_TYPE) IEnumSharedStatType.Types statType) {
         log.info("Get global statistics");
         try {
-            return ResponseFactory.ResponseOk(jobOfferService.getGlobalStatistics(statType, requestContext));
+            return ResponseFactory.responseOk(jobOfferService.getGlobalStatistics(statType, requestContext));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -85,7 +85,7 @@ public class JobOfferStatisticsController extends ControllerExceptionHandler {
                                                         @RequestParam(name = RestApiConstants.CODE) String code) {
         log.info("Get object statistics with code: ", code);
         try {
-            return ResponseFactory.ResponseOk(jobOfferService.getObjectStatistics(code, requestContext));
+            return ResponseFactory.responseOk(jobOfferService.getObjectStatistics(code, requestContext));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

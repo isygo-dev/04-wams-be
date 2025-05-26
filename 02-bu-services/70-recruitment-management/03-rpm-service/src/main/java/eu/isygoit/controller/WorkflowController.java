@@ -54,7 +54,7 @@ public class WorkflowController extends MappedCrudController<Long, Workflow, Wor
     @GetMapping(path = "/unassociated")
     ResponseEntity<List<String>> getUnassociatedWorkflows(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
         try {
-            return ResponseFactory.ResponseOk(crudService().getWorkflowNotAssociated());
+            return ResponseFactory.responseOk(crudService().getWorkflowNotAssociated());
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

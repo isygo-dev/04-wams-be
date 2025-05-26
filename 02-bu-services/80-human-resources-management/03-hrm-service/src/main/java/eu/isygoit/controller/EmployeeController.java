@@ -83,7 +83,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
                                                             IEnumEnabledBinaryStatus.Types newStatus) {
         log.info("update employee status");
         try {
-            return ResponseFactory.ResponseOk(mapper().entityToDto(crudService().updateStatus(id, newStatus)));
+            return ResponseFactory.responseOk(mapper().entityToDto(crudService().updateStatus(id, newStatus)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
