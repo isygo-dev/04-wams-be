@@ -74,7 +74,7 @@ public class Quiz extends AuditableCancelableEntity<Long> implements IDomainAssi
     @CollectionTable(name = SchemaTableConstantName.T_QUIZ_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_QUIZ,
             referencedColumnName = SchemaColumnConstantName.C_CODE,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_QUIZ)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_QUIZ)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
 }

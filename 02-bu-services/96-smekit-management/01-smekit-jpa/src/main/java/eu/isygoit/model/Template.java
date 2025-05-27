@@ -1,10 +1,8 @@
 package eu.isygoit.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.enums.IEnumDocTempStatus;
-import eu.isygoit.enums.IEnumTemplateLanguage;
+import eu.isygoit.enums.IEnumLanguage;
+import eu.isygoit.enums.IEnumTemplateStatus;
 import eu.isygoit.enums.IEnumTemplateVisibility;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -13,43 +11,35 @@ import eu.isygoit.model.schema.SchemaFkConstantName;
 import eu.isygoit.model.schema.SchemaTableConstantName;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
 @Table(name = SchemaTableConstantName.T_TEMPLATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @SecondaryTable(name = SchemaTableConstantName.T_TEMPLATE_FILE,
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID))
-public class Template extends AuditableEntity<Long> implements IFileEntity, ICodeAssignable, IDomainAssignable {
+public class Template extends AuditableEntity<Long> implements IFileEntity, ICodeAssignable, IDomainAssignable, IStatusAssignable<IEnumTemplateStatus.Types> {
     @Id
-    @SequenceGenerator(
-            name = "template_sequence_generator",
-            sequenceName = "template_sequence",
-            allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "template_sequence_generator")
+    @SequenceGenerator(name = "template_sequence_generator", sequenceName = "template_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "template_sequence_generator")
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private String domain;
+
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, updatable = false, nullable = false)
     private String code;
+
     @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
     private String name;
 
@@ -65,70 +55,48 @@ public class Template extends AuditableEntity<Long> implements IFileEntity, ICod
     @Column(name = SchemaColumnConstantName.C_EXTENSION, length = SchemaConstantSize.EXTENSION_SIZE)
     private String extension;
 
-    private LocalDateTime editionDate;
-
     @Column(name = SchemaColumnConstantName.C_SOURCE, length = SchemaConstantSize.SOURCE)
     private String source;
 
     @Column(name = SchemaColumnConstantName.C_VERSION, length = SchemaConstantSize.VERSION)
     private String version;
 
-
     @Builder.Default
     @ColumnDefault("'EDITING'")
     @Enumerated(EnumType.STRING)
-    @Column(name = SchemaColumnConstantName.T_S, length = IEnumDocTempStatus.STR_ENUM_SIZE, nullable = false)
-    private IEnumDocTempStatus.Types typeTs = IEnumDocTempStatus.Types.EDITING;
+    @Column(name = SchemaColumnConstantName.C_STATUS, length = IEnumTemplateStatus.STR_ENUM_SIZE, nullable = false)
+    private IEnumTemplateStatus.Types state = IEnumTemplateStatus.Types.EDITING;
 
 
     @Builder.Default
     @ColumnDefault("'PRV'")
     @Enumerated(EnumType.STRING)
-    @Column(name = SchemaColumnConstantName.T_V, length = IEnumTemplateVisibility.STR_ENUM_SIZE, nullable = false)
-    private IEnumTemplateVisibility.Types typeTv = IEnumTemplateVisibility.Types.PRV;
+    @Column(name = SchemaColumnConstantName.C_VISIBILITY, length = IEnumTemplateVisibility.STR_ENUM_SIZE, nullable = false)
+    private IEnumTemplateVisibility.Types visibility = IEnumTemplateVisibility.Types.PRV;
 
     @Builder.Default
     @ColumnDefault("'EN'")
     @Enumerated(EnumType.STRING)
-    @Column(name = SchemaColumnConstantName.T_L, length = IEnumTemplateLanguage.STR_ENUM_SIZE, nullable = false)
-    private IEnumTemplateLanguage.Types typeTl = IEnumTemplateLanguage.Types.EN;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = SchemaColumnConstantName.C_DOC, referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_DOCUMENTS))
-    @JsonIgnore
-    private List<Document> documents;
+    @Column(name = SchemaColumnConstantName.C_LANGUAGE, length = IEnumLanguage.STR_ENUM_SIZE, nullable = false)
+    private IEnumLanguage.Types language = IEnumLanguage.Types.EN;
 
     @ManyToOne
-    @JoinColumn(name = SchemaColumnConstantName.C_AUTH, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_REF_AUTHOR))
-    @JsonIgnoreProperties({"templates", "hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = SchemaColumnConstantName.C_AUHTOR, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_REF_AUTHOR))
     private Author author;
 
     @ManyToOne
-
-    @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
-    @JsonIgnore
+    @JoinColumn(name = SchemaColumnConstantName.C_CATEGORY, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_REF_CATEGORY))
     private Category category;
 
-    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<TemplateFavorite> favorites = new HashSet<>();
+    @ElementCollection
+    @CollectionTable(name = SchemaTableConstantName.T_FAVORITE_TEMPLATE
+            , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE,
+            referencedColumnName = SchemaColumnConstantName.C_CODE,
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_FAVORITE_REF_TEMPLATE)))
+    @Column(name = SchemaColumnConstantName.C_USER_NAME)
+    private List<String> favorites;
 
-    @ManyToMany
-    @JoinTable(
-            name = SchemaColumnConstantName.C_TEMP_T,
-            joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE_ID, referencedColumnName = SchemaColumnConstantName.C_ID),
-            inverseJoinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TAG_ID, referencedColumnName = SchemaColumnConstantName.C_ID)
-    )
-    @JsonIgnoreProperties({"templates", "hibernateLazyInitializer", "handler"})
-    private List<Tag> tags;
-
-//    @OneToMany(mappedBy = "template", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<UserTemplatePreference> userPreferences = new HashSet<>();
-
-
-    //BEGIN IFileEntity : SecondaryTable / ResumeFile
-
+    //BEGIN IFileEntity : SecondaryTable / TemplateFile
     @Column(name = SchemaColumnConstantName.C_ORIGINAL_FILE_NAME, table = SchemaTableConstantName.T_TEMPLATE_FILE)
     private String originalFileName;
     @ColumnDefault("'NA'")
@@ -138,21 +106,9 @@ public class Template extends AuditableEntity<Long> implements IFileEntity, ICod
     @ElementCollection
     @CollectionTable(name = SchemaTableConstantName.T_TEMPLATE_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE,
-            referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_TEMPLATE_FILE)))
-    @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
-    private List<String> TemplatesTags;
+            referencedColumnName = SchemaColumnConstantName.C_CODE,
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_TEMPLATE)))
+    @Column(name = SchemaColumnConstantName.C_TAG)
+    private List<String> tags;
     //END IFileEntity : SecondaryTable
-
-    @Override
-    public List<String> getTags() {
-        if (tags == null) {
-            return Collections.emptyList();
-        }
-        return tags.stream()
-                .map(Tag::getTagName)
-                .collect(Collectors.toList());
-    }
-
-
 }

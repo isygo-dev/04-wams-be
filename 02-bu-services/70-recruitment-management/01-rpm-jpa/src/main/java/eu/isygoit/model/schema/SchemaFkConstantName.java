@@ -109,15 +109,15 @@ public interface SchemaFkConstantName extends ComSchemaFkConstantName {
      */
     String FK_ACCOUNT_REF_RESUME = "FK_ACCOUNT_REF_RESUME";
     /**
-     * The constant FK_TAGS_REF_JOB.
+     * The constant FK_TAG_REF_JOB.
      */
-    String FK_TAGS_REF_JOB = "FK_TAGS_REF_JOB";
+    String FK_TAG_REF_JOB = "FK_TAG_REF_JOB";
     /**
-     * The constant FK_TAGS_REF_RESUME_FILE.
+     * The constant FK_TAG_REF_RESUME_FILE.
      */
-    String FK_TAGS_REF_RESUME_FILE = "FK_TAGS_REF_RESUME_FILE";
+    String FK_TAG_REF_RESUME_FILE = "FK_TAG_REF_RESUME_FILE";
     /**
-     * The constant FK_TAGS_REF_JOB_OFFER_FILE.
+     * The constant FK_TAG_REF_JOB_OFFER_FILE.
      */
-    String FK_TAGS_REF_JOB_OFFER_FILE = "FK_TAGS_REF_JOB_OFFER_FILE";
+    String FK_TAG_REF_JOB_OFFER_FILE = "FK_TAG_REF_JOB_OFFER_FILE";
 }

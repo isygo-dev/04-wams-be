@@ -82,7 +82,7 @@ public class IntegrationOrder extends AuditableEntity<Long> implements ICodeAssi
     @CollectionTable(name = SchemaTableConstantName.T_INTEGRATION_ORDER_VALIDATION_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_INTEGRATION_FILE,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_INTEGRATION_ORDER_FILE)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_INTEGRATION_ORDER_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
     //END IFileEntity : SecondaryTable

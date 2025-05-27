@@ -1,8 +1,9 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
-import eu.isygoit.enums.IEnumDocCommentsStaus;
+import eu.isygoit.enums.IEnumCommentsStaus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -11,11 +12,10 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
+public class DocumentCommentDto extends AbstractAuditableDto<Long> {
 
-public class DocCommentDto extends AbstractAuditableDto<Long> {
     private String text;
     private String user;
-    private IEnumDocCommentsStaus.Types type = IEnumDocCommentsStaus.Types.CLOSED;
-    private DocumentDto document;
-
+    @Builder.Default
+    private IEnumCommentsStaus.Types status = IEnumCommentsStaus.Types.CLOSED;
 }

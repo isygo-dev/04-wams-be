@@ -1,22 +1,24 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.com.rest.controller.ResponseFactory;
+import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.dto.data.TemplateDto;
+import eu.isygoit.exception.ObjectNotFoundException;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
 import eu.isygoit.mapper.TemplateMapper;
 import eu.isygoit.model.Template;
-import eu.isygoit.repository.CategoryRepository;
-import eu.isygoit.repository.TemplateRepository;
-import eu.isygoit.service.impl.TemplateFavoriteService;
 import eu.isygoit.service.impl.TemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,61 +29,30 @@ import java.util.stream.Collectors;
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = TemplateMapper.class, minMapper = TemplateMapper.class, service = TemplateService.class)
 @RequestMapping(value = "/api/v1/private/template")
 public class TemplateController extends MappedCrudController<Long, Template, TemplateDto, TemplateDto, TemplateService> {
-    private final TemplateService templateService;
-    private final TemplateFavoriteService favoriteService;
-    private final TemplateMapper templateMapper;
-    private final TemplateRepository templateRepository;
-
-
-    public TemplateController(TemplateService templateService, TemplateFavoriteService favoriteService, TemplateMapper templateMapper, CategoryRepository categoryRepository, TemplateRepository templateRepository) {
-        this.templateService = templateService;
-        this.favoriteService = favoriteService;
-        this.templateMapper = templateMapper;
-        this.templateRepository = templateRepository;
-    }
-//    @PutMapping("update/{id}")
-//    public ResponseEntity<Template> updateTemplate(@PathVariable Long id, @RequestBody Template updatedTemplate) {
-//        Template existingTemplate = templateService.findById(id);
-//        if (existingTemplate != null) {
-//            updatedTemplate.setId(id);
-//            Template savedTemplate = templateService.updateTemplate(updatedTemplate);
-//            return ResponseEntity.ok(savedTemplate);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
 
     @PutMapping("update/{id}")
     public ResponseEntity<Template> updateTemplate(@PathVariable Long id, @RequestBody Template updatedTemplate) {
         log.info(" Mise à jour du template ID: {}", id);
 
-        Optional<Template> optional = templateService.findById(id);
+        Optional<Template> optional = crudService().findById(id);
         if (!optional.isPresent()) {
             log.warn("Template ID {} not found.", id);
             return ResponseEntity.notFound().build();
         }
 
         updatedTemplate.setId(id);
-        Template savedTemplate = templateService.updateTemplate(updatedTemplate);
+        Template savedTemplate = crudService().updateTemplate(updatedTemplate);
 
         log.info(" Template ID {} mis à jour avec succès.", id);
         return ResponseEntity.ok(savedTemplate);
     }
 
-    //    @GetMapping("/category/{categoryId}")
-//    public ResponseEntity<String> getTemplatesByCategory(@PathVariable Long categoryId) throws JsonProcessingException {
-//        List<Template> templates = templateRepository.findByCategoryId(categoryId);
-//        String json = new ObjectMapper().writeValueAsString(templates); // Manual JSON serialization
-//        return ResponseEntity.ok()
-//                .header("Content-Length", String.valueOf(json.getBytes().length))
-//                .body(json);
-//    }
-//
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Long categoryId) {
         try {
             log.info("Fetching templates for category ID: {}", categoryId);
 
-            List<Template> templates = templateService.getTemplatesByCategory(categoryId);
+            List<Template> templates = crudService().getTemplatesByCategory(categoryId);
             List<TemplateDto> templateDtos = templates.stream()
                     .map(this::convertToDto)
                     .collect(Collectors.toList());
@@ -95,44 +66,50 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
         }
     }
 
-
-//    @PostMapping("/pinned/{templateId}")
-//    public ResponseEntity<Boolean> setPinned(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
-//                                                       @PathVariable(name = "templateId") Long templateId) {
-//            requestContext.getSenderUser();
-//            return ResponseEntity.ok(Boolean.TRUE);
-//    }
-//
-//    @GetMapping("/pinned")
-//    public ResponseEntity<List<TemplateDto>> getPinned(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
-//        requestContext.getSenderUser();
-//        return ResponseEntity.ok(new ArrayList<>());
-//    }
-
     @PostMapping("/{templateId}/pin")
     public ResponseEntity<Boolean> togglePinStatus(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
             @PathVariable Long templateId) {
 
-        String userIdentifier = requestContext.getSenderUser();
-        log.info("Toggle pin status for template ID: {} by user: {}", templateId, userIdentifier);
+        log.info("togglePinStatus");
+        try {
+            String userName = requestContext.getSenderUser();
+            Optional<Template> optionalTemplate = crudService().findById(templateId);
+            optionalTemplate.ifPresentOrElse(template -> {
+                if (CollectionUtils.isEmpty(template.getFavorites())) {
+                    template.setFavorites(Arrays.asList(userName));
+                } else {
+                    template.getFavorites().add(userName);
+                }
+                crudService().update(template);
+            }, () -> {
+                throw new ObjectNotFoundException("with id " + templateId);
+            });
 
-        boolean isPinned = favoriteService.toggleFavorite(templateId, requestContext);
-        return ResponseEntity.ok(isPinned);
+            return ResponseFactory.responseOk(Boolean.TRUE);
+        } catch (Throwable e) {
+            log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
+            return getBackExceptionResponse(e);
+        }
     }
 
     @GetMapping("/pinned")
     public ResponseEntity<List<TemplateDto>> getPinnedTemplates(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
 
-        String userIdentifier = requestContext.getSenderUser();
-        log.info("Fetching pinned templates for user: {}", userIdentifier);
+        log.info("togglePinStatus");
+        try {
+            String userName = requestContext.getSenderUser();
+            List<Template> pinned = crudService().findAllByFavoritesContaining(userName);
+            if (CollectionUtils.isEmpty(pinned)) {
+                return ResponseEntity.noContent().build();
+            }
 
-        return ResponseEntity.ok(
-                favoriteService.getUserFavorites(userIdentifier).stream()
-                        .map(this::convertToDto)
-                        .collect(Collectors.toList())
-        );
+            return ResponseFactory.responseOk(mapper().listEntityToDto(pinned));
+        } catch (Throwable e) {
+            log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
+            return getBackExceptionResponse(e);
+        }
     }
 
     @GetMapping("/{templateId}/pinned-status")
@@ -140,30 +117,38 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
             @PathVariable Long templateId) {
 
-        String userIdentifier = Optional.ofNullable(requestContext)
-                .map(RequestContextDto::getSenderUser)
-                .orElse("default_user");
-        log.info("Checking pin status for template ID: {} by user: {}", templateId, userIdentifier);
+        log.info("checkPinStatus");
+        try {
+            String userName = requestContext.getSenderUser();
+            log.info("Checking pin status for template ID: {} by user: {}", templateId, userName);
 
-        return ResponseEntity.ok(
-                favoriteService.isFavorite(userIdentifier, templateId)
-        );
+            Template template = crudService().findAllByIdAndFavoritesContaining(templateId, userName);
+            if (template != null) {
+                return ResponseFactory.responseOk(Boolean.TRUE);
+            }
+
+            return ResponseFactory.responseNotFound();
+        } catch (Throwable e) {
+            log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
+            return getBackExceptionResponse(e);
+        }
     }
 
     private TemplateDto convertToDto(Template template) {
-        return templateMapper.entityToDto(template);
+        return mapper().entityToDto(template);
     }
 
 
     @GetMapping("/pinned/count")
     public ResponseEntity<Long> countMyPinnedTemplates(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
-
-        String userIdentifier = requestContext.getSenderUser();
-        log.info("Comptage des templates épinglés pour l'utilisateur: {}", userIdentifier);
-
-        return ResponseEntity.ok(favoriteService.countByUser(userIdentifier));
+        log.info("checkPinStatus");
+        try {
+            String userName = requestContext.getSenderUser();
+            return ResponseEntity.ok(crudService().countTemplatesWithFavoriteUser(userName));
+        } catch (Throwable e) {
+            log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
+            return getBackExceptionResponse(e);
+        }
     }
-
-
 }

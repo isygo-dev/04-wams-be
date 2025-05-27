@@ -7,11 +7,9 @@ import eu.isygoit.model.schema.SchemaConstantSize;
 import eu.isygoit.model.schema.SchemaFkConstantName;
 import eu.isygoit.model.schema.SchemaTableConstantName;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.SQLDelete;
@@ -25,7 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
 @Table(name = SchemaTableConstantName.T_AUTHOR)
 @SecondaryTable(name = SchemaTableConstantName.T_AUTHOR_FILE,
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID))
@@ -83,8 +81,8 @@ public class Author extends AuditableCancelableEntity<Long> implements ICodeAssi
     @ElementCollection
     @CollectionTable(name = SchemaTableConstantName.T_AUTHOR_FILE_TAGS,
             joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_AUTHOR,
-                    referencedColumnName = SchemaColumnConstantName.C_ID,
-                    foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_AUTHOR_FILE)))
-    @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
+                    referencedColumnName = SchemaColumnConstantName.C_CODE,
+                    foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_AUTHOR_FILE)))
+    @Column(name = SchemaColumnConstantName.C_TAG)
     private List<String> tags = new ArrayList<>();
 }

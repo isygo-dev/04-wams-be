@@ -33,7 +33,7 @@ public class ResumeFile extends FileEntity<Long> implements IFileEntity {
     @CollectionTable(name = SchemaTableConstantName.T_RESUME_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_RESUME,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_RESUME_FILE)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_RESUME_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
 }

@@ -33,7 +33,7 @@ public class JobOfferFile extends FileEntity<Long> implements IFileEntity {
     @CollectionTable(name = SchemaTableConstantName.T_JOB_OFFER_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_JOB_OFFER,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_JOB_OFFER_FILE)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_JOB_OFFER_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
 }

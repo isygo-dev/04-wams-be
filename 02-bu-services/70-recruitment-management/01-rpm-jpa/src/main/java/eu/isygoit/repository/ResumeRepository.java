@@ -15,5 +15,5 @@ public interface ResumeRepository extends JpaPagingAndSortingSAASCodifiableRepos
      * @param createdBy the created by
      * @return the long
      */
-    long countByCreatedBy(String createdBy);
+    Long countByCreatedBy(String createdBy);
 }

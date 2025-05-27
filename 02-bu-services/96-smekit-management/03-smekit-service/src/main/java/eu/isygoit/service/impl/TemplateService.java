@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -57,7 +56,6 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
 
     @Transactional
     public Template updateTemplate(Template template) {
-        template.setEditionDate(LocalDateTime.now());
         return templateRepository.save(template);
     }
 
@@ -65,5 +63,15 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
         return templateRepository.findByCategoryId(categoryId);
     }
 
+    public List<Template> findAllByFavoritesContaining(String userName) {
+        return templateRepository.findAllByFavoritesContaining(userName);
+    }
 
+    public Template findAllByIdAndFavoritesContaining(Long id, String userName) {
+        return templateRepository.findAllByIdAndFavoritesContaining(userName);
+    }
+
+    public Long countTemplatesWithFavoriteUser(String userName) {
+        return templateRepository.countTemplatesWithFavoriteUser(userName);
+    }
 }

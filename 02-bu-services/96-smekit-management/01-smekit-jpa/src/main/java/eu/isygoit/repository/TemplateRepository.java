@@ -1,6 +1,6 @@
 package eu.isygoit.repository;
 
-import eu.isygoit.enums.IEnumDocTempStatus;
+import eu.isygoit.enums.IEnumTemplateStatus;
 import eu.isygoit.model.Template;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,23 +15,28 @@ public interface TemplateRepository extends JpaPagingAndSortingSAASRepository<Te
 
     List<Template> findByCategoryId(Long categoryId);
 
-    //    @Query("SELECT t FROM Template t WHERE t.category.id = :categoryId")
-//    List<Template> findByCategoryId(@PathVariable Long categoryId);
     @Query("SELECT COUNT(t) FROM Template t WHERE t.category.id = :categoryId")
     int countByCategoryId(@Param("categoryId") Long categoryId);
 
     @Query("SELECT t.category.id, COUNT(t) FROM Template t GROUP BY t.category.id")
-    List<Object[]> countTemplatesByCategory();
+    List<Object[]> countByCategory();
 
     @Query("SELECT COUNT(t) FROM Template t WHERE t.category IS NULL")
-    int countTemplatesWithoutCategory();
+    int countWithoutCategory();
 
 
     @Query("SELECT COUNT(t) FROM Template t WHERE t.createDate BETWEEN :start AND :end")
-    long countByCreateDateBetween(
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end);
+    Long countByCreateDateBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("SELECT COUNT(t) FROM Template t WHERE t.typeTs = :type")
-    long countByTypeTs(@Param("type") IEnumDocTempStatus.Types type);
+    @Query("SELECT COUNT(t) FROM Template t WHERE t.state = :type")
+    Long countByStatus(@Param("type") IEnumTemplateStatus.Types type);
+
+    Long countByFavoritesContaining(String userName);
+
+    @Query("SELECT COUNT(t) FROM Template t JOIN t.favorites f WHERE f = :userName")
+    Long countTemplatesWithFavoriteUser(@Param("userName") String userName);
+
+    List<Template> findAllByFavoritesContaining(String userName);
+
+    Template findAllByIdAndFavoritesContaining(String userName);
 }

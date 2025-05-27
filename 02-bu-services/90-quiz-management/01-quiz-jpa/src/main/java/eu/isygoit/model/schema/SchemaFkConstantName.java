@@ -22,7 +22,7 @@ public interface SchemaFkConstantName extends ComSchemaFkConstantName {
      */
     String FK_CAND_QUIZ_ANS_REF_CAND_QUIZ = "FK_CAND_QUIZ_ANS_REF_CAND_QUIZ";
     /**
-     * The constant FK_TAGS_REF_QUIZ.
+     * The constant FK_TAG_REF_QUIZ.
      */
-    String FK_TAGS_REF_QUIZ = "FK_TAGS_REF_QUIZ";
+    String FK_TAG_REF_QUIZ = "FK_TAG_REF_QUIZ";
 }

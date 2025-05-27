@@ -11,6 +11,6 @@ import java.util.Date;
 
 public interface AuthorRepository extends JpaPagingAndSortingCodifiableRepository<Author, Long> {
     @Query("SELECT COUNT(a) FROM Author a WHERE a.createDate BETWEEN :start AND :end")
-    long countByCreateDateBetween(@Param("start") Date startDate,
+    Long countByCreateDateBetween(@Param("start") Date startDate,
                                   @Param("end") Date endDate);
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 
 public interface CategoryRepository extends JpaPagingAndSortingSAASRepository<Category, Long> {
     @Query("SELECT COUNT(c) FROM Category c WHERE c.createDate BETWEEN :start AND :end")
-    long countByCreateDateBetween(@Param("start") Date startDate,
+    Long countByCreateDateBetween(@Param("start") Date startDate,
                                   @Param("end") Date endDate);
 
 }

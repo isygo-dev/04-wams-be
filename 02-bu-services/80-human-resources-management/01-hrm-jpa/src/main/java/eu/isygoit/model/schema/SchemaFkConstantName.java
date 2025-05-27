@@ -123,7 +123,7 @@ public interface SchemaFkConstantName extends ComSchemaFkConstantName {
      */
     String FK_CONTRACT_REF_AMENDMENT = "FK_CONTRACT_REF_AMENDMENT";
     /**
-     * The constant FK_TAGS_REF_CONTRACT_FILE.
+     * The constant FK_TAG_REF_CONTRACT_FILE.
      */
-    String FK_TAGS_REF_CONTRACT_FILE = "FK_TAGS_REF_CONTRACT_FILE";
+    String FK_TAG_REF_CONTRACT_FILE = "FK_TAG_REF_CONTRACT_FILE";
 }

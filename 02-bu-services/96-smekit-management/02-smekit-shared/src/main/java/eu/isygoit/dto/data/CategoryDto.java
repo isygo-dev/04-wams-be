@@ -4,6 +4,7 @@ import eu.isygoit.dto.IImageUploadDto;
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
 import eu.isygoit.enums.IEnumCategoryStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,13 +17,12 @@ import java.util.List;
 @SuperBuilder
 
 public class CategoryDto extends AbstractAuditableDto<Long> implements IImageUploadDto {
+
+    List<String> tags;
     private String domain;
     private String name;
     private String description;
-    private IEnumCategoryStatus.Status type = IEnumCategoryStatus.Status.DISABLED;
+    @Builder.Default
+    private IEnumCategoryStatus.Status status = IEnumCategoryStatus.Status.DISABLED;
     private String imagePath;
-    private List<TagDto> tagName;
-    //    private List<TemplateDto> templates ;
-
-
 }

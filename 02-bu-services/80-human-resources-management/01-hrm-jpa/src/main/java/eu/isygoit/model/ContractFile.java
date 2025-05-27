@@ -33,7 +33,7 @@ public class ContractFile extends FileEntity<Long> implements IFileEntity {
     @CollectionTable(name = SchemaTableConstantName.T_CONTRACT_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_CONTRACT,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_CONTRACT_FILE)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_CONTRACT_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
 }

@@ -28,9 +28,8 @@ public class TemplateFile extends FileEntity<Long> implements IFileEntity {
     @ElementCollection
     @CollectionTable(name = SchemaTableConstantName.T_TEMPLATE_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_TEMPLATE,
-            referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_TEMPLATE_FILE)))
-    @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
+            referencedColumnName = SchemaColumnConstantName.C_CODE,
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_TEMPLATE)))
+    @Column(name = SchemaColumnConstantName.C_TAG)
     private List<String> tags;
-
 }

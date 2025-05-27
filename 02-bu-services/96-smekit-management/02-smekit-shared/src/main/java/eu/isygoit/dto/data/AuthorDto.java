@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @SuperBuilder
 public class AuthorDto extends AbstractAuditableDto<Long> implements IImageUploadDto, IFileUploadDto {
+
     private String firstname;
     private String lastname;
     private String domain;
@@ -27,5 +28,4 @@ public class AuthorDto extends AbstractAuditableDto<Long> implements IImageUploa
     private String path;
     private String fileName;
     private String extension;
-
 }

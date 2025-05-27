@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
 import eu.isygoit.dto.data.DashboardStatsDTO;
-import eu.isygoit.enums.IEnumDocTempStatus;
+import eu.isygoit.enums.IEnumTemplateStatus;
 import eu.isygoit.model.Author;
 import eu.isygoit.model.Category;
 import eu.isygoit.model.Template;
@@ -24,9 +24,8 @@ public class DashboardService {
     private final TemplateRepository templateRepository;
     private final CategoryRepository categoryRepository;
     private final AuthorRepository authorRepository;
-    private final eu.isygoit.repository.templateFavoriteRepository templateFavoriteRepository;
 
-    public DashboardStatsDTO getDashboardStatistics(String userIdentifier) {
+    public DashboardStatsDTO getDashboardStatistics(String userName) {
         List<Template> templates = templateRepository.findAll();
         List<Category> categories = categoryRepository.findAll();
         List<Author> authors = authorRepository.findAll();
@@ -35,12 +34,9 @@ public class DashboardService {
         long totalCategories = categories.size();
         long activeAuthors = authors.size();
         long pinnedTemplates = 0;
-        if (userIdentifier != null && !userIdentifier.isEmpty()) {
-            pinnedTemplates = templateFavoriteRepository.countByUserIdentifier(userIdentifier);
+        if (userName != null && !userName.isEmpty()) {
+            pinnedTemplates = templateRepository.countByFavoritesContaining(userName);
         }
-//        long pendingTemplates = templates.stream()
-//                .filter(t -> t.getTypeTs() == IEnumDocTempStatus.Types.VALIDATING)
-//                .count();
 
         Map<String, Long> documentFormats = templates.stream()
                 .collect(Collectors.groupingBy(
@@ -50,7 +46,7 @@ public class DashboardService {
 
         Map<String, Long> languageStats = templates.stream()
                 .collect(Collectors.groupingBy(
-                        t -> t.getTypeTl() != null ? t.getTypeTl().name() : "unknown",
+                        t -> t.getLanguage() != null ? t.getLanguage().name() : "unknown",
                         Collectors.counting()
                 ));
 
@@ -68,7 +64,7 @@ public class DashboardService {
                             .category(t.getCategory() != null ? t.getCategory().getName() : "Non catégorisé")
                             .author(t.getAuthor() != null ?
                                     t.getAuthor().getFirstname() + " " + t.getAuthor().getLastname() : "Anonyme")
-                            .status(t.getTypeTs() == IEnumDocTempStatus.Types.VALIDATING ? "active" : "pending")
+                            .status(t.getState() == IEnumTemplateStatus.Types.VALIDATING ? "active" : "pending")
                             .date(formattedDate)
                             .build();
                 })

@@ -30,7 +30,7 @@ public interface JobOfferRepository extends JpaPagingAndSortingSAASCodifiableRep
      * @return the long
      */
     @Query(name = "JobOffer.countActiveJobs", nativeQuery = true)
-    long countByDomainAndDeadLine(@Param("domain") String domain);
+    Long countByDomainAndDeadLine(@Param("domain") String domain);
 
     /**
      * Count by domain and expired dead line long.
@@ -39,5 +39,5 @@ public interface JobOfferRepository extends JpaPagingAndSortingSAASCodifiableRep
      * @return the long
      */
     @Query(name = "JobOffer.countExpiredJobs", nativeQuery = true)
-    long countByDomainAndExpiredDeadLine(@Param("domain") String domain);
+    Long countByDomainAndExpiredDeadLine(@Param("domain") String domain);
 }

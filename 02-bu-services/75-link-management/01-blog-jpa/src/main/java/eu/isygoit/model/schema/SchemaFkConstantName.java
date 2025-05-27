@@ -21,9 +21,9 @@ public interface SchemaFkConstantName extends ComSchemaFkConstantName {
 
 
     /**
-     * The constant FK_TAGS_REF_POST.
+     * The constant FK_TAG_REF_POST.
      */
-    String FK_TAGS_REF_POST = "FK_TAGS_REF_POST";
+    String FK_TAG_REF_POST = "FK_TAG_REF_POST";
 
     /**
      * The constant FK_BLOG_REF_POST.

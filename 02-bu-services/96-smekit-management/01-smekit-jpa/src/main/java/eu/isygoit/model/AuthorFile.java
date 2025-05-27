@@ -29,7 +29,7 @@ public class AuthorFile extends FileEntity<Long> implements IFileEntity {
     @CollectionTable(name = SchemaTableConstantName.T_AUTHOR_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_AUTHOR,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_AUTHOR_FILE)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_AUTHOR_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
 }

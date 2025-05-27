@@ -4,10 +4,10 @@ import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
 import eu.isygoit.annotation.ServRepo;
 import eu.isygoit.com.rest.service.CrudService;
-import eu.isygoit.model.SharedWith;
+import eu.isygoit.model.DocumentComment;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
-import eu.isygoit.repository.SharedWithRepository;
-import eu.isygoit.service.ISharedWithService;
+import eu.isygoit.repository.DocumentCommentRepository;
+import eu.isygoit.service.IDocCommentsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = SharedWithRepository.class)
-public class SharedWithService extends CrudService<Long, SharedWith, SharedWithRepository> implements ISharedWithService {
-
-
+@ServRepo(value = DocumentCommentRepository.class)
+public class DocumentCommentService extends CrudService<Long, DocumentComment, DocumentCommentRepository> implements IDocCommentsService {
 }

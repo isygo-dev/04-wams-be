@@ -48,7 +48,7 @@ public class JobOfferInfo extends AuditableEntity<Long> {
     @CollectionTable(name = SchemaTableConstantName.T_JOB_OFFER_QUALIFICATIONS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_JOB,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_JOB)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_JOB)))
     @Column(name = SchemaColumnConstantName.C_TAG)
     private List<String> qualifications;
 

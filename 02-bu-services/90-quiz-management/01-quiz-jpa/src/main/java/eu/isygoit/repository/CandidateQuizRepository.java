@@ -21,5 +21,5 @@ public interface CandidateQuizRepository extends JpaPagingAndSortingRepository<C
      */
     Optional<CandidateQuiz> findByQuizCodeIgnoreCaseAndAccountCodeIgnoreCase(String quizCode, String accountCode);
 
-    long countByAccountCode(String accountCode);
+    Long countByAccountCode(String accountCode);
 }

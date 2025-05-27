@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.extendable.AbstractAuditableDto;
-import eu.isygoit.enums.IEnumDocTempStatus;
+import eu.isygoit.enums.IEnumTemplateStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class DocumentDto extends AbstractAuditableDto<Long> {
     private String description;
     private LocalDateTime editionDate;
     private Boolean shared = Boolean.FALSE;
-    private IEnumDocTempStatus.Types type = IEnumDocTempStatus.Types.EDITING;
+    private IEnumTemplateStatus.Types type = IEnumTemplateStatus.Types.EDITING;
     // private  Set<SharedWithDto> sharedWith ;
     // private  Set<DocCommentDto> comments;
     private TemplateDto template;

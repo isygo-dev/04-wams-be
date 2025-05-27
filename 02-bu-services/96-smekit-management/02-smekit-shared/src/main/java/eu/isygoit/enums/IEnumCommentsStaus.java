@@ -1,12 +1,12 @@
 package eu.isygoit.enums;
 
-public interface IEnumDocTempStatus {
-    int STR_ENUM_SIZE = 15;
+public interface IEnumCommentsStaus {
+    int STR_ENUM_SIZE = 10;
 
     enum Types implements IEnum {
-        EDITING("Editing"),
-        VALIDATING("Validated"),
-        REJECTED("Rejected");
+        OPEN("open"),
+        CLOSED("Closed"),
+        VALIDATED("Validation");
 
         private final String meaning;
 

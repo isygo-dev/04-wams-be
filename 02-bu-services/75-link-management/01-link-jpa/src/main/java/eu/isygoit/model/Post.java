@@ -92,7 +92,7 @@ public class Post extends AuditableCancelableEntity<Long>
     @CollectionTable(name = SchemaTableConstantName.T_POST_FILE_TAGS
             , joinColumns = @JoinColumn(name = SchemaColumnConstantName.C_POST,
             referencedColumnName = SchemaColumnConstantName.C_ID,
-            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAGS_REF_POST_FILE)))
+            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TAG_REF_POST_FILE)))
     @Column(name = SchemaColumnConstantName.C_TAG_OWNER)
     private List<String> tags;
     //END IFileEntity : SecondaryTable
