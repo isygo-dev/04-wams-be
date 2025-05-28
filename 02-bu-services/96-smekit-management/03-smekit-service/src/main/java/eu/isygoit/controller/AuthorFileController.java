@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping(path = "/api/v1/private/authorfile")
+@RequestMapping(path = "/api/v1/private/author")
 @CtrlDef(handler = SmeKitExceptionHandler.class, mapper = AuthorMapper.class, minMapper = AuthorMapper.class, service = AuthorService.class)
 public class AuthorFileController extends MappedFileController<Long, Author, AuthorDto, AuthorDto, AuthorService> {
 }

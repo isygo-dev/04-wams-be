@@ -53,22 +53,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 //        return ResponseEntity.notFound().build();
 //    }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<Template> updateTemplate(@PathVariable Long id, @RequestBody Template updatedTemplate) {
-        log.info(" Mise à jour du template ID: {}", id);
 
-        Template existingTemplate = templateService.findById(id);
-        if (existingTemplate == null) {
-            log.warn("⚠Template ID {} introuvable.", id);
-            return ResponseEntity.notFound().build();
-        }
-
-        updatedTemplate.setId(id);
-        Template savedTemplate = templateService.updateTemplate(updatedTemplate);
-
-        log.info(" Template ID {} mis à jour avec succès.", id);
-        return ResponseEntity.ok(savedTemplate);
-    }
 
 //    @GetMapping("/category/{categoryId}")
 //    public ResponseEntity<String> getTemplatesByCategory(@PathVariable Long categoryId) throws JsonProcessingException {

@@ -83,10 +83,10 @@ public class Document  extends AuditableEntity<Long> implements ISAASEntity, ICo
     @JoinColumn(name =SchemaColumnConstantName.C_COMMENT , referencedColumnName = SchemaColumnConstantName.C_ID,
             foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_DOCUMENTS_COMMENTS))
     private  Set<DocComment> comments;
-
-    @ManyToOne
-    @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_DOCUMENTS))
-    private Template template;
+//
+//    @ManyToOne
+//    @JoinColumn(name = SchemaColumnConstantName.C_CAT, foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_DOCUMENTS))
+//    private Template template;
 }
 
 

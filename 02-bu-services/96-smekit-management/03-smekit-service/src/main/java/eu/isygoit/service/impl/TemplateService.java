@@ -2,6 +2,7 @@ package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.CodeGenKms;
 import eu.isygoit.annotation.CodeGenLocal;
+import eu.isygoit.annotation.DmsLinkFileService;
 import eu.isygoit.annotation.SrvRepo;
 import eu.isygoit.com.rest.service.impl.FileService;
 import eu.isygoit.config.AppProperties;
@@ -10,6 +11,7 @@ import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.enums.IEnumDocTempStatus;
 import eu.isygoit.model.*;
 import eu.isygoit.model.schema.ComSchemaColumnConstantName;
+import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 
 import eu.isygoit.repository.TemplateRepository;
@@ -25,6 +27,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional
+@DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = TemplateRepository.class)
