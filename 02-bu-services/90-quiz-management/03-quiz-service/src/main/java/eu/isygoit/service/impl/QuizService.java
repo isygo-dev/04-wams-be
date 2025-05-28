@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -101,7 +102,11 @@ public class QuizService extends CodeAssignableService<Long, Quiz, QuizRepositor
                 Path imagePath = FileHelper.saveMultipartFile(target,
                         file.getOriginalFilename() + "_" + optional.get().getId(),
                         file,
-                        "png");
+                        "png",
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                        StandardOpenOption.SYNC);
 
                 optional.get().setImagePath(imagePath.toString());
             } else {

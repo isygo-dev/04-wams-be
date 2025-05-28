@@ -1,6 +1,7 @@
 package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -37,13 +38,13 @@ public class IntegrationFlow extends AuditableEntity<Long> implements ICodeAssig
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    //@Convert(converter = LowerCaseConverter.class)
+    @Convert(converter = LowerCaseConverter.class)
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
     private String domain;
 
-    //@Convert(converter = LowerCaseConverter.class)
-    @Column(name = SchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
     private String code;
 
     @Column(name = SchemaColumnConstantName.C_ORDER_NAME, length = ComSchemaConstantSize.S_NAME, updatable = false, nullable = false)

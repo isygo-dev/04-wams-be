@@ -1,7 +1,10 @@
 package eu.isygoit.model;
 
+import eu.isygoit.annotation.Criteria;
 import eu.isygoit.constants.AccountTypeConstants;
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.converter.CamelCaseConverter;
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
@@ -41,19 +44,26 @@ public class Employee extends AuditableCancelableEntity<Long> implements IDomain
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_sequence_generator")
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
-    //@Convert(converter = LowerCaseConverter.class)
+
+    @Convert(converter = LowerCaseConverter.class)
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
     private String domain;
-    //@Convert(converter = LowerCaseConverter.class)
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
     private String code;
-    //@Convert(converter = CamelCaseConverter.class)
+
+    @Convert(converter = CamelCaseConverter.class)
+    @Criteria
     @Column(name = SchemaColumnConstantName.C_FIRST_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
     private String firstName;
-    //@Convert(converter = CamelCaseConverter.class)
+
+    @Convert(converter = CamelCaseConverter.class)
+    @Criteria
     @Column(name = SchemaColumnConstantName.C_LAST_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
     private String lastName;
+
     @Column(name = SchemaColumnConstantName.C_TITLE, length = ComSchemaConstantSize.S_NAME)
     private String title;
     @Column(name = SchemaColumnConstantName.C_EMAIL, length = SchemaConstantSize.EMAIL, nullable = false)

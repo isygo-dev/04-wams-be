@@ -38,5 +38,5 @@ public interface TemplateRepository extends JpaPagingAndSortingSAASRepository<Te
 
     List<Template> findAllByFavoritesContaining(String userName);
 
-    Template findAllByIdAndFavoritesContaining(String userName);
+    Template findAllByIdAndFavoritesContaining(Long id, String userName);
 }

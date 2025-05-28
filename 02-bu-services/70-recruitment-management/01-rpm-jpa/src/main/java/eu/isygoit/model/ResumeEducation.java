@@ -1,7 +1,10 @@
 package eu.isygoit.model;
 
 import eu.isygoit.model.jakarta.AuditableEntity;
-import eu.isygoit.model.schema.*;
+import eu.isygoit.model.schema.ComSchemaConstantSize;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.SchemaConstantSize;
+import eu.isygoit.model.schema.SchemaTableConstantName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,6 +41,6 @@ public class ResumeEducation extends AuditableEntity<Long> {
     @Column(name = SchemaColumnConstantName.C_DATE_GRADUATION)
     @Temporal(TemporalType.TIMESTAMP)
     private Date yearOfGraduation;
-    @Column(name = ComSchemaColumnConstantName.C_COUNTRY_NAME, length = SchemaConstantSize.S_NAME)
+    @Column(name = SchemaColumnConstantName.C_COUNTRY_NAME, length = SchemaConstantSize.S_NAME)
     private String country;
 }

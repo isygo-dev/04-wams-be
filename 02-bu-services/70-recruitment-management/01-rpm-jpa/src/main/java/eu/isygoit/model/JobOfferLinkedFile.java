@@ -1,6 +1,7 @@
 package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.extendable.LinkedFileModel;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.model.schema.SchemaConstantSize;
@@ -29,7 +30,7 @@ public class JobOfferLinkedFile extends LinkedFileModel<Long> implements IDomain
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    //@Convert(converter = LowerCaseConverter.class)
+    @Convert(converter = LowerCaseConverter.class)
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
     private String domain;

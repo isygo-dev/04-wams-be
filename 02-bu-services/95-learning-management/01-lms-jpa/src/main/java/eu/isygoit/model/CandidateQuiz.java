@@ -1,5 +1,6 @@
 package eu.isygoit.model;
 
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -36,8 +37,8 @@ public class CandidateQuiz extends AuditableCancelableEntity<Long> implements IC
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    //@Convert(converter = LowerCaseConverter.class)
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
     private String code;
 
     @Temporal(value = TemporalType.TIMESTAMP)

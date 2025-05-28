@@ -1,6 +1,7 @@
 package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
@@ -39,13 +40,18 @@ public class Post extends AuditableCancelableEntity<Long>
     @OrderBy(SchemaColumnConstantName.C_CREATE_DATE + " DESC")
     private Long id;
 
+    @Convert(converter = LowerCaseConverter.class)
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
     private String domain;
+
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
+    private String code;
+
     @Column(name = SchemaColumnConstantName.C_ACCOUNT, length = SchemaConstantSize.CODE, updatable = false, nullable = false)
     private String accountCode;
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
-    private String code;
+
     @Column(name = SchemaColumnConstantName.C_TITLE, length = SchemaConstantSize.S_TITLE, nullable = false)
     private String title;
     @Column(name = SchemaColumnConstantName.C_TALK, length = SchemaConstantSize.XXL_DESCRIPTION, nullable = false)

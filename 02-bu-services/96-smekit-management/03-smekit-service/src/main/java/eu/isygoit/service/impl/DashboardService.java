@@ -63,7 +63,7 @@ public class DashboardService {
                             .name(t.getName())
                             .category(t.getCategory() != null ? t.getCategory().getName() : "Non catégorisé")
                             .author(t.getAuthor() != null ?
-                                    t.getAuthor().getFirstname() + " " + t.getAuthor().getLastname() : "Anonyme")
+                                    t.getAuthor().getFirstName() + " " + t.getAuthor().getLastName() : "Anonyme")
                             .status(t.getState() == IEnumTemplateStatus.Types.VALIDATING ? "active" : "pending")
                             .date(formattedDate)
                             .build();

@@ -1,6 +1,9 @@
 package eu.isygoit.model;
 
+import eu.isygoit.annotation.Criteria;
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.converter.CamelCaseConverter;
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.model.schema.SchemaConstantSize;
@@ -39,21 +42,27 @@ public class Author extends AuditableCancelableEntity<Long> implements ICodeAssi
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
+    @Convert(converter = LowerCaseConverter.class)
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.S_NAME, updatable = false, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
     private String domain;
 
-    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, updatable = false, nullable = false)
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
     private String code;
 
     @Column(name = SchemaColumnConstantName.C_PHOTO)
     private String imagePath;
 
+    @Convert(converter = CamelCaseConverter.class)
+    @Criteria
     @Column(name = SchemaColumnConstantName.C_FIRST_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
-    private String firstname;
+    private String firstName;
 
-    @Column(name = SchemaColumnConstantName.C_LAST_NAME, length = SchemaConstantSize.S_NAME)
-    private String lastname;
+    @Convert(converter = CamelCaseConverter.class)
+    @Criteria
+    @Column(name = SchemaColumnConstantName.C_LAST_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
+    private String lastName;
 
     @Column(name = SchemaColumnConstantName.C_EMAIL, length = SchemaConstantSize.EMAIL)
     private String email;

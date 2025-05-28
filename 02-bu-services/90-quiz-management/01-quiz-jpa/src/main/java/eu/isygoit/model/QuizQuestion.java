@@ -36,7 +36,7 @@ public class QuizQuestion extends AuditableEntity<Long> implements IImageEntity 
     @Builder.Default
     @ColumnDefault("'MCQ'")
     @Enumerated(EnumType.STRING)
-    @Column(name = ComSchemaColumnConstantName.C_TYPE, length = IEnumQuestionType.STR_ENUM_SIZE, nullable = false)
+    @Column(name = SchemaColumnConstantName.C_TYPE, length = IEnumQuestionType.STR_ENUM_SIZE, nullable = false)
     private IEnumQuestionType.Types type = IEnumQuestionType.Types.MCQ;
 
     @Column(name = SchemaColumnConstantName.C_RANK)

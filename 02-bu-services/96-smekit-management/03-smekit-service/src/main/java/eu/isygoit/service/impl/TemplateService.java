@@ -68,7 +68,7 @@ public class TemplateService extends FileService<Long, Template, TemplateReposit
     }
 
     public Template findAllByIdAndFavoritesContaining(Long id, String userName) {
-        return templateRepository.findAllByIdAndFavoritesContaining(userName);
+        return templateRepository.findAllByIdAndFavoritesContaining(id, userName);
     }
 
     public Long countTemplatesWithFavoriteUser(String userName) {

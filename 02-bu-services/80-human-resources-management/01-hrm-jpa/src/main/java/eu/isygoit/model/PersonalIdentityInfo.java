@@ -1,8 +1,12 @@
 package eu.isygoit.model;
 
 import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableEntity;
-import eu.isygoit.model.schema.*;
+import eu.isygoit.model.schema.ComSchemaConstantSize;
+import eu.isygoit.model.schema.SchemaColumnConstantName;
+import eu.isygoit.model.schema.SchemaConstantSize;
+import eu.isygoit.model.schema.SchemaTableConstantName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +32,16 @@ public class PersonalIdentityInfo extends AuditableEntity<Long> implements IImag
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personal_identity_sequence_generator")
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
+
+    @Convert(converter = LowerCaseConverter.class)
+    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
+    private String domain;
+
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
+    private String code;
+
     @Column(name = SchemaColumnConstantName.C_CIN_NUMBER, length = ComSchemaConstantSize.CIN)
     private String cardNumber;
     @Column(name = SchemaColumnConstantName.C_ISSUED_DATE)
@@ -36,13 +50,6 @@ public class PersonalIdentityInfo extends AuditableEntity<Long> implements IImag
     private String issuedPlace;
     @Column(name = SchemaColumnConstantName.C_PHOTO)
     private String imagePath;
-    //@Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
-    //@Convert(converter = LowerCaseConverter.class)
-    @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
-    private String code;
     @Column(name = SchemaColumnConstantName.C_EMPLOYEE_DETAILS_ID, updatable = false)
     private Long employeeDetailsId;
 }
