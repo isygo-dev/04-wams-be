@@ -23,7 +23,6 @@ import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.*;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
-import eu.isygoit.remote.ims.ImAccountService;
 import eu.isygoit.remote.ims.ImsAppParameterService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.remote.quiz.QuizCandidateQuizService;

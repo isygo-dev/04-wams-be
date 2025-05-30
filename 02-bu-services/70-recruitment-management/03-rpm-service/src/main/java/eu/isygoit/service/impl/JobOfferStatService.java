@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JobOfferStatService {
-    
+
     private final JobOfferRepository jobOfferRepository;
-    
+
     public JobOfferStatService(JobOfferRepository jobOfferRepository) {
         this.jobOfferRepository = jobOfferRepository;
     }

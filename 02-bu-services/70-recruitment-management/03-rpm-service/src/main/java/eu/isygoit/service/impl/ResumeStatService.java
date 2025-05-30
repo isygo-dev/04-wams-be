@@ -1,17 +1,13 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
-import eu.isygoit.com.camel.repository.ICamelRepository;
 import eu.isygoit.constants.DomainConstants;
 import eu.isygoit.dto.common.RequestContextDto;
 import eu.isygoit.model.AssoAccountResume;
 import eu.isygoit.remote.ims.ImAccountService;
-import eu.isygoit.remote.ims.ImsAppParameterService;
 import eu.isygoit.remote.quiz.QuizCandidateQuizService;
 import eu.isygoit.repository.AssoAccountResumeRepository;
 import eu.isygoit.repository.JobOfferApplicationRepository;
 import eu.isygoit.repository.ResumeRepository;
-import eu.isygoit.service.IMsgService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
