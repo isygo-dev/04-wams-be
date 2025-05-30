@@ -22,7 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = SchemaTableConstantName.T_CATEGORY)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Category extends AuditableEntity<Long> implements IDomainAssignable, IImageEntity {
+public class Category extends AuditableEntity<Long> implements IDomainAssignable, IImageEntity, ICodeAssignable {
     @Id
     @SequenceGenerator(name = "category_sequence_generator", sequenceName = "category_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "category_sequence_generator")
@@ -33,6 +33,10 @@ public class Category extends AuditableEntity<Long> implements IDomainAssignable
     @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
     @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
     private String domain;
+
+    @Convert(converter = LowerCaseConverter.class)
+    @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
+    private String code;
 
     @Column(name = SchemaColumnConstantName.C_NAME, length = SchemaConstantSize.S_NAME, nullable = false)
     private String name;

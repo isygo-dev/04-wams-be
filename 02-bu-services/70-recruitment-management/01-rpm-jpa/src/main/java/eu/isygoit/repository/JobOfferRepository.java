@@ -11,7 +11,7 @@ import java.util.List;
  * The interface Job offer repository.
  */
 @Repository
-public interface JobOfferRepository extends JpaPagingAndSortingSAASCodifiableRepository<JobOffer, Long> {
+public interface JobOfferRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<JobOffer, Long> {
 
 
     /**

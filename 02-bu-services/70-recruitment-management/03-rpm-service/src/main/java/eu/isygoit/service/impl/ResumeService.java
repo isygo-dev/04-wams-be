@@ -25,7 +25,6 @@ import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
 import eu.isygoit.remote.ims.ImAccountService;
 import eu.isygoit.remote.ims.ImsAppParameterService;
-import eu.isygoit.remote.ims.ImsDomainService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.remote.quiz.QuizCandidateQuizService;
 import eu.isygoit.repository.AssoAccountResumeRepository;
@@ -47,6 +46,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -65,24 +65,30 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     private final IMsgService msgService;
     private final ICamelRepository camelRepository;
     private final ImsAppParameterService imsAppParameterService;
-    private final ImsDomainService imsDomainService;
     private final JobOfferApplicationRepository jobApplicationRepository;
     private final KafkaRegisterAccountProducer kafkaRegisterAccountProducer;
     private final QuizCandidateQuizService quizCandidateQuizService;
-    private final ImAccountService imAccountService;
+    private final ResumeStatService resumeStatService;
 
     @Autowired
-    public ResumeService(AppProperties appProperties, AssoAccountResumeRepository assoAccountResumeRepository, IMsgService msgService, ICamelRepository camelRepository, ImsAppParameterService imsAppParameterService, ImsDomainService imsDomainService, JobOfferApplicationRepository jobApplicationRepository, KafkaRegisterAccountProducer kafkaRegisterAccountProducer, QuizCandidateQuizService quizCandidateQuizService, ImAccountService imAccountService) {
+    public ResumeService(AppProperties appProperties,
+                         AssoAccountResumeRepository assoAccountResumeRepository,
+                         IMsgService msgService,
+                         ICamelRepository camelRepository,
+                         ImsAppParameterService imsAppParameterService,
+                         JobOfferApplicationRepository jobApplicationRepository,
+                         KafkaRegisterAccountProducer kafkaRegisterAccountProducer,
+                         QuizCandidateQuizService quizCandidateQuizService,
+                         ResumeStatService resumeStatService) {
         this.appProperties = appProperties;
         this.assoAccountResumeRepository = assoAccountResumeRepository;
         this.msgService = msgService;
         this.camelRepository = camelRepository;
         this.imsAppParameterService = imsAppParameterService;
-        this.imsDomainService = imsDomainService;
         this.jobApplicationRepository = jobApplicationRepository;
         this.kafkaRegisterAccountProducer = kafkaRegisterAccountProducer;
         this.quizCandidateQuizService = quizCandidateQuizService;
-        this.imAccountService = imAccountService;
+        this.resumeStatService = resumeStatService;
     }
 
     @Override
@@ -233,62 +239,47 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
 
     @Override
     public ResumeGlobalStatDto getGlobalStatistics(IEnumResumeStatType.Types statType, RequestContextDto requestContext) {
-        ResumeGlobalStatDto.ResumeGlobalStatDtoBuilder builder = ResumeGlobalStatDto.builder();
-        switch (statType) {
-            case TOTAL_COUNT:
-                builder.totalCount(stat_GetResumesCount(requestContext));
-                break;
-            case UPLOADED_BY_ME_COUNT:
-                builder.uploadedByMeCount(stat_GetUploadedByMeResumesCount(requestContext));
-                break;
-            case CONFIRMED_COUNT:
-                builder.confirmedCount(stat_GetConfirmedResumesCount(requestContext));
-                break;
-            case COMPLETED_COUNT:
-                builder.completedCount(stat_GetCompletedResumesCount(requestContext));
-                break;
-            case INTERVIEWED_COUNT:
-                builder.interviewedCount(stat_GetInterviewdResumesCount(requestContext));
-                break;
-            default:
-                throw new StatisticTypeNotSupportedException(statType.name());
-        }
+        // Map each statType to a Supplier that returns the corresponding DTO with only that stat calculated
+        Map<IEnumResumeStatType.Types, Supplier<ResumeGlobalStatDto>> statSuppliers = Map.of(
+                IEnumResumeStatType.Types.TOTAL_COUNT, () ->
+                        ResumeGlobalStatDto.builder()
+                                .totalCount(resumeStatService.stat_GetResumesCount(requestContext))
+                                .build(),
 
-        return builder.build();
-    }
+                IEnumResumeStatType.Types.UPLOADED_BY_ME_COUNT, () ->
+                        ResumeGlobalStatDto.builder()
+                                .uploadedByMeCount(resumeStatService.stat_GetUploadedByMeResumesCount(requestContext))
+                                .build(),
 
-    private Long stat_GetCompletedResumesCount(RequestContextDto requestContext) {
-        return 58L;
-    }
+                IEnumResumeStatType.Types.CONFIRMED_COUNT, () ->
+                        ResumeGlobalStatDto.builder()
+                                .confirmedCount(resumeStatService.stat_GetConfirmedResumesCount(requestContext))
+                                .build(),
 
-    private Long stat_GetResumesCount(RequestContextDto requestContext) {
-        if (DomainConstants.SUPER_DOMAIN_NAME.equals(requestContext.getSenderDomain())) {
-            return repository().count();
-        } else {
-            return repository().countByDomainIgnoreCase(requestContext.getSenderDomain());
-        }
-    }
+                IEnumResumeStatType.Types.COMPLETED_COUNT, () ->
+                        ResumeGlobalStatDto.builder()
+                                .completedCount(resumeStatService.stat_GetCompletedResumesCount(requestContext))
+                                .build(),
 
-    private Long stat_GetUploadedByMeResumesCount(RequestContextDto requestContext) {
-        return repository().countByCreatedBy(requestContext.getCreatedByString());
-    }
+                IEnumResumeStatType.Types.INTERVIEWED_COUNT, () ->
+                        ResumeGlobalStatDto.builder()
+                                .interviewedCount(resumeStatService.stat_GetInterviewdResumesCount(requestContext))
+                                .build()
+        );
 
-    private Long stat_GetConfirmedResumesCount(RequestContextDto requestContext) {
-        ResponseEntity<Long> responseEntity = imAccountService.getConfirmedResumeAccountsCount(requestContext);
-        return responseEntity.getBody();
-    }
-
-    private Long stat_GetInterviewdResumesCount(RequestContextDto requestContext) {
-        return jobApplicationRepository.countOngoingGlobalJobApplication(requestContext.getSenderDomain());
+        // Return the stat DTO for the requested type or throw if unsupported
+        return Optional.ofNullable(statSuppliers.get(statType))
+                .map(Supplier::get)
+                .orElseThrow(() -> new StatisticTypeNotSupportedException(statType.name()));
     }
 
     @Override
     public ResumeStatDto getObjectStatistics(String code, RequestContextDto requestContext) {
         return ResumeStatDto.builder()
                 .completion(75L)
-                .realizedTestsCount(stat_GetInterviewedResumesCount(code))
-                .applicationsCount(stat_GetJobApplicationResumesCount(code, requestContext))
-                .ongoingApplicationsCount(stat_GetOngoingJobApplicationResumesCount(code, requestContext))
+                .realizedTestsCount(resumeStatService.stat_GetInterviewedResumesCount(code))
+                .applicationsCount(resumeStatService.stat_GetJobApplicationResumesCount(code, requestContext))
+                .ongoingApplicationsCount(resumeStatService.stat_GetOngoingJobApplicationResumesCount(code, requestContext))
                 .build();
     }
 
@@ -296,23 +287,6 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     public String getAccountCode(String resumeCode) {
         Optional<AssoAccountResume> assoAccountResume = assoAccountResumeRepository.findByResume_Code(resumeCode);
         return assoAccountResume.isPresent() ? assoAccountResume.get().getAccountCode() : null;
-    }
-
-    private Long stat_GetInterviewedResumesCount(String code) {
-        Optional<AssoAccountResume> assoAccountResume = assoAccountResumeRepository.findByResume_Code(code);
-        if (assoAccountResume.isPresent()) {
-            ResponseEntity<Long> responseEntity = quizCandidateQuizService.getCountRealizedTestByAccount(assoAccountResume.get().getAccountCode());
-            return responseEntity.getBody();
-        }
-        return 0L;
-    }
-
-    private Long stat_GetJobApplicationResumesCount(String code, RequestContextDto requestContext) {
-        return jobApplicationRepository.countByResumeCodeAndDomain(code, requestContext.getSenderDomain());
-    }
-
-    private Long stat_GetOngoingJobApplicationResumesCount(String code, RequestContextDto requestContext) {
-        return jobApplicationRepository.countOnGoingJobApplicationByResume(requestContext.getSenderDomain(), code);
     }
 
     @Override

@@ -117,8 +117,8 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                 .findFirst()
                 .orElseGet(() -> workflowStates.get(0)); // Default to first state
 
-        JpaPagingAndSortingSAASRepository repository =
-                (JpaPagingAndSortingSAASRepository) genericRepository.getRepository(workflowBoard.getItem());
+        JpaPagingAndSortingDomainAssignableRepository repository =
+                (JpaPagingAndSortingDomainAssignableRepository) genericRepository.getRepository(workflowBoard.getItem());
 
         return (List<IBoardItem>) repository.findByDomainIgnoreCaseIn(Collections.singletonList(domain)).stream()
                 .map(obj -> {
@@ -476,7 +476,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         //transition is allowed
         log.info("Transition from state {} to state {} is allowed", bpmEventRequest.getFromState(), bpmEventRequest.getToState());
         //Get Original Board item by Item type (class name)
-        JpaPagingAndSortingSAASCodifiableRepository repository = (JpaPagingAndSortingSAASCodifiableRepository) genericRepository.getRepository(workflowBoard.getItem());
+        JpaPagingAndSortingDomainAndCodeAssignableRepository repository = (JpaPagingAndSortingDomainAndCodeAssignableRepository) genericRepository.getRepository(workflowBoard.getItem());
         Optional<IBoardItem> item = repository.findByCodeIgnoreCase(bpmEventRequest.getItem().getCode());
         if (!item.isPresent()) {
             throw new BoardItemNotFoundException(workflowBoard.getItem() + " with code " + bpmEventRequest.getItem().getCode());

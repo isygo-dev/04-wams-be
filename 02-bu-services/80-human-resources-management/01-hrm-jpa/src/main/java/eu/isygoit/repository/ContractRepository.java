@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  * The interface Contract repository.
  */
 @Repository
-public interface ContractRepository extends JpaPagingAndSortingSAASCodifiableRepository<Contract, Long> {
+public interface ContractRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Contract, Long> {
 
     /**
      * Update contract status.

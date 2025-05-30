@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * The interface Personal identity info repository.
  */
 @Repository
-public interface PersonalIdentityInfoRepository extends JpaPagingAndSortingRepository<PersonalIdentityInfo, Long> {
+public interface PersonalIdentityInfoRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<PersonalIdentityInfo, Long> {
 
 }

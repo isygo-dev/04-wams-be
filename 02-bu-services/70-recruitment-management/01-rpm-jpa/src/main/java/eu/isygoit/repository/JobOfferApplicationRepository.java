@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 /**
  * The interface Job offer application repository.
  */
-public interface JobOfferApplicationRepository extends JpaPagingAndSortingSAASCodifiableRepository<JobOfferApplication, Long> {
+public interface JobOfferApplicationRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<JobOfferApplication, Long> {
     /**
      * Cancel job application long.
      *

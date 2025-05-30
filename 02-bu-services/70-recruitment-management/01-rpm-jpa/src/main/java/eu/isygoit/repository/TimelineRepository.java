@@ -9,7 +9,7 @@ import java.util.List;
  * The interface Timeline repository.
  */
 @Repository
-public interface TimelineRepository extends JpaPagingAndSortingSAASCodifiableRepository<Timeline, Long> {
+public interface TimelineRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Timeline, Long> {
 
     /**
      * Find all by domain ignore case and code ignore case list.

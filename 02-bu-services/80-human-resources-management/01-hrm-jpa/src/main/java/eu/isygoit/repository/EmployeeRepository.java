@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * The interface Employee repository.
  */
 @Repository
-public interface EmployeeRepository extends JpaPagingAndSortingSAASCodifiableRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Employee, Long> {
 
     /**
      * Count by domain ignore case and employee status long.

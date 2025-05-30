@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
  * The interface Employee linked file repository.
  */
 @Repository
-public interface EmployeeLinkedFileRepository extends JpaPagingAndSortingCodifiableRepository<EmployeeLinkedFile, Long> {
+public interface EmployeeLinkedFileRepository extends JpaPagingAndSortingCodeAssingnableRepository<EmployeeLinkedFile, Long> {
 }

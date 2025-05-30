@@ -6,7 +6,7 @@ import eu.isygoit.model.JobOfferTemplate;
 /**
  * The interface Job template repository.
  */
-public interface JobOfferTemplateRepository extends JpaPagingAndSortingSAASRepository<JobOfferTemplate, Long> {
+public interface JobOfferTemplateRepository extends JpaPagingAndSortingDomainAssignableRepository<JobOfferTemplate, Long> {
 
     /**
      * Delete job template by job offer id long.

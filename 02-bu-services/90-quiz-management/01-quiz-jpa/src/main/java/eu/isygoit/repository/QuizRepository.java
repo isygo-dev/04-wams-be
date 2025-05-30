@@ -10,7 +10,7 @@ import java.util.List;
  * The interface Quiz repository.
  */
 @Repository
-public interface QuizRepository extends JpaPagingAndSortingSAASCodifiableRepository<Quiz, Long> {
+public interface QuizRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Quiz, Long> {
 
     /**
      * Find by tags in list.

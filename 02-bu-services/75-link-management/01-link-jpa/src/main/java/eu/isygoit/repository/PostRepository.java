@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * The interface Post repository.
  */
 @Repository
-public interface PostRepository extends JpaPagingAndSortingSAASRepository<Post, Long> {
+public interface PostRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Post, Long> {
 
     /**
      * Find by domain and is blog true page.

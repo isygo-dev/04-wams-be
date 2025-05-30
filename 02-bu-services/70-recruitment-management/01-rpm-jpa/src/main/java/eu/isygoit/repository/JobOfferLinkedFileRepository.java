@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
  * The interface Job offer linked file repository.
  */
 @Repository
-public interface JobOfferLinkedFileRepository extends JpaPagingAndSortingCodifiableRepository<JobOfferLinkedFile, Long> {
+public interface JobOfferLinkedFileRepository extends JpaPagingAndSortingCodeAssingnableRepository<JobOfferLinkedFile, Long> {
 }

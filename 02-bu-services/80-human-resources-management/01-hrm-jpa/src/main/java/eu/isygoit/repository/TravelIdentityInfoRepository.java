@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * The interface Travel identity info repository.
  */
 @Repository
-public interface TravelIdentityInfoRepository extends JpaPagingAndSortingRepository<TravelIdentityInfo, Long> {
+public interface TravelIdentityInfoRepository extends JpaPagingAndSortingCodeAssingnableRepository<TravelIdentityInfo, Long> {
 
 }

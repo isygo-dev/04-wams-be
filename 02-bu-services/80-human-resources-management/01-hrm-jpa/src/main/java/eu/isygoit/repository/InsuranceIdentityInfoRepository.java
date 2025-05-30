@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * The interface Insurance identity info repository.
  */
 @Repository
-public interface InsuranceIdentityInfoRepository extends JpaPagingAndSortingRepository<InsuranceIdentityInfo, Long> {
+public interface InsuranceIdentityInfoRepository extends JpaPagingAndSortingCodeAssingnableRepository<InsuranceIdentityInfo, Long> {
 
 }

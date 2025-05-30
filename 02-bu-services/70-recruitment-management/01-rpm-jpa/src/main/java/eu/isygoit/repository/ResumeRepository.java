@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
  * The interface Resume repository.
  */
 @Repository
-public interface ResumeRepository extends JpaPagingAndSortingSAASCodifiableRepository<Resume, Long> {
+public interface ResumeRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Resume, Long> {
 
     /**
      * Count by created by long.

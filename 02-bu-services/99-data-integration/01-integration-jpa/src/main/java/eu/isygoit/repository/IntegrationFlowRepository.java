@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * The interface Integration flow repository.
  */
 @Repository
-public interface IntegrationFlowRepository extends JpaPagingAndSortingSAASCodifiableRepository<IntegrationFlow, Long> {
+public interface IntegrationFlowRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<IntegrationFlow, Long> {
 
 }

@@ -24,7 +24,6 @@ import eu.isygoit.model.JobOfferDetails;
 import eu.isygoit.model.JobOfferShareInfo;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.ims.ImsAppParameterService;
-import eu.isygoit.remote.ims.ImsDomainService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.JobOfferApplicationRepository;
 import eu.isygoit.repository.JobOfferRepository;
@@ -43,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,24 +55,30 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
         implements IJobOfferService {
 
     private final AppProperties appProperties;
-    private final JobOfferRepository jobOfferRepository;
     private final IMsgService msgService;
     private final ImsAppParameterService imsAppParameterService;
-    private final ImsDomainService imsDomainService;
     private final JobOfferTemplateRepository jobTemplateRepository;
     private final JobOfferApplicationRepository jobApplicationRepository;
+    private final JobOfferStatService jobOfferStatService;
 
     @Autowired
-    public JobOfferService(AppProperties appProperties, JobOfferRepository jobOfferRepository, IMsgService msgService, ImsAppParameterService ImsAppParameterService, ImsDomainService imsDomainService, JobOfferTemplateRepository jobTemplateRepository, JobOfferApplicationRepository jobApplicationRepository) {
+    public JobOfferService(AppProperties appProperties,
+                           IMsgService msgService,
+                           ImsAppParameterService imsAppParameterService,
+                           JobOfferTemplateRepository jobTemplateRepository,
+                           JobOfferApplicationRepository jobApplicationRepository,
+                           JobOfferStatService jobOfferStatService) {
         this.appProperties = appProperties;
-        this.jobOfferRepository = jobOfferRepository;
         this.msgService = msgService;
-        this.imsAppParameterService = ImsAppParameterService;
-        this.imsDomainService = imsDomainService;
+        this.imsAppParameterService = imsAppParameterService;
         this.jobTemplateRepository = jobTemplateRepository;
         this.jobApplicationRepository = jobApplicationRepository;
+        this.jobOfferStatService = jobOfferStatService;
     }
 
+    /**
+     * Initializes code generator for JobOffer entity with default domain and prefix.
+     */
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
@@ -86,88 +92,88 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
                 .build();
     }
 
+    /**
+     * Finds all job offers that are not assigned to the specified resume code.
+     */
     @Override
     public List<JobOffer> findJobOffersNotAssignedToResume(String resumeCode) {
-        return jobOfferRepository.findJobOffersNotAssignedToResume(resumeCode);
+        return repository().findJobOffersNotAssignedToResume(resumeCode);
     }
 
+    /**
+     * Shares a job offer with a list of accounts and sends notification emails.
+     */
     @Override
     public List<JobOfferShareInfo> shareJob(Long id, String jobOwner, List<AccountModelDto> accounts) throws JsonProcessingException {
         return findById(id)
                 .map(jobOffer -> {
-                    // Create the share information list using a stream
+                    // Create or reuse share info for each account
                     List<JobOfferShareInfo> shareInfos = accounts.stream()
-                            .map(accountModelDto -> {
-                                // Check if the share info already exists using Optional
-                                return jobOffer.getJobShareInfos().stream()
-                                        .filter(shareInfo -> shareInfo.getSharedWith().equals(accountModelDto.getCode()))
-                                        .findFirst()
-                                        .orElseGet(() -> JobOfferShareInfo.builder()
-                                                .sharedWith(accountModelDto.getCode())
-                                                .build());
-                            })
+                            .map(account -> jobOffer.getJobShareInfos().stream()
+                                    .filter(info -> info.getSharedWith().equals(account.getCode()))
+                                    .findFirst()
+                                    .orElseGet(() -> JobOfferShareInfo.builder()
+                                            .sharedWith(account.getCode())
+                                            .build()))
                             .collect(Collectors.toList());
 
-                    // Update the job offer's share info list
+                    // Update share infos on job offer
                     jobOffer.getJobShareInfos().clear();
                     jobOffer.getJobShareInfos().addAll(shareInfos);
 
-                    // Send notifications (move it outside stream for clarity)
-                    accounts.forEach(accountModelDto -> {
+                    // Send notifications outside stream for clarity and better error handling
+                    accounts.forEach(account -> {
                         try {
-                            shareJobNotification(jobOffer, jobOwner, accountModelDto);
+                            shareJobNotification(jobOffer, jobOwner, account);
                         } catch (JsonProcessingException e) {
-                            throw new ShareJobNotificationException("Failed to send notification for account " + accountModelDto.getCode());
+                            throw new ShareJobNotificationException("Failed to send notification for account " + account.getCode());
                         }
                     });
 
-                    // Save and return updated share info list
-                    return jobOfferRepository.save(jobOffer).getJobShareInfos();
+                    // Save and return updated share infos
+                    return repository().save(jobOffer).getJobShareInfos();
                 })
-                .orElseThrow(() -> new JobOfferNotFoundException("with ID: " + id));
+                .orElseThrow(() -> new JobOfferNotFoundException("Job offer not found with ID: " + id));
     }
 
+    /**
+     * Returns the global statistics based on the requested stat type.
+     * Uses lazy evaluation to calculate only the requested statistic.
+     */
     @Override
     public JobOfferGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, RequestContextDto requestContext) {
-        JobOfferGlobalStatDto.JobOfferGlobalStatDtoBuilder builder = JobOfferGlobalStatDto.builder();
-        int confirmedCount = 182;
+        // Map each statType to a Supplier that returns the corresponding DTO with only that stat calculated
+        Map<IEnumSharedStatType.Types, Supplier<JobOfferGlobalStatDto>> statSuppliers = Map.of(
+                IEnumSharedStatType.Types.TOTAL_COUNT, () ->
+                        JobOfferGlobalStatDto.builder()
+                                .totalCount(jobOfferStatService.stat_GetJobOffersCount(requestContext))
+                                .build(),
 
-        switch (statType) {
-            case TOTAL_COUNT:
-                builder.totalCount(stat_GetJobOffersCount(requestContext));
-                break;
-            case ACTIVE_COUNT:
-                builder.activeCount(stat_GetActiveJobOffersCount(requestContext));
-                break;
-            case CONFIRMED_COUNT:
-                builder.confirmedCount(stat_GetConfirmedJobOffersCount(requestContext));
-                break;
-            case EXPIRED_COUNT:
-                builder.expiredCount(stat_GetExpiredJobOffersCount(requestContext));
-                break;
-            default:
-                throw new StatisticTypeNotSupportedException(statType.name());
-        }
+                IEnumSharedStatType.Types.ACTIVE_COUNT, () ->
+                        JobOfferGlobalStatDto.builder()
+                                .activeCount(jobOfferStatService.stat_GetActiveJobOffersCount(requestContext))
+                                .build(),
 
-        return builder.build();
+                IEnumSharedStatType.Types.CONFIRMED_COUNT, () ->
+                        JobOfferGlobalStatDto.builder()
+                                .confirmedCount(jobOfferStatService.stat_GetConfirmedJobOffersCount(requestContext))
+                                .build(),
+
+                IEnumSharedStatType.Types.EXPIRED_COUNT, () ->
+                        JobOfferGlobalStatDto.builder()
+                                .expiredCount(jobOfferStatService.stat_GetExpiredJobOffersCount(requestContext))
+                                .build()
+        );
+
+        // Return the stat DTO for the requested type or throw if unsupported
+        return Optional.ofNullable(statSuppliers.get(statType))
+                .map(Supplier::get)  // Executes exactly one method
+                .orElseThrow(() -> new StatisticTypeNotSupportedException(statType.name()));
     }
 
-    private Long stat_GetConfirmedJobOffersCount(RequestContextDto requestContext) {
-        return 181L;
-    }
-
-    private Long stat_GetJobOffersCount(RequestContextDto requestContext) {
-        return repository().countByDomainIgnoreCase(requestContext.getSenderDomain());
-    }
-
-    private Long stat_GetActiveJobOffersCount(RequestContextDto requestContext) {
-        return repository().countByDomainAndDeadLine(requestContext.getSenderDomain());
-    }
-
-    private Long stat_GetExpiredJobOffersCount(RequestContextDto requestContext) {
-        return repository().countByDomainAndExpiredDeadLine(requestContext.getSenderDomain());
-    }
-
+    /**
+     * Returns detailed statistics for a specific job offer identified by code.
+     */
     @Override
     public JobOfferStatDto getObjectStatistics(String code, RequestContextDto requestContext) {
         return JobOfferStatDto.builder()
@@ -179,23 +185,35 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
                 .build();
     }
 
+    /**
+     * Gets the number of applications for the given job code and domain.
+     */
     private Long getNumberOfApplicationsByJob(String code, RequestContextDto requestContext) {
         return jobApplicationRepository.countJobsByNumberOfApplications(code, requestContext.getSenderDomain());
     }
 
+    /**
+     * Gets the number of interviewed profiles for the given job code and domain.
+     */
     private Long getInterviewedProfilesCount(String code, RequestContextDto requestContext) {
+        // Note: Uses same method as applications count - verify if this is intentional
         return jobApplicationRepository.countJobsByNumberOfApplications(code, requestContext.getSenderDomain());
     }
 
+    /**
+     * Sends a share notification email for a job offer to the specified account.
+     */
     private void shareJobNotification(JobOffer jobOffer, String jobOwner, AccountModelDto account) throws JsonProcessingException {
         final String defaultUrl = "https://localhost:4002/apps/job/";
+
+        // Fetch job view URL parameter, fallback to default if unavailable
         String jobUrl = Optional.ofNullable(imsAppParameterService.getValueByDomainAndName(RequestContextDto.builder().build(),
                         jobOffer.getDomain(), AppParameterConstants.JOB_VIEW_URL, true, defaultUrl))
                 .filter(result -> result.hasBody() && StringUtils.hasText(result.getBody()))
                 .map(result -> result.getBody() + jobOffer.getId())
-                .orElse(defaultUrl + jobOffer.getId());  // Default URL fallback
+                .orElse(defaultUrl + jobOffer.getId());
 
-        // Create mail message DTO
+        // Build mail message DTO
         MailMessageDto mailMessageDto = MailMessageDto.builder()
                 .domain(jobOffer.getDomain())
                 .subject(EmailSubjects.SHARED_JOB_EMAIL_SUBJECT)
@@ -204,7 +222,7 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
                 .sent(true)
                 .build();
 
-        // Set variables in the mail message DTO
+        // Set variables for the email template
         mailMessageDto.setVariables(MailMessageDto.getVariablesAsString(Map.of(
                 MsgTemplateVariables.V_USER_NAME, account.getCode(),
                 MsgTemplateVariables.V_FULLNAME, account.getFullName(),
@@ -213,10 +231,13 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
                 MsgTemplateVariables.V_SHARED_BY, jobOffer.getOwner(),
                 MsgTemplateVariables.V_JOB_VIEW_URL, jobUrl)));
 
-        // Send the message
+        // Send the email (async if configured)
         msgService.sendMessage(jobOffer.getDomain(), mailMessageDto, appProperties.isSendAsyncEmail());
     }
 
+    /**
+     * Ensures that JobOfferDetails is initialized after creation.
+     */
     @Override
     public JobOffer afterCreate(JobOffer jobOffer) {
         if (Objects.isNull(jobOffer.getDetails())) {
@@ -225,6 +246,9 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
         return super.afterCreate(jobOffer);
     }
 
+    /**
+     * Deletes associated job templates after deleting a job offer.
+     */
     @Override
     public void afterDelete(Long id) {
         jobTemplateRepository.deleteJobTemplateByJobOffer_Id(id);

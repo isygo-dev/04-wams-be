@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * The interface Integration order repository.
  */
 @Repository
-public interface IntegrationOrderRepository extends JpaPagingAndSortingSAASCodifiableRepository<IntegrationOrder, Long> {
+public interface IntegrationOrderRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<IntegrationOrder, Long> {
 
 }
