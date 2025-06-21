@@ -16,7 +16,6 @@ public class DashboardStatsDTO {
     private long totalTemplates;
     private long totalCategories;
     private long activeAuthors;
-//    private long pendingTemplates;
     long pinnedTemplates;
     private Map<String, Long> documentFormats;
     private Map<String, Long> languageStats;

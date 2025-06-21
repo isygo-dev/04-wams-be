@@ -33,7 +33,6 @@ public class TemplateFavorite extends AuditableEntity<Long>  implements ISAASEnt
     private String userIdentifier;
 
     @ManyToOne
-//            (fetch = FetchType.LAZY)
     @JoinColumn(name = "TEMPLATE_ID", nullable = false,
             foreignKey = @ForeignKey(name = "FK_FAVORITE_TEMPLATE"))
     private Template template;

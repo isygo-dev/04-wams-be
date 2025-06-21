@@ -1,7 +1,5 @@
 package eu.isygoit.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.isygoit.annotation.CtrlDef;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
@@ -10,8 +8,6 @@ import eu.isygoit.dto.data.TemplateDto;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
 import eu.isygoit.mapper.TemplateMapper;
 import eu.isygoit.model.Template;
-import eu.isygoit.repository.CategoryRepository;
-import eu.isygoit.repository.TemplateRepository;
 import eu.isygoit.service.impl.TemplateFavoriteService;
 import eu.isygoit.service.impl.TemplateService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,37 +29,14 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
     private final TemplateService templateService;
     private final TemplateFavoriteService favoriteService;
     private final TemplateMapper templateMapper;
-    private final TemplateRepository templateRepository;
 
 
-    public TemplateController(TemplateService templateService, TemplateFavoriteService favoriteService, TemplateMapper templateMapper, CategoryRepository categoryRepository, TemplateRepository templateRepository) {
+    public TemplateController(TemplateService templateService, TemplateFavoriteService favoriteService, TemplateMapper templateMapper) {
         this.templateService = templateService;
         this.favoriteService = favoriteService;
         this.templateMapper = templateMapper;
-        this.templateRepository = templateRepository;
     }
-//    @PutMapping("update/{id}")
-//    public ResponseEntity<Template> updateTemplate(@PathVariable Long id, @RequestBody Template updatedTemplate) {
-//        Template existingTemplate = templateService.findById(id);
-//        if (existingTemplate != null) {
-//            updatedTemplate.setId(id);
-//            Template savedTemplate = templateService.updateTemplate(updatedTemplate);
-//            return ResponseEntity.ok(savedTemplate);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
 
-
-
-//    @GetMapping("/category/{categoryId}")
-//    public ResponseEntity<String> getTemplatesByCategory(@PathVariable Long categoryId) throws JsonProcessingException {
-//        List<Template> templates = templateRepository.findByCategoryId(categoryId);
-//        String json = new ObjectMapper().writeValueAsString(templates); // Manual JSON serialization
-//        return ResponseEntity.ok()
-//                .header("Content-Length", String.valueOf(json.getBytes().length))
-//                .body(json);
-//    }
-//
 @GetMapping("/category/{categoryId}")
 public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Long categoryId) {
     try {
@@ -82,21 +55,6 @@ public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Lo
         return ResponseEntity.internalServerError().build();
     }
 }
-
-
-
-//    @PostMapping("/pinned/{templateId}")
-//    public ResponseEntity<Boolean> setPinned(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
-//                                                       @PathVariable(name = "templateId") Long templateId) {
-//            requestContext.getSenderUser();
-//            return ResponseEntity.ok(Boolean.TRUE);
-//    }
-//
-//    @GetMapping("/pinned")
-//    public ResponseEntity<List<TemplateDto>> getPinned(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
-//        requestContext.getSenderUser();
-//        return ResponseEntity.ok(new ArrayList<>());
-//    }
 
     @PostMapping("/{templateId}/pin")
     public ResponseEntity<Boolean> togglePinStatus(
@@ -152,6 +110,15 @@ public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Lo
         log.info("Comptage des templates épinglés pour l'utilisateur: {}", userIdentifier);
 
         return ResponseEntity.ok(favoriteService.countByUser(userIdentifier));
+    }
+
+    @GetMapping("/author/{authorId}")
+    public ResponseEntity<List<TemplateDto>> getTemplatesByAuthor(@PathVariable Long authorId) {
+        List<Template> templates = templateService.getTemplatesByAuthor(authorId);
+        List<TemplateDto> templateDtos = templates.stream()
+                .map(templateMapper::entityToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(templateDtos);
     }
 
 

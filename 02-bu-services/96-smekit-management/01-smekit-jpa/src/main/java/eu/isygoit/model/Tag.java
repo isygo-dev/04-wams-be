@@ -43,10 +43,8 @@ public class Tag extends AuditableEntity<Long> {
     @EqualsAndHashCode.Include
     private String tagName;
 
-//    @ManyToMany(mappedBy = "tags")
-//    private Set<Template> templates = new HashSet<>();
-//
+
     @ManyToMany(mappedBy = "tags")
     private Set<Category> categories = new HashSet<>();
-//}
+
 }

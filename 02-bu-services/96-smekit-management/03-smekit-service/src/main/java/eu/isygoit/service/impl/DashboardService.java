@@ -5,7 +5,6 @@ import eu.isygoit.enums.IEnumDocTempStatus;
 import eu.isygoit.model.Author;
 import eu.isygoit.model.Category;
 import eu.isygoit.model.Template;
-import eu.isygoit.model.TemplateFavorite;
 import eu.isygoit.repository.AuthorRepository;
 import eu.isygoit.repository.CategoryRepository;
 import eu.isygoit.repository.TemplateRepository;
@@ -39,9 +38,6 @@ public class DashboardService {
         if (userIdentifier != null && !userIdentifier.isEmpty()) {
             pinnedTemplates = templateFavoriteRepository.countByUserIdentifier(userIdentifier);
         }
-//        long pendingTemplates = templates.stream()
-//                .filter(t -> t.getTypeTs() == IEnumDocTempStatus.Types.VALIDATING)
-//                .count();
 
         Map<String, Long> documentFormats = templates.stream()
                 .collect(Collectors.groupingBy(
@@ -91,7 +87,6 @@ public class DashboardService {
                 totalTemplates,
                 totalCategories,
                 activeAuthors,
-//                pendingTemplates,
                 pinnedTemplates,
                 documentFormats,
                 languageStats,

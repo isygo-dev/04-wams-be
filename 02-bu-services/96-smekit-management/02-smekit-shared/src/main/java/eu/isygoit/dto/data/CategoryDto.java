@@ -22,7 +22,6 @@ public class CategoryDto extends  AbstractAuditableDto<Long> implements IImageUp
     private IEnumCategoryStatus.Status type = IEnumCategoryStatus.Status.DISABLED;
     private String imagePath ;
     private List<TagDto> tagName;
-    //    private List<TemplateDto> templates ;
 
 
 }

@@ -9,12 +9,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
 @SuperBuilder
@@ -68,10 +65,7 @@ public class Category extends AuditableEntity<Long> implements ISAASEntity,IImag
     }
 
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name =SchemaColumnConstantName.C_CAT , referencedColumnName = ComSchemaColumnConstantName.C_ID,
-//            foreignKey = @ForeignKey(name = SchemaFkConstantName.FK_TEMPLATE_CATEGORY))
-//    private List<Template> templates ;
+
 
 
 

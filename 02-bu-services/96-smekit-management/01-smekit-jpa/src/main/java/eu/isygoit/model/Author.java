@@ -58,7 +58,6 @@ public class Author extends AuditableCancelableEntity<Long> implements ICodifiab
     @Column(name = ComSchemaColumnConstantName.C_PHONE_NUMBER, length = ComSchemaConstantSize.PHONE_NUMBER)
     private String phone;
 
-    // IFileEntity fields
     @Column(name = SchemaColumnConstantName.C_FILE_NAME, table = SchemaTableConstantName.T_AUTHOR_FILE)
     private String fileName;
 

@@ -12,9 +12,7 @@ import org.hibernate.annotations.Where;
 
 import java.util.List;
 
-/**
- * The type Quiz.
- */
+
 @Data
 @SuperBuilder
 @AllArgsConstructor
@@ -35,7 +33,6 @@ public class Quiz extends AuditableCancelableEntity<Long> implements ICodifiable
     @Column(name = SchemaColumnConstantName.C_ID, updatable = false, nullable = false)
     private Long id;
 
-    //@Convert(converter = LowerCaseConverter.class)
     @Column(name = ComSchemaColumnConstantName.C_CODE, length = ComSchemaConstantSize.CODE, updatable = false, nullable = false)
     private String code;
 

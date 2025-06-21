@@ -43,4 +43,5 @@ public interface SchemaTableConstantName extends ComSchemaTableConstantName {
     String T_AUTHOR_FILE_TAGS="T_AUTHOR_FILE_TAGS";
     String T_FAVORITE_TEMPLATE="T_FAVORITE_TEMPLATE";
     String T_USER_TEMPLATE_PREFERENCE="T_USER_TEMPLATE_PREFERENCE";
+    String T_DOCUMENT_FILE ="T_DOCUMENT_FILE";
 }

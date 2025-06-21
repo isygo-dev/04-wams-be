@@ -8,9 +8,13 @@ import eu.isygoit.mapper.DocumentMapper;
 import eu.isygoit.model.Document;
 import eu.isygoit.service.impl.DocumentService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+
 @Slf4j
 @Validated
 @RestController
@@ -18,4 +22,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1/private/document")
 
 public class DocumentController extends MappedCrudController<Long, Document, DocumentDto,DocumentDto, DocumentService> {
+    private final DocumentService documentService;
+
+    public DocumentController(DocumentService documentService) {
+        this.documentService = documentService;
+    }
+
+    @PostMapping("/from-template/{templateId}")
+    public ResponseEntity<DocumentDto> createFromTemplate(
+            @PathVariable Long templateId,
+            @RequestBody DocumentDto request) {
+        try {
+            String content = request.getContent();
+            String name = request.getName();
+
+            log.info("Creating document from template ID: {} with name: {}, content length: {}",
+                    templateId, name, content != null ? content.length() : 0);
+
+            Document document = documentService.createFromTemplate(templateId, content, name);
+            DocumentDto dto = mapper().entityToDto(document);
+
+            log.info("Created DTO with ID: {}, content present: {}, isTemplateCopy: {}, originalDocumentId: {}",
+                    dto.getId(),
+                    dto.getContent() != null,
+                    dto.getIsTemplateCopy(),
+                    dto.getOriginalDocumentId());
+
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            log.error("Error creating document from template: {}", templateId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

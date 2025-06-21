@@ -30,14 +30,12 @@ public class TemplateDto  extends AbstractAuditableDto<Long> implements IFileUpl
     private IEnumDocTempStatus.Types typeTs ;
     private IEnumTemplateVisibility.Types typeTv ;
     private IEnumTemplateLanguage.Types typeTl ;
-  //  private List<DocumentDto> documents;
+    private String content ;
     private Long authorId;
     private Long categoryId;
 
-  //  private List<TagDto> tags ;
     //BEGIN IFileEntity : SecondaryTable / ResumeFile
     private String type;
-  //  private List<String> TemplatesTags;
     //END IFileEntity : SecondaryTable
     private MultipartFile file;
     private String originalFileName;

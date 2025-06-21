@@ -37,6 +37,16 @@ public class DocComment extends AuditableCancelableEntity<Long> {
     private  String user;
 
 
+    @Column(name = "start_offset")
+    private Integer startOffset;
+
+    @Column(name = "end_offset")
+    private Integer endOffset;
+
+    @Column(name = "text_commented", length = 1000)
+    private String textCommented;
+
+
     @Builder.Default
     @ColumnDefault("'CLOSED'")
     @Enumerated(EnumType.STRING)

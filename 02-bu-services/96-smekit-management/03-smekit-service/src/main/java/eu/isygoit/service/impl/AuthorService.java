@@ -27,10 +27,10 @@ import java.util.Date;
 @Slf4j
 @Service
 @Transactional
+@DmsLinkFileService(DmsLinkedFileService.class)
 @CodeGenLocal(value = NextCodeService.class)
 @CodeGenKms(value = KmsIncrementalKeyService.class)
 @SrvRepo(value = AuthorRepository.class)
-@DmsLinkFileService(DmsLinkedFileService.class)
 public class AuthorService extends FileImageService<Long, Author, AuthorRepository> implements IAutherService {
     private final AppProperties appProperties;
     private final AuthorRepository authorRepository;
