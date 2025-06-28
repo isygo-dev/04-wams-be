@@ -60,6 +60,8 @@ public class DocumentService extends FileService<Long, Document, DocumentReposit
                 .build();
     }
 
+
+
     @Override
     public Document createFromTemplate(Long templateId, String content, String name) throws IOException {
         Template template = templateService.findById(templateId);

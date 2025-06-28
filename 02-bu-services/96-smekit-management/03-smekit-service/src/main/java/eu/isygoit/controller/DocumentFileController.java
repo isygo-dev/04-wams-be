@@ -6,10 +6,13 @@ import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.DocumentDto;
 import eu.isygoit.dto.data.DocumentHtmlResponseDto;
 import eu.isygoit.enums.IEnumDocTempStatus;
+import eu.isygoit.enums.IEnumPermissionLevel;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
 import eu.isygoit.mapper.DocumentMapper;
 import eu.isygoit.model.Document;
+import eu.isygoit.model.SharedWith;
 import eu.isygoit.service.impl.DocumentService;
+import eu.isygoit.service.impl.SharedWithService;
 import eu.isygoit.service.impl.TemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.util.ZipSecureFile;
@@ -23,9 +26,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Validated
@@ -39,25 +44,52 @@ public class DocumentFileController extends MappedFileController<Long, Document,
 
     private final DocumentService documentService;
     private final TemplateService templateService;
+    private  final SharedWithService sharedWithService;
 
-
-    public DocumentFileController(DocumentService documentService, TemplateService templateService) {
+    public DocumentFileController(DocumentService documentService, TemplateService templateService, SharedWithService sharedWithService) {
         this.documentService = documentService;
         this.templateService = templateService;
+        this.sharedWithService = sharedWithService;
     }
 
     @PutMapping("/{id}/save")
-    public ResponseEntity<?> updateHtmlDocument(@PathVariable Long id, @RequestBody Map<String, String> request) {
+    public ResponseEntity<?> updateHtmlDocument(@PathVariable Long id, @RequestBody Map<String, String> request, Principal principal) {
         try {
             String updatedContent = request.get("html");
-            log.info("🔍 Contenu HTML reçu pour MAJ : {}", updatedContent);
             if (updatedContent == null || updatedContent.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("Missing or empty 'html' content");
+                return ResponseEntity.badRequest().body("Contenu HTML manquant ou vide");
             }
+
+            if (principal == null || principal.getName() == null) {
+                log.warn("Utilisateur non authentifié");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentification requise");
+            }
+
+            String userCode = extractUserCode(principal.getName());
 
             Document existing = documentService.findById(id);
             if (existing == null) {
                 return ResponseEntity.notFound().build();
+            }
+
+            log.info(" Tentative de modification du document {} par {}", id, userCode);
+
+            if (existing.getCreatedBy() != null && extractUserCode(existing.getCreatedBy()).equalsIgnoreCase(userCode)) {
+                log.info(" Modification autorisée : propriétaire du document");
+            } else {
+                Optional<SharedWith> shared = sharedWithService.getSharedPermission(id, userCode);
+
+                if (shared.isEmpty()) {
+                    log.warn("Accès refusé : document non partagé avec {}", userCode);
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Vous n'avez pas accès à ce document");
+                }
+
+                if (IEnumPermissionLevel.PermissionLevel.READ.equals(shared.get().getPermission())) {
+                    log.warn("Modification refusée : accès en lecture seule pour {}", userCode);
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Vous n'avez pas la permission de modifier ce document");
+                }
+
+                log.info("Modification autorisée : document partagé avec droit EDIT pour {}", userCode);
             }
 
             existing.setContent(updatedContent);
@@ -75,7 +107,6 @@ public class DocumentFileController extends MappedFileController<Long, Document,
             try {
                 documentService.convertHtmlToDocx(updatedContent, tmp.getAbsolutePath());
                 MultipartFile mp = documentService.convertFileToMultipart(tmp.getAbsolutePath());
-
                 documentService.uploadDocumentFile(updatedDoc, mp);
             } finally {
                 tmp.delete();
@@ -84,7 +115,7 @@ public class DocumentFileController extends MappedFileController<Long, Document,
             return ResponseEntity.ok(updatedDoc);
 
         } catch (Exception e) {
-            log.error("Erreur lors de la mise à jour du document", e);
+            log.error(" Erreur lors de la mise à jour du document", e);
             return ResponseEntity.internalServerError().body("Erreur lors de la mise à jour du document");
         }
     }
@@ -139,4 +170,11 @@ public class DocumentFileController extends MappedFileController<Long, Document,
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    private String extractUserCode(String raw) {
+        if (raw == null) return "";
+        String code = raw.contains("@") ? raw.substring(0, raw.indexOf("@")) : raw;
+        return code.toUpperCase();
+    }
+
 }
