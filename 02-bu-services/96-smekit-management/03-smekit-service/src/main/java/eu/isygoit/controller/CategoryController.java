@@ -9,14 +9,12 @@ import eu.isygoit.mapper.CategoryMapper;
 import eu.isygoit.model.Category;
 import eu.isygoit.service.ICategoryService;
 import eu.isygoit.service.impl.CategoryService;
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Validated
@@ -33,10 +31,21 @@ public class CategoryController extends MappedCrudController<Long, Category, Cat
     public ResponseEntity<CategoryDto> addTagsToCategory(
             @PathVariable Long categoryId,
             @RequestBody List<TagDto> tagDtos) {
+
         Category updatedCategory = crudService().addTagsToCategory(categoryId, tagDtos);
+
         CategoryDto responseDto = mapper().entityToDto(updatedCategory);
+
+        if (responseDto.getTagName() == null && updatedCategory.getTags() != null) {
+            List<TagDto> tags = updatedCategory.getTags().stream()
+                    .map(tag -> new TagDto( tag.getTagName()))
+                    .toList();
+            responseDto.setTagName(tags);
+        }
+
         return ResponseEntity.ok(responseDto);
     }
+
 
     @PutMapping("/{categoryId}/tags")
     public ResponseEntity<CategoryDto> setTagsForCategory(

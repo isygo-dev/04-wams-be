@@ -53,5 +53,7 @@ public interface SchemaColumnConstantName extends ComSchemaColumnConstantName {
     String C_IS_FAVORITE="C_IS_FAVORITE";
     String C_NOTES="C_NOTES";
     String C_PERMISSION="C_PERMISSION";
+    String C_SHAREDWITH="C_SHAREDWITH";
+    String C_SHAREDBY="C_SHAREDBY";
 }
 

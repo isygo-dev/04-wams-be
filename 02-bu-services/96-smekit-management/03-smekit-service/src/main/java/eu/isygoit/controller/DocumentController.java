@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Validated
@@ -54,5 +54,20 @@ public class DocumentController extends MappedCrudController<Long, Document, Doc
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @GetMapping("/by-user")
+    public ResponseEntity<List<DocumentDto>> getDocumentsByUser(
+            @RequestParam String createdBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        log.info("Fetching documents for user: {}", createdBy);
+
+        var pageable = org.springframework.data.domain.PageRequest.of(page, size);
+        var pageResult = documentService.findByCreatedBy(createdBy, pageable);
+        var dtos = pageResult.map(mapper()::entityToDto).toList();
+
+        return ResponseEntity.ok(dtos);
+    }
+
 
 }

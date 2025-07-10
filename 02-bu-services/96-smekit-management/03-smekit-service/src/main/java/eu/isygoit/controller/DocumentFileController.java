@@ -103,7 +103,11 @@ public class DocumentFileController extends MappedFileController<Long, Document,
 
             Document updatedDoc = documentService.saveOrUpdate(existing);
 
-            File tmp = File.createTempFile("updated_", ".docx");
+            String baseName = existing.getOriginalFileName() != null
+                    ? existing.getOriginalFileName().replaceAll("\\.docx$", "")
+                    : "updated_" + id;
+
+            File tmp = File.createTempFile(baseName + "_", ".docx");
             try {
                 documentService.convertHtmlToDocx(updatedContent, tmp.getAbsolutePath());
                 MultipartFile mp = documentService.convertFileToMultipart(tmp.getAbsolutePath());

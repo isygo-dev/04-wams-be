@@ -13,4 +13,5 @@ import lombok.experimental.SuperBuilder;
 public class TagDto extends AbstractAuditableDto<Long> {
     private String tagName;
 
+
 }

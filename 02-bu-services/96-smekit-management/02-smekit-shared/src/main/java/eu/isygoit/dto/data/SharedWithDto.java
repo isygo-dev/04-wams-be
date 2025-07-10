@@ -18,7 +18,6 @@ public class SharedWithDto extends AbstractAuditableDto <Long>{
     private String user;
     private  String documentCode;
     private IEnumPermissionLevel.PermissionLevel permission;
-    @JsonIgnore
     private DocumentDto document ;
 
 

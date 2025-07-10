@@ -22,6 +22,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,11 +43,9 @@ public class DocumentService extends FileService<Long, Document, DocumentReposit
 
     private final AppProperties appProperties;
     private final TemplateService templateService;
-    private  final  DmsLinkedFileService dmsLinkedFileService ;
-    public DocumentService(AppProperties appProperties, TemplateService templateService, DmsLinkedFileService dmsLinkedFileService) {
+    public DocumentService(AppProperties appProperties, TemplateService templateService) {
         this.appProperties = appProperties;
         this.templateService = templateService;
-        this.dmsLinkedFileService = dmsLinkedFileService;
     }
 
     @Override
@@ -61,6 +61,9 @@ public class DocumentService extends FileService<Long, Document, DocumentReposit
     }
 
 
+    public Page<Document> findByCreatedBy(String createdBy, Pageable pageable) {
+        return repository().findByCreatedBy(createdBy, pageable);
+    }
 
     @Override
     public Document createFromTemplate(Long templateId, String content, String name) throws IOException {
