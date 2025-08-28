@@ -1,15 +1,16 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ResumeDto;
 import eu.isygoit.dto.data.ResumeShareInfoDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
+import eu.isygoit.dto.extendable.IdAssignableDto;
 import eu.isygoit.dto.request.ShareResumeRequestDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.ResumeMapper;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/resume")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = ResumeMapper.class, minMapper = ResumeMapper.class, service = ResumeService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = ResumeMapper.class, minMapper = ResumeMapper.class, service = ResumeService.class)
 public class ResumeController extends MappedCrudController<Long, Resume, ResumeDto, ResumeDto, ResumeService> {
 
     @Autowired
@@ -64,10 +65,10 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IdAssignableDto.class))})
     })
     @PostMapping(path = "/share/{id}")
-    public ResponseEntity<List<ResumeShareInfoDto>> shareResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<ResumeShareInfoDto>> shareResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                 @PathVariable(name = RestApiConstants.ID) Long id,
                                                                 @Valid @RequestBody ShareResumeRequestDto shareResumeRequestDto) {
         log.info("share resume ");
@@ -81,7 +82,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
     }
 
     @Override
-    public List<ResumeDto> afterFindAll(RequestContextDto requestContext, List<ResumeDto> resumeDtos) {
+    public List<ResumeDto> afterFindAll(ContextRequestDto requestContext, List<ResumeDto> resumeDtos) {
         return super.afterFindAll(requestContext, resumeDtos.stream()
                 .map(resumeDto -> {
                     String accountCode = crudService().getAccountCode(resumeDto.getCode());
@@ -111,10 +112,10 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IdAssignableDto.class))})
     })
     @PutMapping(path = "/resume-review/update/{id}")
-    public ResponseEntity<ResumeShareInfo> updateResumeReview(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<ResumeShareInfo> updateResumeReview(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                               @PathVariable(name = RestApiConstants.ID) Long id,
                                                               @Valid @RequestBody ResumeShareInfo resumeShareInfo) {
         log.info("update resume review");
@@ -140,10 +141,10 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IdAssignableDto.class))})
     })
     @GetMapping(path = "/findByCandidateCode")
-    public ResponseEntity<ResumeDto> getResumeByAccountCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
+    public ResponseEntity<ResumeDto> getResumeByAccountCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
         try {
             ResumeDto resumeDto = mapper().entityToDto(crudService().getResumeByAccountCode(requestContext.getSenderUser()));
             if (resumeDto != null) {
@@ -170,14 +171,14 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IdAssignableDto.class))})
     })
     @PostMapping(path = "/candidate")
-    public ResponseEntity<ResumeDto> createCurrentUserResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<ResumeDto> createCurrentUserResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                              @Valid @RequestBody ResumeDto resumeDto) {
         try {
-            if (!StringUtils.hasText(resumeDto.getDomain())) {
-                resumeDto.setDomain(requestContext.getSenderDomain());
+            if (!StringUtils.hasText(resumeDto.getTenant())) {
+                resumeDto.setTenant(requestContext.getSenderTenant());
             }
             return ResponseFactory.responseOk(mapper().entityToDto(crudService().createResumeForAccount(requestContext.getSenderUser(),
                     mapper().dtoToEntity(resumeDto))));
@@ -199,11 +200,11 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IdAssignableDto.class))})
     })
     @PostMapping(path = "/create/account")
     public ResponseEntity<Boolean> assignAccountToResume(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
             @Valid @RequestBody ResumeDto resumeDto) {
         try {
             crudService().createAccount(mapper().dtoToEntity(resumeDto));

@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.Date;
  */
 @Data
 
-public class ContractAmendmentDto extends AbstractAuditableDto<Long> {
+public class ContractAmendmentDto extends AuditableDto<Long> {
 
     private Long id;
     private String type;

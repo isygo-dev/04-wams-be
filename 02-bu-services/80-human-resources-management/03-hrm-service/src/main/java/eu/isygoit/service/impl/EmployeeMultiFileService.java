@@ -3,8 +3,9 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.*;
 import eu.isygoit.com.rest.service.MultiFileService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Employee;
 import eu.isygoit.model.EmployeeLinkedFile;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -23,11 +24,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-@DmsLinkFileService(DmsLinkedFileService.class)
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = EmployeeRepository.class)
-@ServLinkFileRepo(value = EmployeeLinkedFileRepository.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = EmployeeRepository.class)
+@InjectLinkedFileRepository(value = EmployeeLinkedFileRepository.class)
 public class EmployeeMultiFileService extends MultiFileService<Long, Employee, EmployeeLinkedFile, EmployeeRepository, EmployeeLinkedFileRepository>
         implements IEmployeeMultiFileService {
 
@@ -50,12 +51,12 @@ public class EmployeeMultiFileService extends MultiFileService<Long, Employee, E
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Employee.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("EMF")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }

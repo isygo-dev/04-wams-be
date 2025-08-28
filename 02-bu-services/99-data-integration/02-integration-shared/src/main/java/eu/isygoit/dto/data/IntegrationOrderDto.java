@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumIntegrationOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +14,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class IntegrationOrderDto extends AbstractAuditableDto<Long> {
+public class IntegrationOrderDto extends AuditableDto<Long> {
 
-    private String domain;
+    private String tenant;
     private String code;
     private String name;
     private String description;

@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class MinResumeDto extends AbstractAuditableDto<Long> {
+public class MinResumeDto extends AuditableDto<Long> {
 
     private String code;
-    private String Domain;
+    private String Tenant;
     private String title;
     private String presentation;
     private String firstName;

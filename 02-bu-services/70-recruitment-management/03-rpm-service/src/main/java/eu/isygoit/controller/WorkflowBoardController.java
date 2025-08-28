@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -8,12 +8,12 @@ import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.BpmEventRequestDto;
 import eu.isygoit.dto.common.BpmEventResponseDto;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferApplicationInterviewEventRequestDto;
 import eu.isygoit.dto.data.WorkflowBoardDto;
 import eu.isygoit.dto.data.WorkflowStateDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.WorkflowBoardMapper;
 import eu.isygoit.mapper.WorkflowStateMapper;
@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/workflow/board")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = WorkflowBoardMapper.class, minMapper = WorkflowBoardMapper.class, service = WorkflowBoardService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = WorkflowBoardMapper.class, minMapper = WorkflowBoardMapper.class, service = WorkflowBoardService.class)
 public class WorkflowBoardController extends MappedCrudController<Long, WorkflowBoard, WorkflowBoardDto, WorkflowBoardDto, WorkflowBoardService> {
 
     @Autowired
@@ -67,10 +67,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = WorkflowStateDto.class))})
     })
     @GetMapping(path = "/states")
-    ResponseEntity<List<WorkflowStateDto>> getStates(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<List<WorkflowStateDto>> getStates(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                      @RequestParam(name = RestApiConstants.WB_CODE) String wbCode) {
         try {
             List<WorkflowStateDto> list = workflowStateMapper.listEntityToDto(workflowBoardService.getStates(wbCode))
@@ -100,14 +100,14 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IBoardItem.class))})
     })
 
     @GetMapping(path = "/items")
-    ResponseEntity<List<IBoardItem>> getItems(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<List<IBoardItem>> getItems(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                               @RequestParam(name = RestApiConstants.WB_CODE) String wbCode) {
         try {
-            List<IBoardItem> list = workflowBoardService.getItems(requestContext.getSenderDomain(), wbCode);
+            List<IBoardItem> list = workflowBoardService.getItems(requestContext.getSenderTenant(), wbCode);
             if (CollectionUtils.isEmpty(list)) {
                 return ResponseFactory.responseNoContent();
             }
@@ -131,10 +131,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = AccountModelDto.class))})
     })
     @GetMapping(path = "/candidate/{code}")
-    ResponseEntity<AccountModelDto> getJobApplicationCandidate(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<AccountModelDto> getJobApplicationCandidate(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                @PathVariable(name = RestApiConstants.CODE) String code) {
         try {
             return ResponseFactory.responseOk(workflowBoardService.getCandidateData(code));
@@ -157,10 +157,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @GetMapping(path = "/itemTypes")
-    ResponseEntity<List<String>> getItemTypes(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
+    ResponseEntity<List<String>> getItemTypes(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
         try {
             List<String> list = this.exceptionHandler().getEntityMap().values().stream()
                     .filter(c -> IStatusAssignable.class.isAssignableFrom(c))
@@ -188,10 +188,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = BpmEventResponseDto.class))})
     })
     @PostMapping(path = "/event")
-    ResponseEntity<BpmEventResponseDto> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<BpmEventResponseDto> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                     @Valid @RequestBody BpmEventRequestDto bpmEventRequest) {
         try {
             return ResponseFactory.responseOk(workflowBoardService.performEvent(bpmEventRequest));
@@ -215,14 +215,14 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = JobOfferApplicationInterviewEventRequestDto.class))})
     })
     @GetMapping(path = "/board-event/{code}/{id}")
-    ResponseEntity<JobOfferApplicationInterviewEventRequestDto> getEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<JobOfferApplicationInterviewEventRequestDto> getEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                          @PathVariable(name = RestApiConstants.CODE) String code,
                                                                          @PathVariable(name = RestApiConstants.ID) Long id) {
         try {
-            return ResponseFactory.responseOk(workflowBoardService.getInterviewEvent(requestContext.getSenderDomain(), code, id));
+            return ResponseFactory.responseOk(workflowBoardService.getInterviewEvent(requestContext.getSenderTenant(), code, id));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -244,15 +244,15 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @PostMapping(path = "/board-event/{eventType}/{code}")
-    ResponseEntity<?> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<?> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                   @PathVariable(name = RestApiConstants.EVENT_TYPE) String eventType,
                                   @PathVariable(name = RestApiConstants.CODE) String code,
                                   @Valid @RequestBody JobOfferApplicationInterviewEventRequestDto event) {
         try {
-            return ResponseFactory.responseOk(workflowBoardService.addInterviewEvent(requestContext.getSenderDomain(), code, eventType, event));
+            return ResponseFactory.responseOk(workflowBoardService.addInterviewEvent(requestContext.getSenderTenant(), code, eventType, event));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -274,10 +274,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @PutMapping(path = "/board-event/{eventType}/{code}")
-    ResponseEntity<?> updateEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<?> updateEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                   @PathVariable(name = RestApiConstants.EVENT_TYPE) String eventType,
                                   @PathVariable(name = RestApiConstants.CODE) String code,
                                   @Valid @RequestBody JobOfferApplicationInterviewEventRequestDto event) {
@@ -303,13 +303,13 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @GetMapping(path = "/watchers")
-    ResponseEntity<List<String>> getAvailableWorkflowEmails(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<List<String>> getAvailableWorkflowEmails(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                             @RequestParam(name = RestApiConstants.WF_CODE) String wfCode) {
         try {
-            return ResponseFactory.responseOk(crudService().getBoardWatchersByWorkflow(wfCode, requestContext.getSenderDomain()));
+            return ResponseFactory.responseOk(crudService().getBoardWatchersByWorkflow(wfCode, requestContext.getSenderTenant()));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

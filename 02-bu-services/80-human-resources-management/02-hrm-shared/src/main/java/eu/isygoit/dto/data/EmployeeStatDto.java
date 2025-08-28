@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 
-import eu.isygoit.dto.extendable.IdentifiableDto;
+import eu.isygoit.dto.extendable.IdAssignableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @SuperBuilder
-public class EmployeeStatDto extends IdentifiableDto<Long> {
+public class EmployeeStatDto extends IdAssignableDto<Long> {
     private Integer contractCount;
     private LocalDate activeContractEndDate;
     private LocalDate activeContractAnniversaryDate;

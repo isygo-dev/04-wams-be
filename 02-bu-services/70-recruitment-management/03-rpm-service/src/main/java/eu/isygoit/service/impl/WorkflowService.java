@@ -1,11 +1,12 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Workflow;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
@@ -22,9 +23,9 @@ import java.util.List;
 
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = WorkflowRepository.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = WorkflowRepository.class)
 public class WorkflowService extends CodeAssignableService<Long, Workflow, WorkflowRepository> implements IWorkflowService {
 
     @Autowired
@@ -35,11 +36,11 @@ public class WorkflowService extends CodeAssignableService<Long, Workflow, Workf
     @Override
     public Workflow beforeCreate(Workflow workflow) {
         if (!CollectionUtils.isEmpty(workflow.getWorkflowStates())) {
-            workflow.setWorkflowStates(this.workflowStateService.create(workflow.getWorkflowStates()));
+            workflow.setWorkflowStates(this.workflowStateService.createBatch(workflow.getWorkflowStates()));
         }
 
         if (!CollectionUtils.isEmpty(workflow.getWorkflowTransitions())) {
-            workflow.setWorkflowTransitions(this.workflowTransitionService.create(workflow.getWorkflowTransitions()));
+            workflow.setWorkflowTransitions(this.workflowTransitionService.createBatch(workflow.getWorkflowTransitions()));
         }
 
         return workflow;
@@ -60,12 +61,12 @@ public class WorkflowService extends CodeAssignableService<Long, Workflow, Workf
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Workflow.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("WFL")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }

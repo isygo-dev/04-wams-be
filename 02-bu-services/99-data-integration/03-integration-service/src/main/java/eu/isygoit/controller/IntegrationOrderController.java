@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.dto.data.IntegrationOrderFileDto;
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = IntegrationExceptionHandler.class, mapper = IntegrationOrderFileMapper.class, minMapper = IntegrationOrderFileMapper.class, service = IntegrationOrderService.class)
+@InjectMapperAndService(handler = IntegrationExceptionHandler.class, mapper = IntegrationOrderFileMapper.class, minMapper = IntegrationOrderFileMapper.class, service = IntegrationOrderService.class)
 @RequestMapping(value = "/api/v1/private/integration/order")
 public class IntegrationOrderController extends MappedCrudController<Long, IntegrationOrder, IntegrationOrderFileDto,
         IntegrationOrderFileDto, IntegrationOrderService> {
@@ -74,7 +74,7 @@ public class IntegrationOrderController extends MappedCrudController<Long, Integ
                 "    \"email\": \"s.mbarki@isygoit.eu\",\n" +
                 "    \"fullName\": \"Sami Mbarki\",\n" +
                 "    \"origin\": \"SYS_ADMIN\",\n" +
-                "    \"domain\": \"isygoit.eu\",\n" +
+                "    \"tenant\": \"isygoit.eu\",\n" +
                 "    \"language\": \"EN\",\n" +
                 "    \"adminStatus\": \"ENABLED\",\n" +
                 "    \"systemStatus\": \"IDLE\",\n" +
@@ -96,12 +96,12 @@ public class IntegrationOrderController extends MappedCrudController<Long, Integ
                 "      }\n" +
                 "    },\n" +
                 "    \"roleInfo\": [],\n" +
-                "    \"functionRole\": \"Domain Admin\",\n" +
+                "    \"functionRole\": \"Tenant Admin\",\n" +
                 "    \"imagePath\": \"\\\\uploads\\\\isygoit.eu\\\\account\\\\image\\\\blob_ACT000003.png\",\n" +
                 "    \"phoneNumber\": \"+21658965478\",\n" +
                 "    \"isAdmin\": true,\n" +
                 "    \"authType\": \"OTP\",\n" +
-                "    \"accountType\": \"domain-user\"\n" +
+                "    \"accountType\": \"tenant-user\"\n" +
                 "  }";
 
         RequestEntity<String> requestEntity = null;
@@ -137,7 +137,7 @@ public class IntegrationOrderController extends MappedCrudController<Long, Integ
                         "    \"email\": \"s.mbarki@isygoit.eu\",\n" +
                         "    \"fullName\": \"Sami Mbarki\",\n" +
                         "    \"origin\": \"SYS_ADMIN\",\n" +
-                        "    \"domain\": \"isygoit.eu\",\n" +
+                        "    \"tenant\": \"isygoit.eu\",\n" +
                         "    \"language\": \"EN\",\n" +
                         "    \"adminStatus\": \"ENABLED\",\n" +
                         "    \"systemStatus\": \"IDLE\",\n" +
@@ -159,12 +159,12 @@ public class IntegrationOrderController extends MappedCrudController<Long, Integ
                         "      }\n" +
                         "    },\n" +
                         "    \"roleInfo\": [],\n" +
-                        "    \"functionRole\": \"Domain Admin\",\n" +
+                        "    \"functionRole\": \"Tenant Admin\",\n" +
                         "    \"imagePath\": \"\\\\uploads\\\\isygoit.eu\\\\account\\\\image\\\\blob_ACT000003.png\",\n" +
                         "    \"phoneNumber\": \"+21658965478\",\n" +
                         "    \"isAdmin\": true,\n" +
                         "    \"authType\": \"OTP\",\n" +
-                        "    \"accountType\": \"domain-user\"\n" +
+                        "    \"accountType\": \"tenant-user\"\n" +
                         "  }", String.class)
                 .retrieve().toEntity(String.class).block();
     }

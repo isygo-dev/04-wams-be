@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.IImageUploadDto;
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumCategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder
 
-public class CategoryDto extends AbstractAuditableDto<Long> implements IImageUploadDto {
+public class CategoryDto extends AuditableDto<Long> implements IImageUploadDto {
 
     List<String> tags;
-    private String domain;
+    private String tenant;
     private String name;
     private String description;
     @Builder.Default

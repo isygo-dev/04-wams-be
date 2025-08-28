@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.TemplateDto;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/template")
-@CtrlDef(handler = SmeKitExceptionHandler.class, mapper = TemplateMapper.class, minMapper = TemplateMapper.class, service = TemplateService.class)
+@InjectMapperAndService(handler = SmeKitExceptionHandler.class, mapper = TemplateMapper.class, minMapper = TemplateMapper.class, service = TemplateService.class)
 public class TemplateFileController extends MappedFileController<Long, Template, TemplateDto, TemplateDto, TemplateService> {
 
 }

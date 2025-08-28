@@ -1,13 +1,13 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.com.rest.service.IFileServiceMethods;
 import eu.isygoit.model.Contract;
 
 /**
  * The interface Contract service.
  */
-public interface IContractService extends ICrudServiceMethod<Long, Contract>, IFileServiceMethods<Long, Contract> {
+public interface IContractService extends ICrudServiceMethods<Long, Contract>, IFileServiceMethods<Long, Contract> {
     /**
      * Update contract status contract.
      *

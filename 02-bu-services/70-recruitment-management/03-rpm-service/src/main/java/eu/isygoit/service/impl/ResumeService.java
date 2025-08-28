@@ -1,18 +1,18 @@
 package eu.isygoit.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectDmsLinkedFileService;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.camel.repository.ICamelRepository;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
-import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.constants.TenantConstants;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
 import eu.isygoit.dto.request.NewAccountDto;
@@ -51,10 +51,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Transactional
-@DmsLinkFileService(DmsLinkedFileService.class)
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = ResumeRepository.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = ResumeRepository.class)
 public class ResumeService extends FileImageService<Long, Resume, ResumeRepository>
         implements IResumeService {
 
@@ -93,19 +93,19 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Resume.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("RES")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .build();
     }
 
     @Override
-    public Resume beforeUpload(String domain, Resume resume, MultipartFile file) throws IOException {
+    public Resume beforeUpload(String tenant, Resume resume, MultipartFile file) throws IOException {
         camelRepository.asyncSendBody(ICamelRepository.parse_resume_queue, ResumeParseDto.builder()
-                .domain(resume.getDomain())
+                .tenant(resume.getTenant())
                 .code(resume.getCode())
                 .file(file)
                 .build());
@@ -151,15 +151,15 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
 
     private void shareResumeNotification(Resume resume, String resumeOwner, AccountModelDto account) throws JsonProcessingException {
         final String defaultUrl = "https://localhost:4004/apps/resumes/view/";
-        String resumeUrl = Optional.ofNullable(imsAppParameterService.getValueByDomainAndName(RequestContextDto.builder().build(),
-                        resume.getDomain(), AppParameterConstants.RESUME_VIEW_URL, true, defaultUrl))
+        String resumeUrl = Optional.ofNullable(imsAppParameterService.getValueByTenantAndName(ContextRequestDto.builder().build(),
+                        resume.getTenant(), AppParameterConstants.RESUME_VIEW_URL, true, defaultUrl))
                 .filter(result -> result.hasBody() && StringUtils.hasText(result.getBody()))
                 .map(result -> result.getBody() + resume.getId())
                 .orElse(defaultUrl + resume.getId());  // Default URL fallback
 
 
         MailMessageDto mailMessageDto = MailMessageDto.builder()
-                .domain(resume.getDomain())
+                .tenant(resume.getTenant())
                 .subject(EmailSubjects.SHARED_RESUME_EMAIL_SUBJECT)
                 .toAddr(account.getEmail())
                 .templateName(IEnumEmailTemplate.Types.RESUME_SHARED_TEMPLATE)
@@ -170,13 +170,13 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
                 //Common vars
                 MsgTemplateVariables.V_USER_NAME, account.getCode(),
                 MsgTemplateVariables.V_FULLNAME, account.getFullName(),
-                MsgTemplateVariables.V_DOMAIN_NAME, resume.getDomain(),
+                MsgTemplateVariables.V_TENANT_NAME, resume.getTenant(),
                 //Specific vars
                 MsgTemplateVariables.V_CONDIDATE_FULLNAME, resume.getFullName(),
                 MsgTemplateVariables.V_SHARED_BY, resumeOwner,
                 MsgTemplateVariables.V_RESUME_VIEW_URL, resumeUrl)));
 
-        msgService.sendMessage(resume.getDomain(), mailMessageDto, appProperties.isSendAsyncEmail());
+        msgService.sendMessage(resume.getTenant(), mailMessageDto, appProperties.isSendAsyncEmail());
     }
 
 
@@ -237,7 +237,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     @Override
-    public ResumeGlobalStatDto getGlobalStatistics(IEnumResumeStatType.Types statType, RequestContextDto requestContext) {
+    public ResumeGlobalStatDto getGlobalStatistics(IEnumResumeStatType.Types statType, ContextRequestDto requestContext) {
         // Map each statType to a Supplier that returns the corresponding DTO with only that stat calculated
         Map<IEnumResumeStatType.Types, Supplier<ResumeGlobalStatDto>> statSuppliers = Map.of(
                 IEnumResumeStatType.Types.TOTAL_COUNT, () ->
@@ -273,7 +273,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     }
 
     @Override
-    public ResumeStatDto getObjectStatistics(String code, RequestContextDto requestContext) {
+    public ResumeStatDto getObjectStatistics(String code, ContextRequestDto requestContext) {
         return ResumeStatDto.builder()
                 .completion(75L)
                 .realizedTestsCount(resumeStatService.stat_GetInterviewedResumesCount(code))
@@ -310,7 +310,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     public void createAccount(Resume resume) throws IOException {
         kafkaRegisterAccountProducer.sendMessage(NewAccountDto.builder()
                 .origin(new StringBuilder(IEnumAccountOrigin.Types.RESUME.name()).append("-").append(resume.getCode()).toString())
-                .domain(resume.getDomain())
+                .tenant(resume.getTenant())
                 .email(resume.getEmail())
                 .firstName(resume.getFirstName())
                 .lastName(resume.getLastName())
@@ -333,7 +333,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     private void completeSkills(Resume resume, String accountCode) {
         resume.getDetails().getSkills().forEach(resumeSkills -> {
             try {
-                ResponseEntity<List<QuizReportDto>> result = quizCandidateQuizService.getByCandidateAndTags(RequestContextDto.builder().build(),
+                ResponseEntity<List<QuizReportDto>> result = quizCandidateQuizService.getByCandidateAndTags(ContextRequestDto.builder().build(),
                         accountCode,
                         Arrays.asList(resumeSkills.getName())
                 );

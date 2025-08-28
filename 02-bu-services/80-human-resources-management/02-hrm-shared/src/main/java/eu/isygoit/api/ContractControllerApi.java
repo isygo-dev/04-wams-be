@@ -3,10 +3,9 @@ package eu.isygoit.api;
 import eu.isygoit.com.rest.api.IMappedCrudApi;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ContractDto;
 import eu.isygoit.dto.data.MinContractDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,10 +34,10 @@ public interface ContractControllerApi extends IMappedCrudApi<Long, MinContractD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = ContractDto.class))})
     })
     @PutMapping(path = "/updateContractStatus")
-    ResponseEntity<ContractDto> updateContractStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<ContractDto> updateContractStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                      @RequestParam(name = RestApiConstants.ID) Long id,
                                                      @RequestParam(name = RestApiConstants.IS_LOCKED) Boolean isLocked);
 

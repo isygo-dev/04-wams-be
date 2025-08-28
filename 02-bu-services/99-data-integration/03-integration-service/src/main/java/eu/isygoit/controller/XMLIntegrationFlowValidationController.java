@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
 import eu.isygoit.helper.XmlHelper;
 import eu.isygoit.mapper.IntegrationFlowFileMapper;
@@ -23,7 +23,7 @@ import java.io.IOException;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/integration/validate")
-@CtrlDef(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class,
+@InjectMapperAndService(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class,
         service = IntegrationFlowService.class)
 public class XMLIntegrationFlowValidationController {
 

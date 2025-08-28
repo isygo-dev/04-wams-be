@@ -2,7 +2,7 @@ package eu.isygoit.dto.data;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import eu.isygoit.deserializer.UuidDeserializer;
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class IntegrationElementDto extends AbstractAuditableDto<UUID> {
+public class IntegrationElementDto extends AuditableDto<UUID> {
 
     @JsonDeserialize(using = UuidDeserializer.class)
     private UUID id;

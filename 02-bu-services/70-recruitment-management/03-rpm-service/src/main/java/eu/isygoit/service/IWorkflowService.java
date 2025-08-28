@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.model.Workflow;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The interface Workflow service.
  */
-public interface IWorkflowService extends ICrudServiceMethod<Long, Workflow> {
+public interface IWorkflowService extends ICrudServiceMethods<Long, Workflow> {
     /**
      * Gets workflow not associated.
      *

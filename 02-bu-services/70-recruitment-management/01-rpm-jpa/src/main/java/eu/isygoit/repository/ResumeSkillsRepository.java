@@ -2,6 +2,7 @@ package eu.isygoit.repository;
 
 import eu.isygoit.model.ResumeSkills;
 import org.springframework.data.jpa.repository.Query;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

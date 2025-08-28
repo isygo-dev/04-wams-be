@@ -3,8 +3,9 @@ package eu.isygoit.service.impl;
 import eu.isygoit.annotation.*;
 import eu.isygoit.com.rest.service.MultiFileService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferLinkedFile;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -21,11 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional
-@DmsLinkFileService(DmsLinkedFileService.class)
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = JobOfferRepository.class)
-@ServLinkFileRepo(value = JobOfferLinkedFileRepository.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = JobOfferRepository.class)
+@InjectLinkedFileRepository(value = JobOfferLinkedFileRepository.class)
 public class JobOfferMultiFileService extends MultiFileService<Long, JobOffer, JobOfferLinkedFile, JobOfferRepository, JobOfferLinkedFileRepository>
         implements IJobOfferMultiFileService {
 
@@ -44,12 +45,12 @@ public class JobOfferMultiFileService extends MultiFileService<Long, JobOffer, J
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(JobOffer.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("JMF")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }

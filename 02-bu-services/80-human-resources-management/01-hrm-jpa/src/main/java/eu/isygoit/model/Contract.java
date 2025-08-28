@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.enums.IEnumContractType;
 import eu.isygoit.enums.IEnumTimeType;
@@ -38,7 +38,7 @@ import java.util.List;
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_CONTRACT + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
 public class Contract extends AuditableCancelableEntity<Long>
-        implements IDomainAssignable, ICodeAssignable, IFileEntity {
+        implements ITenantAssignable, ICodeAssignable, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "contract_sequence_generator", sequenceName = "contract_sequence", allocationSize = 1)
@@ -47,9 +47,9 @@ public class Contract extends AuditableCancelableEntity<Long>
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

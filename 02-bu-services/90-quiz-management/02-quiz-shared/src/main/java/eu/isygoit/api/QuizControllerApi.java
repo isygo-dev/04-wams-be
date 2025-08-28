@@ -3,11 +3,10 @@ package eu.isygoit.api;
 import eu.isygoit.com.rest.api.IMappedCrudApi;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.QuizDto;
 import eu.isygoit.dto.data.QuizListDto;
 import eu.isygoit.dto.data.QuizQuestionDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -41,10 +40,10 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = Resource.class))})
     })
     @GetMapping(path = "/question/image/download/{id}")
-    ResponseEntity<Resource> downloadQuestionImage(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<Resource> downloadQuestionImage(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                    @PathVariable(name = RestApiConstants.ID) Long id) throws IOException;
 
     /**
@@ -64,7 +63,7 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
                             schema = @Schema(implementation = QuizQuestionDto.class))})
     })
     @PostMapping(path = "/question/image/upload/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<QuizQuestionDto> uploadQuestionImage(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<QuizQuestionDto> uploadQuestionImage(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                         @PathVariable(name = RestApiConstants.ID) Long id,
                                                         @RequestPart(name = RestApiConstants.FILE) MultipartFile file);
 
@@ -82,10 +81,10 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = QuizListDto.class))})
     })
     @GetMapping(path = "/category")
-    ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                              @RequestParam(name = RestApiConstants.CATEGORY) String category);
 
 
@@ -102,9 +101,9 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = QuizDto.class))})
     })
     @GetMapping(path = "/code/{code}")
-    ResponseEntity<QuizDto> findByCodeIgnoreCase(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<QuizDto> findByCodeIgnoreCase(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                  @PathVariable(name = RestApiConstants.CODE) String code);
 }

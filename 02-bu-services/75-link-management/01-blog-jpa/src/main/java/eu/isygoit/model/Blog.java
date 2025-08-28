@@ -32,8 +32,8 @@ public class Blog extends AuditableEntity<Long> {
     private String title;
 
     @CassandraType(type = CassandraType.Name.TEXT)
-    @Column(SchemaColumnConstantName.C_DOMAIN)
-    private String domain;
+    @Column(SchemaColumnConstantName.C_TENANT)
+    private String tenant;
 
     @CassandraType(type = CassandraType.Name.TEXT)
     @Column(SchemaColumnConstantName.C_DESCRIPTION)

@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumSkillLevelType;
 import eu.isygoit.enums.IEnumSkillType;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobSkillsDto extends AbstractAuditableDto<Long> {
+public class JobSkillsDto extends AuditableDto<Long> {
     private Long id;
     private IEnumSkillType.Types type;
     private String name;

@@ -4,6 +4,7 @@ import eu.isygoit.model.Contract;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Repository;
  * The interface Contract repository.
  */
 @Repository
-public interface ContractRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Contract, Long> {
+public interface ContractRepository extends JpaPagingAndSortingTenantAndCodeAssignableRepository<Contract, Long> {
 
     /**
      * Update contract status.

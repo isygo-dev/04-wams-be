@@ -1,6 +1,8 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.Quiz;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  * The interface Quiz repository.
  */
 @Repository
-public interface QuizRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<Quiz, Long> {
+public interface QuizRepository extends JpaPagingAndSortingTenantAndCodeAssignableRepository<Quiz, Long> {
 
     /**
      * Find by tags in list.

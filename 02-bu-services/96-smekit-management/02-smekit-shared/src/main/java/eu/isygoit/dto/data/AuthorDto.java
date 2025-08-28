@@ -2,7 +2,7 @@ package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.IFileUploadDto;
 import eu.isygoit.dto.IImageUploadDto;
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AuthorDto extends AbstractAuditableDto<Long> implements IImageUploadDto, IFileUploadDto {
+public class AuthorDto extends AuditableDto<Long> implements IImageUploadDto, IFileUploadDto {
 
     private String firstname;
     private String lastname;
-    private String domain;
+    private String tenant;
     private String code;
     private String imagePath;
     private String email;

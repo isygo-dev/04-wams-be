@@ -1,15 +1,15 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectDmsLinkedFileService;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.service.ImageService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.constants.TenantConstants;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
 import eu.isygoit.dto.request.NewAccountDto;
@@ -46,10 +46,10 @@ import java.util.*;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = EmployeeRepository.class)
-@DmsLinkFileService(DmsLinkedFileService.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = EmployeeRepository.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
 public class EmployeeService extends ImageService<Long, Employee, EmployeeRepository> implements IEmployeeService {
 
     private final AppProperties appProperties;
@@ -116,12 +116,12 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Employee.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("EMP")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }
@@ -137,10 +137,10 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public List<Employee> findByDomain(String domain) {
-        List<Employee> employees = employeeRepository.findByDomainIgnoreCase(domain);
+    public List<Employee> findByTenant(String tenant) {
+        List<Employee> employees = employeeRepository.findByTenantIgnoreCase(tenant);
         if (CollectionUtils.isEmpty(employees)) {
-            throw new NotFoundException("Employee not found with domain: " + domain);
+            throw new NotFoundException("Employee not found with tenant: " + tenant);
         }
         return employees;
     }
@@ -155,7 +155,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public EmployeeStatDto getObjectStatistics(String code, RequestContextDto requestContext) {
+    public EmployeeStatDto getObjectStatistics(String code, ContextRequestDto requestContext) {
         return EmployeeStatDto.builder().contractCount(getTotalContractByEmployee(code))
                 .activeContractEndDate(getLastContractEndDate(code))
                 .activeContractAnniversaryDate(getActiveContractAnniversaryDate(code))
@@ -226,7 +226,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     @Override
-    public EmployeeGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, RequestContextDto requestContext) {
+    public EmployeeGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, ContextRequestDto requestContext) {
         EmployeeGlobalStatDto.EmployeeGlobalStatDtoBuilder builder = EmployeeGlobalStatDto.builder();
         switch (statType) {
             case TOTAL_COUNT:
@@ -255,7 +255,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     public void createAccount(Employee employee) throws IOException {
         kafkaRegisterAccountProducer.sendMessage(NewAccountDto.builder()
                 .origin(new StringBuilder(IEnumAccountOrigin.Types.EMPLOYEE.name()).append("-").append(employee.getCode()).toString())
-                .domain(employee.getDomain())
+                .tenant(employee.getTenant())
                 .email(employee.getEmail())
                 .firstName(employee.getFirstName())
                 .lastName(employee.getLastName())
@@ -264,20 +264,20 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
                 .build());
     }
 
-    private Long stat_GetEmployeesCount(RequestContextDto requestContext) {
-        if (DomainConstants.SUPER_DOMAIN_NAME.equals(requestContext.getSenderDomain())) {
+    private Long stat_GetEmployeesCount(ContextRequestDto requestContext) {
+        if (TenantConstants.SUPER_TENANT_NAME.equals(requestContext.getSenderTenant())) {
             return repository().count();
         } else {
-            return repository().countByDomainIgnoreCase(requestContext.getSenderDomain());
+            return repository().countByTenantIgnoreCase(requestContext.getSenderTenant());
         }
     }
 
-    private Long stat_GetConfirmedEmployeesCount(RequestContextDto requestContext) {
+    private Long stat_GetConfirmedEmployeesCount(ContextRequestDto requestContext) {
         ResponseEntity<Long> responseEntity = imAccountService.getConfirmedAccountNumberByEmployee(requestContext);
         return responseEntity.getBody();
     }
 
-    private Long stat_GetActiveEmployeesCount(RequestContextDto requestContext) {
-        return repository().countByDomainIgnoreCaseAndEmployeeStatus(requestContext.getSenderDomain(), IEnumEnabledBinaryStatus.Types.ENABLED);
+    private Long stat_GetActiveEmployeesCount(ContextRequestDto requestContext) {
+        return repository().countByTenantIgnoreCaseAndEmployeeStatus(requestContext.getSenderTenant(), IEnumEnabledBinaryStatus.Types.ENABLED);
     }
 }

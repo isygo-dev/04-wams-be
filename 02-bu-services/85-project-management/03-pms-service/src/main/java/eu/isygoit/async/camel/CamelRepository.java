@@ -3,6 +3,7 @@ package eu.isygoit.async.camel;
 import eu.isygoit.com.camel.repository.AbstractCamelRepository;
 import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 /**

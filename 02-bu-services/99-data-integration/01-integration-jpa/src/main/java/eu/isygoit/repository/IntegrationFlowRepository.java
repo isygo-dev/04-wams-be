@@ -1,6 +1,7 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.IntegrationFlow;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * The interface Integration flow repository.
  */
 @Repository
-public interface IntegrationFlowRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<IntegrationFlow, Long> {
+public interface IntegrationFlowRepository extends JpaPagingAndSortingTenantAndCodeAssignableRepository<IntegrationFlow, Long> {
 
 }

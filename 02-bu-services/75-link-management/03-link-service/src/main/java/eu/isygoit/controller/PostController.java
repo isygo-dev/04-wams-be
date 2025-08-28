@@ -1,16 +1,16 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.api.PostControllerApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.PostDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.PostNotFoundException;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.PostMapper;
@@ -40,7 +40,7 @@ import java.util.Optional;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = LinkExceptionHandler.class, mapper = PostMapper.class, minMapper = PostMapper.class, service = PostService.class)
+@InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = PostMapper.class, minMapper = PostMapper.class, service = PostService.class)
 @RequestMapping(value = "/api/v1/private/post")
 public class PostController extends MappedCrudController<Long, Post, PostDto, PostDto, PostService> implements PostControllerApi {
 
@@ -64,10 +64,10 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = PostDto.class))})
     })
     @PostMapping(path = "/like")
-    public ResponseEntity<PostDto> createLikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<PostDto> createLikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                   @RequestParam(name = RestApiConstants.ID) Long postId,
                                                   @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                   @RequestParam Boolean isLike
@@ -105,10 +105,10 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @GetMapping(path = "/like/{postId}")
-    public ResponseEntity<List<String>> getUsersLikedPostByPostId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<String>> getUsersLikedPostByPostId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                   @PathVariable(name = RestApiConstants.POST_ID) Long postId) {
         try {
             return ResponseFactory.responseOk(postService.findById(postId)
@@ -135,10 +135,10 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = PostDto.class))})
     })
     @PostMapping(path = "/dislike")
-    public ResponseEntity<PostDto> createDislikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<PostDto> createDislikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                      @RequestParam(name = RestApiConstants.ID) Long postId,
                                                      @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                      @RequestParam Boolean isLike) {
@@ -176,19 +176,19 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = PostDto.class))})
     })
     @GetMapping(path = "/blog/{page}/{size}")
-    public ResponseEntity<List<PostDto>> findAllBlogs(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<PostDto>> findAllBlogs(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                       @PathVariable(name = RestApiConstants.PAGE) Integer page,
                                                       @PathVariable(name = RestApiConstants.SIZE) Integer size) {
         log.info("Find all post/blogs by page/size request received {}/{}", page, size);
         try {
             List<PostDto> list = null;
-            if (DomainConstants.SUPER_DOMAIN_NAME.equals(requestContext.getSenderDomain())) {
+            if (TenantConstants.SUPER_TENANT_NAME.equals(requestContext.getSenderTenant())) {
                 list = this.mapper().listEntityToDto(this.crudService().findByIsBlogTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"))));
             } else {
-                list = this.mapper().listEntityToDto(this.crudService().findByDomainAndIsBlogTrue(requestContext.getSenderDomain(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"))));
+                list = this.mapper().listEntityToDto(this.crudService().findByTenantAndIsBlogTrue(requestContext.getSenderTenant(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"))));
             }
 
             if (CollectionUtils.isEmpty(list)) {

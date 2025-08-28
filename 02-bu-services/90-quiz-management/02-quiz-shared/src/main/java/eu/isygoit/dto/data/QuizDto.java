@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumSkillLevelType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class QuizDto extends AbstractAuditableDto<Long> {
+public class QuizDto extends AuditableDto<Long> {
 
-    private String domain;
+    private String tenant;
     private String code;
     private String name;
     private String description;

@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResumeDetailsDto extends AbstractAuditableDto<Long> {
+public class ResumeDetailsDto extends AuditableDto<Long> {
 
     private List<ResumeProfExperienceDto> profExperiences;
     private List<ResumeEducationDto> educations;

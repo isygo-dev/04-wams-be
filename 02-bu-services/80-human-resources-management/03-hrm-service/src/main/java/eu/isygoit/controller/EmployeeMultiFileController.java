@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.api.IMappedMultiFileUploadApi;
 import eu.isygoit.com.rest.controller.impl.MappedMultiFileController;
 import eu.isygoit.dto.data.EmployeeDto;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/employee")
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = EmployeeMapper.class, minMapper = EmployeeMapper.class, service = EmployeeMultiFileService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = EmployeeMapper.class, minMapper = EmployeeMapper.class, service = EmployeeMultiFileService.class)
 public class EmployeeMultiFileController extends MappedMultiFileController<Long, Employee, EmployeeLinkedFileDto, EmployeeDto, EmployeeDto, EmployeeMultiFileService>
         implements IMappedMultiFileUploadApi<EmployeeLinkedFileDto, Long> {
 

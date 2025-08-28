@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.model.Quiz;
 import eu.isygoit.model.QuizQuestion;
 import org.springframework.core.io.Resource;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * The interface Quiz service.
  */
-public interface IQuizService extends ICrudServiceMethod<Long, Quiz> {
+public interface IQuizService extends ICrudServiceMethods<Long, Quiz> {
 
     /**
      * Download question image resource.
@@ -28,12 +28,12 @@ public interface IQuizService extends ICrudServiceMethod<Long, Quiz> {
      * Upload question image quiz question.
      *
      * @param id     the id
-     * @param domain the domain
+     * @param tenant the tenant
      * @param file   the file
      * @return the quiz question
      * @throws IOException the io exception
      */
-    QuizQuestion uploadQuestionImage(Long id, String domain, MultipartFile file) throws IOException;
+    QuizQuestion uploadQuestionImage(Long id, String tenant, MultipartFile file) throws IOException;
 
     /**
      * Gets quiz codes by category.

@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.PostDto;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = LinkExceptionHandler.class, mapper = PostMapper.class, minMapper = PostMapper.class, service = PostService.class)
+@InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = PostMapper.class, minMapper = PostMapper.class, service = PostService.class)
 @RequestMapping(value = "/api/v1/private/post")
 public class PostFileController extends MappedFileController<Long, Post, PostDto, PostDto, PostService> {
 }

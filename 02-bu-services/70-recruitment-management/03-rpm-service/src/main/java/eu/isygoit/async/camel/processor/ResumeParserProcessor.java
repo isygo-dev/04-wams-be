@@ -1,6 +1,7 @@
 package eu.isygoit.async.camel.processor;
 
 import eu.isygoit.com.camel.processor.AbstractCamelProcessor;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ResumeParseDto;
 import eu.isygoit.enums.IEnumFile;
 import eu.isygoit.enums.IEnumSkillLevelType;
@@ -44,14 +45,14 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
 
     @Override
     public void performProcessor(Exchange exchange, ResumeParseDto resumeParseDto) throws Exception {
-        exchange.getIn().setHeader("domain", resumeParseDto.getDomain());
+        exchange.getIn().setHeader("tenant", resumeParseDto.getTenant());
         exchange.getIn().setHeader("code", resumeParseDto.getCode());
 
         if (resumeParseDto.getFile() != null &&
                 org.springframework.util.StringUtils.hasText(resumeParseDto.getFile().getOriginalFilename()) &&
                 FilenameUtils.isExtension(resumeParseDto.getFile().getOriginalFilename().toLowerCase(), "pdf")) { //NOSONAR
             try {
-                ResponseEntity<Resource> result = dmsFileFileConverterService.convertPdf(//RequestContextDto.builder().build(),
+                ResponseEntity<Resource> result = dmsFileFileConverterService.convertPdf(ContextRequestDto.builder().build(),
                         IEnumFile.Types.TEXT, resumeParseDto.getFile());
                 if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
                     Optional<Resume> optional = resumeRepository.findByCodeIgnoreCase(resumeParseDto.getCode());

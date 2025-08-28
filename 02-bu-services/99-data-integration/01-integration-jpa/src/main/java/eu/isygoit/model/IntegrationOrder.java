@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.enums.IEnumIntegrationOrder;
 import eu.isygoit.model.jakarta.AuditableEntity;
@@ -26,14 +26,14 @@ import java.util.List;
         , uniqueConstraints = {
         @UniqueConstraint(name = SchemaUcConstantName.UC_INTEGRATION_ORDER_CODE,
                 columnNames = {SchemaColumnConstantName.C_CODE}),
-        @UniqueConstraint(name = SchemaUcConstantName.UC_INTEGRATION_ORDER_DOMAIN_NAME,
-                columnNames = {SchemaColumnConstantName.C_DOMAIN, SchemaColumnConstantName.C_NAME})
+        @UniqueConstraint(name = SchemaUcConstantName.UC_INTEGRATION_ORDER_TENANT_NAME,
+                columnNames = {SchemaColumnConstantName.C_TENANT, SchemaColumnConstantName.C_NAME})
 })
 @SecondaryTable(name = SchemaTableConstantName.T_INTEGRATION_ORDER_VALIDATION_FILE,
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID,
                 referencedColumnName = SchemaColumnConstantName.C_ID)
 )
-public class IntegrationOrder extends AuditableEntity<Long> implements ICodeAssignable, IDomainAssignable, IFileEntity {
+public class IntegrationOrder extends AuditableEntity<Long> implements ICodeAssignable, ITenantAssignable, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "integration_api_sequence_generator", sequenceName = "integration_api_sequence", allocationSize = 1)
@@ -42,9 +42,9 @@ public class IntegrationOrder extends AuditableEntity<Long> implements ICodeAssi
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

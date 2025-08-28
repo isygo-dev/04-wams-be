@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.ResumeDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/resume")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = ResumeMapper.class, minMapper = ResumeMapper.class, service = ResumeService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = ResumeMapper.class, minMapper = ResumeMapper.class, service = ResumeService.class)
 public class ResumeFileController extends MappedFileController<Long, Resume, ResumeDto, ResumeDto, ResumeService> {
 
 }

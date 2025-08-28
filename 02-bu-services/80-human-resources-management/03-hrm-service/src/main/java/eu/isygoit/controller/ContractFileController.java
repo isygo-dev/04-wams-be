@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.ContractDto;
 import eu.isygoit.dto.data.MinContractDto;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = ContractMapper.class, minMapper = ContractMapper.class, service = ContractService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = ContractMapper.class, minMapper = ContractMapper.class, service = ContractService.class)
 @RequestMapping(value = "/api/v1/private/contract")
 public class ContractFileController extends MappedFileController<Long, Contract, MinContractDto, ContractDto, ContractService> {
 

@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.*;
@@ -30,7 +30,7 @@ import java.util.List;
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID,
                 referencedColumnName = SchemaColumnConstantName.C_ID)
 )
-public class IntegrationFlow extends AuditableEntity<Long> implements ICodeAssignable, IDomainAssignable, IFileEntity {
+public class IntegrationFlow extends AuditableEntity<Long> implements ICodeAssignable, ITenantAssignable, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "integration_flow_sequence_generator", sequenceName = "integration_flow_sequence", allocationSize = 1)
@@ -39,9 +39,9 @@ public class IntegrationFlow extends AuditableEntity<Long> implements ICodeAssig
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

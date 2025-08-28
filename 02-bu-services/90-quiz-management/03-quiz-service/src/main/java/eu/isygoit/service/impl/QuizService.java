@@ -1,16 +1,17 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.exception.EmptyPathException;
 import eu.isygoit.exception.ObjectNotFoundException;
 import eu.isygoit.exception.ResourceNotFoundException;
 import eu.isygoit.helper.FileHelper;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Quiz;
 import eu.isygoit.model.QuizQuestion;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -41,9 +42,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = QuizRepository.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = QuizRepository.class)
 public class QuizService extends CodeAssignableService<Long, Quiz, QuizRepository> implements IQuizService {
 
     private final AppProperties appProperties;
@@ -63,12 +64,12 @@ public class QuizService extends CodeAssignableService<Long, Quiz, QuizRepositor
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Quiz.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("QIZ")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }
@@ -92,12 +93,12 @@ public class QuizService extends CodeAssignableService<Long, Quiz, QuizRepositor
     }
 
     @Override
-    public QuizQuestion uploadQuestionImage(Long id, String domain, MultipartFile file) throws IOException {
+    public QuizQuestion uploadQuestionImage(Long id, String tenant, MultipartFile file) throws IOException {
         Optional<QuizQuestion> optional = quizQuestionRepository.findById(id);
         if (optional.isPresent()) {
             if (file != null && !file.isEmpty()) {
                 Path target = Path.of(appProperties.getUploadDirectory())
-                        .resolve(domain).resolve(QuizQuestion.class.getSimpleName().toLowerCase()).resolve("image");
+                        .resolve(tenant).resolve(QuizQuestion.class.getSimpleName().toLowerCase()).resolve("image");
 
                 Path imagePath = FileHelper.saveMultipartFile(target,
                         file.getOriginalFilename() + "_" + optional.get().getId(),

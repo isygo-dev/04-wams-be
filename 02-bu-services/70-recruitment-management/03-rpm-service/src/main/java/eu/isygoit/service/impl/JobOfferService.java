@@ -1,14 +1,14 @@
 package eu.isygoit.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
-import eu.isygoit.constants.DomainConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.constants.TenantConstants;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
 import eu.isygoit.dto.data.MailMessageDto;
@@ -19,6 +19,7 @@ import eu.isygoit.exception.JobOfferNotFoundException;
 import eu.isygoit.exception.ShareJobNotificationException;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferDetails;
 import eu.isygoit.model.JobOfferShareInfo;
@@ -48,9 +49,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = JobOfferRepository.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = JobOfferRepository.class)
 public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOfferRepository>
         implements IJobOfferService {
 
@@ -77,17 +78,17 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
     }
 
     /**
-     * Initializes code generator for JobOffer entity with default domain and prefix.
+     * Initializes code generator for JobOffer entity with default tenant and prefix.
      */
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(JobOffer.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("JOB")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }
@@ -141,7 +142,7 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
      * Uses lazy evaluation to calculate only the requested statistic.
      */
     @Override
-    public JobOfferGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, RequestContextDto requestContext) {
+    public JobOfferGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, ContextRequestDto requestContext) {
         // Map each statType to a Supplier that returns the corresponding DTO with only that stat calculated
         Map<IEnumSharedStatType.Types, Supplier<JobOfferGlobalStatDto>> statSuppliers = Map.of(
                 IEnumSharedStatType.Types.TOTAL_COUNT, () ->
@@ -175,7 +176,7 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
      * Returns detailed statistics for a specific job offer identified by code.
      */
     @Override
-    public JobOfferStatDto getObjectStatistics(String code, RequestContextDto requestContext) {
+    public JobOfferStatDto getObjectStatistics(String code, ContextRequestDto requestContext) {
         return JobOfferStatDto.builder()
                 .completion(75L)
                 .applicationCount(getNumberOfApplicationsByJob(code, requestContext))
@@ -186,18 +187,18 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
     }
 
     /**
-     * Gets the number of applications for the given job code and domain.
+     * Gets the number of applications for the given job code and tenant.
      */
-    private Long getNumberOfApplicationsByJob(String code, RequestContextDto requestContext) {
-        return jobApplicationRepository.countJobsByNumberOfApplications(code, requestContext.getSenderDomain());
+    private Long getNumberOfApplicationsByJob(String code, ContextRequestDto requestContext) {
+        return jobApplicationRepository.countJobsByNumberOfApplications(code, requestContext.getSenderTenant());
     }
 
     /**
-     * Gets the number of interviewed profiles for the given job code and domain.
+     * Gets the number of interviewed profiles for the given job code and tenant.
      */
-    private Long getInterviewedProfilesCount(String code, RequestContextDto requestContext) {
+    private Long getInterviewedProfilesCount(String code, ContextRequestDto requestContext) {
         // Note: Uses same method as applications count - verify if this is intentional
-        return jobApplicationRepository.countJobsByNumberOfApplications(code, requestContext.getSenderDomain());
+        return jobApplicationRepository.countJobsByNumberOfApplications(code, requestContext.getSenderTenant());
     }
 
     /**
@@ -207,15 +208,15 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
         final String defaultUrl = "https://localhost:4002/apps/job/";
 
         // Fetch job view URL parameter, fallback to default if unavailable
-        String jobUrl = Optional.ofNullable(imsAppParameterService.getValueByDomainAndName(RequestContextDto.builder().build(),
-                        jobOffer.getDomain(), AppParameterConstants.JOB_VIEW_URL, true, defaultUrl))
+        String jobUrl = Optional.ofNullable(imsAppParameterService.getValueByTenantAndName(ContextRequestDto.builder().build(),
+                        jobOffer.getTenant(), AppParameterConstants.JOB_VIEW_URL, true, defaultUrl))
                 .filter(result -> result.hasBody() && StringUtils.hasText(result.getBody()))
                 .map(result -> result.getBody() + jobOffer.getId())
                 .orElse(defaultUrl + jobOffer.getId());
 
         // Build mail message DTO
         MailMessageDto mailMessageDto = MailMessageDto.builder()
-                .domain(jobOffer.getDomain())
+                .tenant(jobOffer.getTenant())
                 .subject(EmailSubjects.SHARED_JOB_EMAIL_SUBJECT)
                 .toAddr(account.getEmail())
                 .templateName(IEnumEmailTemplate.Types.JOB_OFFER_SHARED_TEMPLATE)
@@ -226,13 +227,13 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
         mailMessageDto.setVariables(MailMessageDto.getVariablesAsString(Map.of(
                 MsgTemplateVariables.V_USER_NAME, account.getCode(),
                 MsgTemplateVariables.V_FULLNAME, account.getFullName(),
-                MsgTemplateVariables.V_DOMAIN_NAME, jobOffer.getDomain(),
+                MsgTemplateVariables.V_TENANT_NAME, jobOffer.getTenant(),
                 MsgTemplateVariables.V_JOB_TITLE, jobOffer.getTitle(),
                 MsgTemplateVariables.V_SHARED_BY, jobOffer.getOwner(),
                 MsgTemplateVariables.V_JOB_VIEW_URL, jobUrl)));
 
         // Send the email (async if configured)
-        msgService.sendMessage(jobOffer.getDomain(), mailMessageDto, appProperties.isSendAsyncEmail());
+        msgService.sendMessage(jobOffer.getTenant(), mailMessageDto, appProperties.isSendAsyncEmail());
     }
 
     /**

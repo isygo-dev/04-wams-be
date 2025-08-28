@@ -1,11 +1,11 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.api.QuizControllerApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.QuizDto;
 import eu.isygoit.dto.data.QuizListDto;
 import eu.isygoit.dto.data.QuizQuestionDto;
@@ -39,7 +39,7 @@ import java.util.Objects;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = QuizExceptionHandler.class, mapper = QuizMapper.class, minMapper = QuizMapper.class, service = QuizService.class)
+@InjectMapperAndService(handler = QuizExceptionHandler.class, mapper = QuizMapper.class, minMapper = QuizMapper.class, service = QuizService.class)
 @RequestMapping(value = "/api/v1/private/quiz")
 public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, QuizDto, QuizService>
         implements QuizControllerApi {
@@ -52,7 +52,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     private QuizListMapper quizListMapper;
 
     @Override
-    public ResponseEntity<Resource> downloadQuestionImage(RequestContextDto requestContext, Long id) throws IOException {
+    public ResponseEntity<Resource> downloadQuestionImage(ContextRequestDto requestContext, Long id) throws IOException {
         log.info("Download question image request received");
         try {
             Resource imageResource = crudService().downloadQuestionImage(id);
@@ -67,11 +67,11 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public ResponseEntity<QuizQuestionDto> uploadQuestionImage(RequestContextDto requestContext, Long id, MultipartFile file) {
+    public ResponseEntity<QuizQuestionDto> uploadQuestionImage(ContextRequestDto requestContext, Long id, MultipartFile file) {
         log.info("Upload question image request received");
         try {
             return ResponseFactory.responseOk(quizQuestionMapper.entityToDto(crudService().uploadQuestionImage(id,
-                    requestContext.getSenderDomain(), file)));
+                    requestContext.getSenderTenant(), file)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -79,7 +79,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(RequestContextDto requestContext, String category) {
+    public ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(ContextRequestDto requestContext, String category) {
         log.info("get Quiz Codes By Category request received");
         try {
             List<Quiz> list = crudService().getQuizCodesByCategory(category);
@@ -94,7 +94,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public ResponseEntity<QuizDto> findByCodeIgnoreCase(RequestContextDto requestContext, String code) {
+    public ResponseEntity<QuizDto> findByCodeIgnoreCase(ContextRequestDto requestContext, String code) {
         log.info("get quiz by code received");
         try {
             QuizDto quizDto = mapper().entityToDto(crudService().getQuizByCode(code));
@@ -110,7 +110,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public List<QuizDto> afterFindAll(RequestContextDto requestContext, List<QuizDto> list) {
+    public List<QuizDto> afterFindAll(ContextRequestDto requestContext, List<QuizDto> list) {
         if (!CollectionUtils.isEmpty(list)) {
             list.forEach(quizDto -> {
                 QuizReportDto quizReport = candidateQuizService.getReport(quizDto.getCode(), requestContext.getSenderUser());

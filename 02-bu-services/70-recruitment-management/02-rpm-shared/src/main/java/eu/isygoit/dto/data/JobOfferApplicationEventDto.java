@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumJobAppEventType;
 import eu.isygoit.enums.IEnumJobAppStatusType;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class JobOfferApplicationEventDto extends AbstractAuditableDto<Long> {
+public class JobOfferApplicationEventDto extends AuditableDto<Long> {
 
     private IEnumJobAppEventType.Types type;
     @Builder.Default

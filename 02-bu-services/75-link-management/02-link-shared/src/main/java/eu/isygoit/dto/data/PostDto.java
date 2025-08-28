@@ -2,7 +2,7 @@ package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.IFileUploadDto;
 import eu.isygoit.dto.IImageUploadDto;
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,10 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class PostDto extends AbstractAuditableDto<Long> implements IImageUploadDto, IFileUploadDto {
+public class PostDto extends AuditableDto<Long> implements IImageUploadDto, IFileUploadDto {
 
     @NotEmpty
-    private String domain;
+    private String tenant;
     @NotEmpty
     private String accountCode;
     @NotEmpty

@@ -1,15 +1,15 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.IntegrationElementDto;
 import eu.isygoit.dto.data.IntegrationFlowFileDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
 import eu.isygoit.mapper.IntegrationElementMapper;
 import eu.isygoit.mapper.IntegrationFlowFileMapper;
@@ -36,7 +36,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class, service = IntegrationFlowService.class)
+@InjectMapperAndService(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class, service = IntegrationFlowService.class)
 @RequestMapping(value = "/api/v1/private/integration/flow")
 public class IntegrationFlowController extends MappedCrudController<Long, IntegrationFlow, IntegrationFlowFileDto,
         IntegrationFlowFileDto, IntegrationFlowService> {
@@ -57,10 +57,10 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IntegrationElementDto.class))})
     })
     @GetMapping(path = "/elements")
-    ResponseEntity<List<IntegrationElementDto>> findAllIntegratedElements(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<List<IntegrationElementDto>> findAllIntegratedElements(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                           @RequestParam(name = RestApiConstants.FLOW_ID) Long flowId) {
         log.info("Find all integrated elements request received", IntegrationElement.class.getSimpleName());
         try {
@@ -90,10 +90,10 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = IntegrationElementDto.class))})
     })
     @GetMapping(path = "/element/id")
-    ResponseEntity<IntegrationElementDto> findIntegratedElementById(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<IntegrationElementDto> findIntegratedElementById(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                     @RequestParam(name = RestApiConstants.ID) Long elementId) {
         log.info("Find integrated element by id request received", IntegrationElement.class.getSimpleName());
         try {

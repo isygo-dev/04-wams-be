@@ -1,13 +1,13 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.BlogTalkDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.BlogTalkMapper;
 import eu.isygoit.model.BlogTalk;
@@ -32,7 +32,7 @@ import java.util.UUID;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = LinkExceptionHandler.class, mapper = BlogTalkMapper.class, minMapper = BlogTalkMapper.class, service = BlogTalkService.class)
+@InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = BlogTalkMapper.class, minMapper = BlogTalkMapper.class, service = BlogTalkService.class)
 @RequestMapping(value = "/api/v1/private/blog/talk")
 public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, BlogTalkDto, BlogTalkDto, BlogTalkService> {
 
@@ -51,10 +51,10 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = BlogTalkDto.class))})
     })
     @GetMapping(path = "/blogId/page")
-    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                              @RequestParam(name = RestApiConstants.BLOG_ID) Long blogId,
                                                              @RequestParam(name = RestApiConstants.PAGE) Integer page,
                                                              @RequestParam(name = RestApiConstants.SIZE) Integer size) {
@@ -83,10 +83,10 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = BlogTalkDto.class))})
     })
     @GetMapping(path = "/blogId")
-    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                              @RequestParam(name = RestApiConstants.PAGE) Long blogId) {
         try {
             List<BlogTalk> list = this.crudService().findByBlogId(blogId);

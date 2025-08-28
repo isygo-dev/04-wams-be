@@ -1,16 +1,16 @@
 package eu.isygoit.controller;
 
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.api.CommentControllerApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.PostCommentDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.PostCommentNotFoundException;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.PostCommentMapper;
@@ -38,7 +38,7 @@ import java.util.Optional;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = LinkExceptionHandler.class, mapper = PostCommentMapper.class, minMapper = PostCommentMapper.class, service = PostCommentService.class)
+@InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = PostCommentMapper.class, minMapper = PostCommentMapper.class, service = PostCommentService.class)
 @RequestMapping(value = "/api/v1/private/comment")
 public class CommentController extends MappedCrudController<Long, PostComment, PostCommentDto, PostCommentDto, PostCommentService> implements CommentControllerApi {
 
@@ -72,10 +72,10 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = PostCommentDto.class))})
     })
     @PostMapping(path = "/like")
-    public ResponseEntity<PostCommentDto> createLikeComment(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<PostCommentDto> createLikeComment(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                             @RequestParam(name = RestApiConstants.ID) Long commentId,
                                                             @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode
     ) {
@@ -109,10 +109,10 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @GetMapping(path = "/like/{commentId}")
-    public ResponseEntity<List<String>> getLikedCommentByCommentId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<String>> getLikedCommentByCommentId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                    @PathVariable(name = RestApiConstants.COMMENT_ID) Long commentId) {
         try {
             return ResponseFactory.responseOk(commentService.findById(commentId)
@@ -139,10 +139,10 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = PostCommentDto.class))})
     })
     @PostMapping(path = "/dislike")
-    public ResponseEntity<PostCommentDto> createDislikeComment(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<PostCommentDto> createDislikeComment(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                @RequestParam(name = RestApiConstants.ID) Long commentId,
                                                                @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode
     ) {

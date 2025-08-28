@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableEntity;
 import eu.isygoit.model.schema.ComSchemaConstantSize;
@@ -25,7 +25,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_TRAVEL_IDENTITY_INFO)
-public class TravelIdentityInfo extends AuditableEntity<Long> implements IImageEntity, IDomainAssignable, ICodeAssignable {
+public class TravelIdentityInfo extends AuditableEntity<Long> implements IImageEntity, ITenantAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "travel_identity_sequence_generator", sequenceName = "travel_identity_sequence", allocationSize = 1)
@@ -34,9 +34,9 @@ public class TravelIdentityInfo extends AuditableEntity<Long> implements IImageE
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

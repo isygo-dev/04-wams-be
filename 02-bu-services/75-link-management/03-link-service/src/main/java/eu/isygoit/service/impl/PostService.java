@@ -1,16 +1,17 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectDmsLinkedFileService;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.exception.PostDeleteForbiddenException;
 import eu.isygoit.exception.PostUpdateForbiddenException;
 import eu.isygoit.helper.DateHelper;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Blog;
 import eu.isygoit.model.Post;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -38,10 +39,10 @@ import java.util.Optional;
 @Slf4j
 @Service
 @Transactional
-@DmsLinkFileService(DmsLinkedFileService.class)
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = PostRepository.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = PostRepository.class)
 public class PostService extends FileImageService<Long, Post, PostRepository>
         implements IPostService {
 
@@ -109,7 +110,7 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
                     .title(post.getTitle())
                     .description(post.getTalk())
                     .accountCode(post.getAccountCode())
-                    .domain(post.getDomain())
+                    .tenant(post.getTenant())
                     .build());
         }
         return super.afterCreate(post);
@@ -152,18 +153,18 @@ public class PostService extends FileImageService<Long, Post, PostRepository>
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Post.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("PST")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .build();
     }
 
     @Override
-    public List<Post> findByDomainAndIsBlogTrue(String domain, Pageable pageable) {
-        Page<Post> posts = repository().findByDomainAndIsBlogTrue(domain, pageable);
+    public List<Post> findByTenantAndIsBlogTrue(String tenant, Pageable pageable) {
+        Page<Post> posts = repository().findByTenantAndIsBlogTrue(tenant, pageable);
         if (!posts.isEmpty()) {
             return posts.toList();
         }

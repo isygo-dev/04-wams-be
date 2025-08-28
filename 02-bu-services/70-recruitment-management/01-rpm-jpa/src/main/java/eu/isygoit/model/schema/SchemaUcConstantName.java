@@ -14,9 +14,9 @@ public interface SchemaUcConstantName extends ComSchemaUcConstantName {
      */
     String UC_RESUME_CODE = "UC_RESUME_CODE";
     /**
-     * The constant UC_RESUME_DOMAIN_EMAIL.
+     * The constant UC_RESUME_TENANT_EMAIL.
      */
-    String UC_RESUME_DOMAIN_EMAIL = "UC_RESUME_DOMAIN_EMAIL";
+    String UC_RESUME_TENANT_EMAIL = "UC_RESUME_TENANT_EMAIL";
     /**
      * The constant UC_JOB_OFFER_CODE.
      */

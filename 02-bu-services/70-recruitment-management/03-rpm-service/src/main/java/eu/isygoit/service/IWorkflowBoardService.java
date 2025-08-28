@@ -1,7 +1,7 @@
 package eu.isygoit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.dto.common.BpmEventRequestDto;
 import eu.isygoit.dto.common.BpmEventResponseDto;
 import eu.isygoit.dto.data.JobOfferApplicationInterviewEventRequestDto;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The interface Workflow board service.
  */
-public interface IWorkflowBoardService extends ICrudServiceMethod<Long, WorkflowBoard> {
+public interface IWorkflowBoardService extends ICrudServiceMethods<Long, WorkflowBoard> {
 
     /**
      * Gets states.
@@ -28,33 +28,33 @@ public interface IWorkflowBoardService extends ICrudServiceMethod<Long, Workflow
     /**
      * Gets items.
      *
-     * @param domain the domain
+     * @param tenant the tenant
      * @param wbCode the wb code
      * @return the items
      * @throws ClassNotFoundException the class not found exception
      */
-    List<IBoardItem> getItems(String domain, String wbCode) throws ClassNotFoundException;
+    List<IBoardItem> getItems(String tenant, String wbCode) throws ClassNotFoundException;
 
     /**
      * Gets interview event.
      *
-     * @param domain the domain
+     * @param tenant the tenant
      * @param code   the code
      * @param id     the id
      * @return the interview event
      */
-    JobOfferApplicationInterviewEventRequestDto getInterviewEvent(String domain, String code, Long id);
+    JobOfferApplicationInterviewEventRequestDto getInterviewEvent(String tenant, String code, Long id);
 
     /**
      * Add interview event job offer application interview event request dto.
      *
-     * @param domain    the domain
+     * @param tenant    the tenant
      * @param code      the code
      * @param eventType the event type
      * @param event     the event
      * @return the job offer application interview event request dto
      */
-    JobOfferApplicationInterviewEventRequestDto addInterviewEvent(String domain, String code, String eventType, JobOfferApplicationInterviewEventRequestDto event);
+    JobOfferApplicationInterviewEventRequestDto addInterviewEvent(String tenant, String code, String eventType, JobOfferApplicationInterviewEventRequestDto event);
 
     /**
      * Edit interview event job offer application interview event request dto.
@@ -70,10 +70,10 @@ public interface IWorkflowBoardService extends ICrudServiceMethod<Long, Workflow
      * Gets board watchers by workflow.
      *
      * @param workflowCode the workflow code
-     * @param domain       the domain
+     * @param tenant       the tenant
      * @return the board watchers by workflow
      */
-    List<String> getBoardWatchersByWorkflow(String workflowCode, String domain);
+    List<String> getBoardWatchersByWorkflow(String workflowCode, String tenant);
 
     /**
      * Gets item types.

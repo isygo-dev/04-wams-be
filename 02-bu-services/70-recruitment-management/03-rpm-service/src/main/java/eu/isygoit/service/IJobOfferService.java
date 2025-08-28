@@ -1,8 +1,8 @@
 package eu.isygoit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The interface Job offer service.
  */
-public interface IJobOfferService extends ICrudServiceMethod<Long, JobOffer> {
+public interface IJobOfferService extends ICrudServiceMethods<Long, JobOffer> {
 
 
     /**
@@ -36,7 +36,7 @@ public interface IJobOfferService extends ICrudServiceMethod<Long, JobOffer> {
      * @param requestContext the request context
      * @return the global statistics
      */
-    JobOfferGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, RequestContextDto requestContext);
+    JobOfferGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, ContextRequestDto requestContext);
 
     /**
      * Gets object statistics.
@@ -45,5 +45,5 @@ public interface IJobOfferService extends ICrudServiceMethod<Long, JobOffer> {
      * @param requestContext the request context
      * @return the object statistics
      */
-    JobOfferStatDto getObjectStatistics(String code, RequestContextDto requestContext);
+    JobOfferStatDto getObjectStatistics(String code, ContextRequestDto requestContext);
 }

@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumJobAppEventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,9 +17,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class JobOfferApplicationInterviewEventRequestDto extends AbstractAuditableDto<Long> {
+public class JobOfferApplicationInterviewEventRequestDto extends AuditableDto<Long> {
 
-    private String domain;
+    private String tenant;
     private String title;
     private IEnumJobAppEventType.Types type;
     private Date startDateTime;

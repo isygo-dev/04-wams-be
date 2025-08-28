@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumQuestionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @SuperBuilder
-public class QuizQuestionDto extends AbstractAuditableDto<Long> {
+public class QuizQuestionDto extends AuditableDto<Long> {
 
     private String question;
     private IEnumQuestionType.Types type;

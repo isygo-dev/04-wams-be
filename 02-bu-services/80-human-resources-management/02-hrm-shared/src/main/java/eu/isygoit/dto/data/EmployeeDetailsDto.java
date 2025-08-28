@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumCivility;
 import eu.isygoit.enums.IEnumGender;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class EmployeeDetailsDto extends AbstractAuditableDto<Long> {
+public class EmployeeDetailsDto extends AuditableDto<Long> {
 
     private String placeofBirth;
     private LocalDate birthDate;

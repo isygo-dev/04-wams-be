@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 
-public class PaymentScheduleDto extends AbstractAuditableDto<Long> {
+public class PaymentScheduleDto extends AuditableDto<Long> {
 
     private Boolean isSubmited;
     private Date submitDate;

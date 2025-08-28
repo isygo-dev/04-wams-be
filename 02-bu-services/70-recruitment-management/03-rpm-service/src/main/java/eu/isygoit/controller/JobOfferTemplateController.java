@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.dto.data.JobOfferTemplateDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/JobOfferTemplate")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = JobOfferTemplateMapper.class, minMapper = JobOfferTemplateMapper.class, service = JobOfferTemplateService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = JobOfferTemplateMapper.class, minMapper = JobOfferTemplateMapper.class, service = JobOfferTemplateService.class)
 public class JobOfferTemplateController extends MappedCrudController<Long, JobOfferTemplate, JobOfferTemplateDto, JobOfferTemplateDto, JobOfferTemplateService> {
 
 }

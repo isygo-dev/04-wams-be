@@ -440,8 +440,8 @@
                                                             <td align="left" class="es-m-txt-?"
                                                                 esdev-links-color="#1c4a47"
                                                                 style="padding:0;margin:0;font-size:12px;line-height:16px;color:#FFFFFF;font-weight:bold;">
-                                                                ${V_DOMAIN_NAME}<br/>
-                                                                ${V_DOMAIN_URL}<br/>
+                                                                ${V_TENANT_NAME}<br/>
+                                                                ${V_TENANT_URL}<br/>
                                                                 +216 53 57 94 52
                                                             </td>
                                                         </tr>

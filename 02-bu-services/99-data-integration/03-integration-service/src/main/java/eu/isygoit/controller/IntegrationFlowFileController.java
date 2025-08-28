@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.IntegrationFlowFileDto;
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/integration/flow")
-@CtrlDef(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class, service = IntegrationFlowService.class)
+@InjectMapperAndService(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class, service = IntegrationFlowService.class)
 public class IntegrationFlowFileController extends MappedFileController<Long, IntegrationFlow, IntegrationFlowFileDto,
         IntegrationFlowFileDto, IntegrationFlowService> {
 

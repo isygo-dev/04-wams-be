@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.dto.data.DocumentCommentDto;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = SmeKitExceptionHandler.class, mapper = DocumentCommentMapper.class, minMapper = DocumentCommentMapper.class, service = DocumentCommentService.class)
+@InjectMapperAndService(handler = SmeKitExceptionHandler.class, mapper = DocumentCommentMapper.class, minMapper = DocumentCommentMapper.class, service = DocumentCommentService.class)
 @RequestMapping(value = "/api/v1/private/docComments")
 public class DocCommentsController extends MappedCrudController<Long, DocumentComment, DocumentCommentDto, DocumentCommentDto, DocumentCommentService> {
 }

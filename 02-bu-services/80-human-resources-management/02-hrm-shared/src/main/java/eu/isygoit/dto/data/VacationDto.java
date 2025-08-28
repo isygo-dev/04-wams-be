@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumAbsenceType;
 import eu.isygoit.enums.IEnumAbseneceStatus;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 
-public class VacationDto extends AbstractAuditableDto<Long> {
+public class VacationDto extends AuditableDto<Long> {
 
     private String startDate;
     private String endDate;

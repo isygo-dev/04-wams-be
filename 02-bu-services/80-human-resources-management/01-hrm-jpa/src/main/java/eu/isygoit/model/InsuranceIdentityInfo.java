@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.enums.IEnumInsuranceType;
 import eu.isygoit.model.jakarta.AuditableEntity;
@@ -26,7 +26,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = SchemaTableConstantName.T_INSURANCE_IDENTITY_INFO)
-public class InsuranceIdentityInfo extends AuditableEntity<Long> implements IImageEntity, IDomainAssignable, ICodeAssignable {
+public class InsuranceIdentityInfo extends AuditableEntity<Long> implements IImageEntity, ITenantAssignable, ICodeAssignable {
 
     @Id
     @SequenceGenerator(name = "insurance_identity_sequence_generator", sequenceName = "insurance_identity_sequence", allocationSize = 1)
@@ -52,9 +52,9 @@ public class InsuranceIdentityInfo extends AuditableEntity<Long> implements IIma
     @Column(name = SchemaColumnConstantName.C_PHOTO)
     private String imagePath;
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
     @Column(name = SchemaColumnConstantName.C_EMPLOYEE_DETAILS_ID, updatable = false)
     private Long employeeDetailsId;
 }

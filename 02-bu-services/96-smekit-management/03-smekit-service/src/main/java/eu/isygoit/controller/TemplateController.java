@@ -1,11 +1,11 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.TemplateDto;
 import eu.isygoit.exception.ObjectNotFoundException;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = SmeKitExceptionHandler.class, mapper = TemplateMapper.class, minMapper = TemplateMapper.class, service = TemplateService.class)
+@InjectMapperAndService(handler = SmeKitExceptionHandler.class, mapper = TemplateMapper.class, minMapper = TemplateMapper.class, service = TemplateService.class)
 @RequestMapping(value = "/api/v1/private/template")
 public class TemplateController extends MappedCrudController<Long, Template, TemplateDto, TemplateDto, TemplateService> {
 
@@ -68,7 +68,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 
     @PostMapping("/{templateId}/pin")
     public ResponseEntity<Boolean> togglePinStatus(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
             @PathVariable Long templateId) {
 
         log.info("togglePinStatus");
@@ -95,7 +95,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 
     @GetMapping("/pinned")
     public ResponseEntity<List<TemplateDto>> getPinnedTemplates(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
+            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
 
         log.info("togglePinStatus");
         try {
@@ -114,7 +114,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 
     @GetMapping("/{templateId}/pinned-status")
     public ResponseEntity<Boolean> checkPinStatus(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
             @PathVariable Long templateId) {
 
         log.info("checkPinStatus");
@@ -141,7 +141,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
 
     @GetMapping("/pinned/count")
     public ResponseEntity<Long> countMyPinnedTemplates(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
+            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
         log.info("checkPinStatus");
         try {
             String userName = requestContext.getSenderUser();

@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,9 +14,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobOfferTemplateDto extends AbstractAuditableDto<Long> {
+public class JobOfferTemplateDto extends AuditableDto<Long> {
 
-    private String domain;
+    private String tenant;
     private String title;
     private JobOfferDto jobOffer;
 

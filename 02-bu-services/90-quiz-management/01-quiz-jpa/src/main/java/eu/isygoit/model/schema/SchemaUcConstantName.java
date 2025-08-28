@@ -14,7 +14,7 @@ public interface SchemaUcConstantName extends ComSchemaUcConstantName {
      */
     String UC_CANDIDATE_QUIZ_CODE = "UC_CANDIDATE_QUIZ_CODE";
     /**
-     * The constant UC_QUIZ_DOMAIN_NAME.
+     * The constant UC_QUIZ_TENANT_NAME.
      */
-    String UC_QUIZ_DOMAIN_NAME = "UC_QUIZ_DOMAIN_NAME";
+    String UC_QUIZ_TENANT_NAME = "UC_QUIZ_TENANT_NAME";
 }

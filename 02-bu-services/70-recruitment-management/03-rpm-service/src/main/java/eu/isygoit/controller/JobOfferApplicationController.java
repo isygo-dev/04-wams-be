@@ -1,15 +1,15 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferApplicationDto;
 import eu.isygoit.dto.data.JobOfferDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.JobOfferApplicationMapper;
 import eu.isygoit.mapper.JobOfferMapper;
@@ -36,7 +36,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/JobOfferApplication")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = JobOfferApplicationMapper.class, minMapper = JobOfferApplicationMapper.class, service = JobOfferApplicationService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = JobOfferApplicationMapper.class, minMapper = JobOfferApplicationMapper.class, service = JobOfferApplicationService.class)
 public class JobOfferApplicationController extends MappedCrudController<Long, JobOfferApplication, JobOfferApplicationDto, JobOfferApplicationDto, JobOfferApplicationService> {
 
     @Autowired
@@ -59,10 +59,10 @@ public class JobOfferApplicationController extends MappedCrudController<Long, Jo
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = JobOfferDto.class))})
     })
     @GetMapping(path = "/not-applied/{resumeCode}")
-    public ResponseEntity<List<JobOfferDto>> getJobOffersNotAssignedToResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<JobOfferDto>> getJobOffersNotAssignedToResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                                              @PathVariable(name = RestApiConstants.RESUME_CODE) String resumeCode) {
         try {
             List<JobOfferDto> jobOffers = jobOfferMapper.listEntityToDto(jobOfferService.findJobOffersNotAssignedToResume(resumeCode));

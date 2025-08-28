@@ -1,6 +1,6 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.repository.JobOfferRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,28 +16,28 @@ public class JobOfferStatService {
     /**
      * Returns the count of confirmed job offers. (Hardcoded here, replace with real logic)
      */
-    public Long stat_GetConfirmedJobOffersCount(RequestContextDto requestContext) {
+    public Long stat_GetConfirmedJobOffersCount(ContextRequestDto requestContext) {
         return 181L;
     }
 
     /**
-     * Returns total count of job offers for the domain.
+     * Returns total count of job offers for the tenant.
      */
-    public Long stat_GetJobOffersCount(RequestContextDto requestContext) {
-        return jobOfferRepository.countByDomainIgnoreCase(requestContext.getSenderDomain());
+    public Long stat_GetJobOffersCount(ContextRequestDto requestContext) {
+        return jobOfferRepository.countByTenantIgnoreCase(requestContext.getSenderTenant());
     }
 
     /**
-     * Returns count of active job offers for the domain.
+     * Returns count of active job offers for the tenant.
      */
-    public Long stat_GetActiveJobOffersCount(RequestContextDto requestContext) {
-        return jobOfferRepository.countByDomainAndDeadLine(requestContext.getSenderDomain());
+    public Long stat_GetActiveJobOffersCount(ContextRequestDto requestContext) {
+        return jobOfferRepository.countByTenantAndDeadLine(requestContext.getSenderTenant());
     }
 
     /**
-     * Returns count of expired job offers for the domain.
+     * Returns count of expired job offers for the tenant.
      */
-    public Long stat_GetExpiredJobOffersCount(RequestContextDto requestContext) {
-        return jobOfferRepository.countByDomainAndExpiredDeadLine(requestContext.getSenderDomain());
+    public Long stat_GetExpiredJobOffersCount(ContextRequestDto requestContext) {
+        return jobOfferRepository.countByTenantAndExpiredDeadLine(requestContext.getSenderTenant());
     }
 }

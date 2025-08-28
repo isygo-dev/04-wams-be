@@ -1,13 +1,13 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.WorkflowDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.WorkflowMapper;
 import eu.isygoit.model.Workflow;
@@ -34,7 +34,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/workflow")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = WorkflowMapper.class, minMapper = WorkflowMapper.class, service = WorkflowService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = WorkflowMapper.class, minMapper = WorkflowMapper.class, service = WorkflowService.class)
 public class WorkflowController extends MappedCrudController<Long, Workflow, WorkflowDto, WorkflowDto, WorkflowService> {
 
     /**
@@ -49,10 +49,10 @@ public class WorkflowController extends MappedCrudController<Long, Workflow, Wor
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = String.class))})
     })
     @GetMapping(path = "/unassociated")
-    ResponseEntity<List<String>> getUnassociatedWorkflows(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext) {
+    ResponseEntity<List<String>> getUnassociatedWorkflows(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
         try {
             return ResponseFactory.responseOk(crudService().getWorkflowNotAssociated());
         } catch (Throwable e) {

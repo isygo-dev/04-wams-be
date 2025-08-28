@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedImageController;
 import eu.isygoit.dto.data.TravelIdentityInfoDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = PassportMapper.class, minMapper = PassportMapper.class, service = TravelIdentityInfoService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = PassportMapper.class, minMapper = PassportMapper.class, service = TravelIdentityInfoService.class)
 @RequestMapping(value = "/api/v1/private/passport")
 public class TravelIdentityInfoController extends MappedImageController<Long, TravelIdentityInfo, TravelIdentityInfoDto, TravelIdentityInfoDto, TravelIdentityInfoService> {
 

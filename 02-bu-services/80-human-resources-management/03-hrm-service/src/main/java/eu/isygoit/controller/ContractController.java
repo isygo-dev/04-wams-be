@@ -1,11 +1,11 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.api.ContractControllerApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ContractDto;
 import eu.isygoit.dto.data.MinContractDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = ContractMapper.class, minMapper = ContractMapper.class, service = ContractService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = ContractMapper.class, minMapper = ContractMapper.class, service = ContractService.class)
 @RequestMapping(value = "/api/v1/private/contract")
 public class ContractController extends MappedCrudController<Long, Contract, MinContractDto, ContractDto, ContractService>
         implements ContractControllerApi {
@@ -35,7 +35,7 @@ public class ContractController extends MappedCrudController<Long, Contract, Min
     private IContractService contractService;
 
     @Override
-    public ResponseEntity<ContractDto> updateContractStatus(RequestContextDto requestContext,
+    public ResponseEntity<ContractDto> updateContractStatus(ContextRequestDto requestContext,
                                                             Long id, Boolean isLocked) {
         log.info("update contrat status");
         try {

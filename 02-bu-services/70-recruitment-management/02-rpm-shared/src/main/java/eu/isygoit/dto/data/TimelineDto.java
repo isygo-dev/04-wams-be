@@ -1,6 +1,7 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.IExchangeObjectDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumActionEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +15,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimelineDto extends AbstractAuditableDto<Long> {
+public class TimelineDto extends AuditableDto<Long> implements IExchangeObjectDto {
 
-    private String domain;
+    private String tenant;
     private IEnumActionEvent.Types action;
     private String code;
     private String object;

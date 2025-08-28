@@ -23,12 +23,12 @@ public class TimeLineProcessor extends AbstractCamelProcessor<TimelineDto> {
 
     @Override
     public void performProcessor(Exchange exchange, TimelineDto timelineDto) {
-        exchange.getIn().setHeader("domain", timelineDto.getDomain());
+        exchange.getIn().setHeader("tenant", timelineDto.getTenant());
         exchange.getIn().setHeader("code", timelineDto.getCode());
         timelineRepository.save(Timeline.builder()
                 .code(timelineDto.getCode())
                 .action(timelineDto.getAction())
-                .domain(timelineDto.getDomain())
+                .tenant(timelineDto.getTenant())
                 .object(timelineDto.getObject())
                 .parentCode(timelineDto.getParentCode())
                 .build());

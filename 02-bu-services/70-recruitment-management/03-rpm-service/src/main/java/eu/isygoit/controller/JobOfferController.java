@@ -1,15 +1,15 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferDto;
 import eu.isygoit.dto.data.JobOfferShareInfoDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.dto.request.ShareJobRequestDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.JobOfferMapper;
@@ -37,7 +37,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/JobOffer")
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = JobOfferMapper.class, minMapper = JobOfferMapper.class, service = JobOfferService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = JobOfferMapper.class, minMapper = JobOfferMapper.class, service = JobOfferService.class)
 public class JobOfferController extends MappedCrudController<Long, JobOffer, JobOfferDto, JobOfferDto, JobOfferService> {
 
     @Autowired
@@ -57,10 +57,10 @@ public class JobOfferController extends MappedCrudController<Long, JobOffer, Job
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = JobOfferShareInfoDto.class))})
     })
     @PostMapping(path = "/share/{id}")
-    public ResponseEntity<List<JobOfferShareInfoDto>> share(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    public ResponseEntity<List<JobOfferShareInfoDto>> share(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                             @PathVariable(name = RestApiConstants.ID) Long id,
                                                             @Valid @RequestBody ShareJobRequestDto shareJobRequestDto) {
         log.info("share job ");

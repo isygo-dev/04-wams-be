@@ -14,7 +14,7 @@ public interface SchemaUcConstantName extends ComSchemaUcConstantName {
      */
     String UC_INTEGRATION_FLOW_CODE = "UC_INTEGRATION_FLOW_CODE";
     /**
-     * The constant UC_INTEGRATION_ORDER_DOMAIN_NAME.
+     * The constant UC_INTEGRATION_ORDER_TENANT_NAME.
      */
-    String UC_INTEGRATION_ORDER_DOMAIN_NAME = "UC_INTEGRATION_ORDER_DOMAIN_NAME";
+    String UC_INTEGRATION_ORDER_TENANT_NAME = "UC_INTEGRATION_ORDER_TENANT_NAME";
 }

@@ -2,15 +2,17 @@ package eu.isygoit.repository;
 
 import eu.isygoit.enums.IEnumTemplateStatus;
 import eu.isygoit.model.Template;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAssignableRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface TemplateRepository extends JpaPagingAndSortingDomainAssignableRepository<Template, Long>, JpaPagingAndSortingCodeAssingnableRepository<Template, Long> {
+public interface TemplateRepository extends JpaPagingAndSortingTenantAssignableRepository<Template, Long>, JpaPagingAndSortingCodeAssingnableRepository<Template, Long> {
 
     List<Template> findByCategoryId(Long categoryId);
 

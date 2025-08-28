@@ -1,13 +1,14 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectDmsLinkedFileService;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.FileImageService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Author;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.dms.DmsLinkedFileService;
@@ -26,10 +27,10 @@ import java.util.Date;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = AuthorRepository.class)
-@DmsLinkFileService(DmsLinkedFileService.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = AuthorRepository.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
 public class AuthorService extends FileImageService<Long, Author, AuthorRepository> implements IAutherService {
     private final AppProperties appProperties;
     private final AuthorRepository authorRepository;
@@ -48,12 +49,12 @@ public class AuthorService extends FileImageService<Long, Author, AuthorReposito
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Author.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("AUTH")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .build();
     }
 

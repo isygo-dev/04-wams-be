@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.IFileUploadDto;
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumContractType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,10 +19,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class MinContractDto extends AbstractAuditableDto<Long> implements IFileUploadDto {
+public class MinContractDto extends AuditableDto<Long> implements IFileUploadDto {
 
     private String code;
-    private String domain;
+    private String tenant;
     private IEnumContractType.Types contract;
     private LocalDate startDate;
     private LocalDate endDate;

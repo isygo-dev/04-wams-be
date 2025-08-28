@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.dto.data.BlogDto;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = LinkExceptionHandler.class, mapper = BlogMapper.class, minMapper = BlogMapper.class, service = BlogService.class)
+@InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = BlogMapper.class, minMapper = BlogMapper.class, service = BlogService.class)
 @RequestMapping(value = "/api/v1/private/blog")
 public class BlogController extends MappedCrudController<Long, Blog, BlogDto, BlogDto, BlogService> {
 

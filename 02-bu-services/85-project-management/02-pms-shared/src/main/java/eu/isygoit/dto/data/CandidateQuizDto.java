@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @SuperBuilder
-public class CandidateQuizDto extends AbstractAuditableDto<Long> {
+public class CandidateQuizDto extends AuditableDto<Long> {
 
     private String code;
     private Date startDate;

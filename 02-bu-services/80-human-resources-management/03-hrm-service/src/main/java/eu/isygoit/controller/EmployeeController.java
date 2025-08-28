@@ -1,12 +1,12 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.api.EmployeeControllerApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.dto.data.MinEmployeeDto;
 import eu.isygoit.enums.IEnumEnabledBinaryStatus;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = EmployeeMapper.class, minMapper = EmployeeMapper.class, service = EmployeeService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = EmployeeMapper.class, minMapper = EmployeeMapper.class, service = EmployeeService.class)
 @RequestMapping(value = "/api/v1/private/employee")
 public class EmployeeController extends MappedCrudController<Long, Employee, MinEmployeeDto, EmployeeDto, EmployeeService>
         implements EmployeeControllerApi {
@@ -50,7 +50,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     }
 
     @Override
-    public ResponseEntity<EmployeeDto> getEmployeeByCode(RequestContextDto requestContext,
+    public ResponseEntity<EmployeeDto> getEmployeeByCode(ContextRequestDto requestContext,
                                                          String code) {
         try {
             return crudService().findByCode(code)
@@ -63,9 +63,9 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     }
 
     @Override
-    public ResponseEntity<List<EmployeeDto>> getEmployeeByDomain(RequestContextDto requestContext, String domain) {
+    public ResponseEntity<List<EmployeeDto>> getEmployeeByTenant(ContextRequestDto requestContext, String tenant) {
         try {
-            List<Employee> employees = crudService().findByDomain(domain);
+            List<Employee> employees = crudService().findByTenant(tenant);
             if (CollectionUtils.isEmpty(employees)) {
                 return ResponseEntity.noContent().build();
             }
@@ -78,7 +78,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
 
 
     @Override
-    public ResponseEntity<EmployeeDto> updateEmployeeStatus(RequestContextDto requestContext,
+    public ResponseEntity<EmployeeDto> updateEmployeeStatus(ContextRequestDto requestContext,
                                                             Long id,
                                                             IEnumEnabledBinaryStatus.Types newStatus) {
         log.info("update employee status");
@@ -91,7 +91,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     }
 
     @Override
-    public List<MinEmployeeDto> afterFindAll(RequestContextDto requestContext, List<MinEmployeeDto> employeeDtos) {
+    public List<MinEmployeeDto> afterFindAll(ContextRequestDto requestContext, List<MinEmployeeDto> employeeDtos) {
         return employeeDtos.stream()
                 .map(employee -> {
                     String accountCode = crudService().getAccountCode(employee.getCode());
@@ -110,7 +110,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
      */
     @PostMapping(path = "/create/account")
     public ResponseEntity<HttpStatus> createAccountToEmployee(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
             @Valid @RequestBody EmployeeDto employeeDto) {
         try {
             employeeService.createAccount(mapper().dtoToEntity(employeeDto));

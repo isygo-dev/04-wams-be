@@ -2,7 +2,7 @@ package eu.isygoit.controller;
 
 
 import com.networknt.schema.ValidationMessage;
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
 import eu.isygoit.helper.JsonHelper;
 import eu.isygoit.mapper.IntegrationFlowFileMapper;
@@ -25,7 +25,7 @@ import java.util.Set;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/integration")
-@CtrlDef(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class,
+@InjectMapperAndService(handler = IntegrationExceptionHandler.class, mapper = IntegrationFlowFileMapper.class, minMapper = IntegrationFlowFileMapper.class,
         service = IntegrationFlowService.class)
 public class JSONIntegrationFlowValidationController {
 

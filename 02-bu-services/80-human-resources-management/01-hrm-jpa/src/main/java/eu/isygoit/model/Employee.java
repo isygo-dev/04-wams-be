@@ -2,7 +2,7 @@ package eu.isygoit.model;
 
 import eu.isygoit.annotation.Criteria;
 import eu.isygoit.constants.AccountTypeConstants;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.CamelCaseConverter;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.enums.IEnumEnabledBinaryStatus;
@@ -37,7 +37,7 @@ import java.util.List;
 })
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_EMPLOYEE + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
-public class Employee extends AuditableCancelableEntity<Long> implements IDomainAssignable, ICodeAssignable, IImageEntity, IMultiFileEntity<EmployeeLinkedFile> {
+public class Employee extends AuditableCancelableEntity<Long> implements ITenantAssignable, ICodeAssignable, IImageEntity, IMultiFileEntity<EmployeeLinkedFile> {
 
     @Id
     @SequenceGenerator(name = "employee_sequence_generator", sequenceName = "employee_sequence", allocationSize = 1)
@@ -46,9 +46,9 @@ public class Employee extends AuditableCancelableEntity<Long> implements IDomain
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)
@@ -72,8 +72,8 @@ public class Employee extends AuditableCancelableEntity<Long> implements IDomain
     @Column(name = SchemaColumnConstantName.C_PHONE_NUMBER, length = SchemaConstantSize.PHONE_NUMBER, nullable = false)
     private String phone;
     @Column(name = SchemaColumnConstantName.C_FUNCTION_ROLE, length = SchemaConstantSize.S_NAME, nullable = false)
-    @ColumnDefault("'" + AccountTypeConstants.DOMAIN_USER + "'")
-    private String functionRole = AccountTypeConstants.DOMAIN_USER;
+    @ColumnDefault("'" + AccountTypeConstants.TENANT_USER + "'")
+    private String functionRole = AccountTypeConstants.TENANT_USER;
     @Column(name = SchemaColumnConstantName.C_PHOTO)
     private String imagePath;
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL  /* CASCADE only for OneToOne*/)

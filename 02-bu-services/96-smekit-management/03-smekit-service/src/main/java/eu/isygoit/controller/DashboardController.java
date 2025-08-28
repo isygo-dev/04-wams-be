@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.ControllerExceptionHandler;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = SmeKitExceptionHandler.class, mapper = DocumentCommentMapper.class, minMapper = DocumentCommentMapper.class, service = DocumentCommentService.class)
+@InjectMapperAndService(handler = SmeKitExceptionHandler.class, mapper = DocumentCommentMapper.class, minMapper = DocumentCommentMapper.class, service = DocumentCommentService.class)
 @RequestMapping("/api/v1/private/dashboard")
 @RequiredArgsConstructor
 public class DashboardController extends ControllerExceptionHandler {

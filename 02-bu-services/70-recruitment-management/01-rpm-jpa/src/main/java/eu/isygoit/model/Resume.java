@@ -1,10 +1,10 @@
 package eu.isygoit.model;
 
 import eu.isygoit.annotation.Criteria;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.CamelCaseConverter;
 import eu.isygoit.converter.LowerCaseConverter;
-import eu.isygoit.listener.TimeLineListener;
+import eu.isygoit.listener.TimelineEventListener;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.CascadeType;
@@ -34,29 +34,29 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(name = SchemaUcConstantName.UC_RESUME_CODE,
                         columnNames = {SchemaColumnConstantName.C_CODE}),
-                @UniqueConstraint(name = SchemaUcConstantName.UC_RESUME_DOMAIN_EMAIL,
-                        columnNames = {SchemaColumnConstantName.C_DOMAIN, SchemaColumnConstantName.C_EMAIL})
+                @UniqueConstraint(name = SchemaUcConstantName.UC_RESUME_TENANT_EMAIL,
+                        columnNames = {SchemaColumnConstantName.C_TENANT, SchemaColumnConstantName.C_EMAIL})
         })
 @SecondaryTable(name = SchemaTableConstantName.T_RESUME_FILE,
         pkJoinColumns = @PrimaryKeyJoinColumn(name = SchemaColumnConstantName.C_ID,
                 referencedColumnName = SchemaColumnConstantName.C_ID)
 )
-@EntityListeners(TimeLineListener.class)
+@EntityListeners(TimelineEventListener.class)
 @SQLDelete(sql = "update " + SchemaTableConstantName.T_RESUME + " set " + SchemaColumnConstantName.C_CHECK_CANCEL + "= true , " + ComSchemaColumnConstantName.C_CANCEL_DATE + " = current_timestamp WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + "=false")
 @FilterDef(
         name = "firstNameFilter",
         parameters = {
-                @ParamDef(name = "domain", type = String.class),
+                @ParamDef(name = "tenant", type = String.class),
                 @ParamDef(name = "firstName", type = String.class)
         }
 )
 @Filter(
         name = "firstNameFilter",
-        condition = SchemaColumnConstantName.C_DOMAIN + "= :domain and " + SchemaColumnConstantName.C_FIRST_NAME + "= :firstName"
+        condition = SchemaColumnConstantName.C_TENANT + "= :tenant and " + SchemaColumnConstantName.C_FIRST_NAME + "= :firstName"
 )
 public class Resume extends AuditableCancelableEntity<Long>
-        implements IDomainAssignable, ICodeAssignable, ITLEntity, IFileEntity, IMultiFileEntity<ResumeLinkedFile>, IImageEntity {
+        implements ITenantAssignable, ICodeAssignable, ITLEntity, IFileEntity, IMultiFileEntity<ResumeLinkedFile>, IImageEntity {
 
     @Id
     @SequenceGenerator(name = "resume_sequence_generator", sequenceName = "resume_sequence", allocationSize = 1)
@@ -65,9 +65,9 @@ public class Resume extends AuditableCancelableEntity<Long>
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

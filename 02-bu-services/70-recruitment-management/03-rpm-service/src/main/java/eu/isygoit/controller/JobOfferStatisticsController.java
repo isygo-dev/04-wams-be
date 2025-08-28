@@ -1,15 +1,15 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlHandler;
+import eu.isygoit.annotation.InjectExceptionHandler;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.ControllerExceptionHandler;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.service.IJobOfferService;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Validated
 @RestController
-@CtrlHandler(RpmExceptionHandler.class)
+@InjectExceptionHandler(RpmExceptionHandler.class)
 @RequestMapping(path = "/api/v1/private/JobOffer/stat")
 public class JobOfferStatisticsController extends ControllerExceptionHandler {
 
@@ -51,10 +51,10 @@ public class JobOfferStatisticsController extends ControllerExceptionHandler {
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = JobOfferGlobalStatDto.class))})
     })
     @GetMapping(path = "/global")
-    ResponseEntity<JobOfferGlobalStatDto> getGlobalStatistics(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext
+    ResponseEntity<JobOfferGlobalStatDto> getGlobalStatistics(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext
             , @RequestParam(name = RestApiConstants.STAT_TYPE) IEnumSharedStatType.Types statType) {
         log.info("Get global statistics");
         try {
@@ -78,10 +78,10 @@ public class JobOfferStatisticsController extends ControllerExceptionHandler {
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = JobOfferStatDto.class))})
     })
     @GetMapping(path = "/object")
-    ResponseEntity<JobOfferStatDto> getObjectStatistics(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    ResponseEntity<JobOfferStatDto> getObjectStatistics(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                         @RequestParam(name = RestApiConstants.CODE) String code) {
         log.info("Get object statistics with code: ", code);
         try {

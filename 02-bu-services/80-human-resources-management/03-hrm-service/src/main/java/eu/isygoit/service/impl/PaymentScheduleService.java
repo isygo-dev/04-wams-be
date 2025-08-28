@@ -1,8 +1,8 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CrudService;
 import eu.isygoit.enums.IEnumContractType;
 import eu.isygoit.model.PaymentSchedule;
@@ -32,9 +32,9 @@ import java.util.stream.Stream;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = PaymentScheduleRepository.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = PaymentScheduleRepository.class)
 public class PaymentScheduleService extends CrudService<Long, PaymentSchedule, PaymentScheduleRepository> implements IPaymentScheduleService {
 
     /**

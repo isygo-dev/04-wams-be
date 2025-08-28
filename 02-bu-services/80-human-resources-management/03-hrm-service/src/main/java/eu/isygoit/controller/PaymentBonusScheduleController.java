@@ -1,11 +1,11 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.data.PaymentBonusScheduleDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.PaymentBonusScheduleMapper;
 import eu.isygoit.model.PaymentBonusSchedule;
@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = PaymentBonusScheduleMapper.class, minMapper = PaymentBonusScheduleMapper.class, service = PaymentScheduleBonusService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = PaymentBonusScheduleMapper.class, minMapper = PaymentBonusScheduleMapper.class, service = PaymentScheduleBonusService.class)
 @RequestMapping(value = "/api/v1/private/payment-Schedule/bonus")
 public class PaymentBonusScheduleController extends MappedCrudController<Long, PaymentBonusSchedule, PaymentBonusScheduleDto, PaymentBonusScheduleDto, PaymentScheduleBonusService> {
 
@@ -51,7 +51,7 @@ public class PaymentBonusScheduleController extends MappedCrudController<Long, P
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Api executed successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))),
+                            schema = @Schema(implementation = PaymentBonusScheduleDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
 

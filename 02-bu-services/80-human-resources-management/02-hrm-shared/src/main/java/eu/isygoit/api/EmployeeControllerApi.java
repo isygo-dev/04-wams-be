@@ -3,10 +3,9 @@ package eu.isygoit.api;
 import eu.isygoit.com.rest.api.IMappedCrudApi;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.dto.data.MinEmployeeDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
 import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,11 +35,11 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))}),
+                            schema = @Schema(implementation = EmployeeDto.class))}),
             @ApiResponse(responseCode = "404", description = "Api not found")
     })
     @PutMapping(path = "/updateStatusEmployee")
-    ResponseEntity<EmployeeDto> updateEmployeeStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<EmployeeDto> updateEmployeeStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                      @RequestParam(name = RestApiConstants.ID) Long id,
                                                      @RequestParam(name = RestApiConstants.NEW_STATUS) IEnumEnabledBinaryStatus.Types newStatus);
 
@@ -58,23 +57,23 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
             @ApiResponse(responseCode = "404", description = "Employee not found")
     })
     @GetMapping("/code/{code}")
-    ResponseEntity<EmployeeDto> getEmployeeByCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<EmployeeDto> getEmployeeByCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                   @PathVariable(name = RestApiConstants.CODE) String code);
 
     /**
-     * Gets employee by domain.
+     * Gets employee by tenant.
      *
      * @param requestContext the request context
-     * @param domain         the domain
-     * @return the employee by domain
+     * @param tenant         the tenant
+     * @return the employee by tenant
      */
-    @Operation(summary = "Get Employee by Domain",
-            description = "Get an employee by their domain")
+    @Operation(summary = "Get Employee by Tenant",
+            description = "Get an employee by their tenant")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Employee found successfully"),
             @ApiResponse(responseCode = "404", description = "Employee not found")
     })
-    @GetMapping("/domain/{domain}")
-    ResponseEntity<List<EmployeeDto>> getEmployeeByDomain(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
-                                                          @PathVariable(name = RestApiConstants.DOMAIN_NAME) String domain);
+    @GetMapping("/tenant/{tenant}")
+    ResponseEntity<List<EmployeeDto>> getEmployeeByTenant(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+                                                          @PathVariable(name = RestApiConstants.TENANT_NAME) String tenant);
 }

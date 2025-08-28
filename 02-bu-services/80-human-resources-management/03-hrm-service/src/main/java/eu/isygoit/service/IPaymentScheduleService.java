@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.model.PaymentSchedule;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The interface Payment schedule service.
  */
-public interface IPaymentScheduleService extends ICrudServiceMethod<Long, PaymentSchedule> {
+public interface IPaymentScheduleService extends ICrudServiceMethods<Long, PaymentSchedule> {
 
     /**
      * Calculate payment schedule list.

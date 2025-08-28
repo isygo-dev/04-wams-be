@@ -1,7 +1,7 @@
 package eu.isygoit.dto.data;
 
 import eu.isygoit.dto.IImageUploadDto;
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -11,13 +11,13 @@ import java.time.LocalDate;
  */
 @Data
 
-public class PersonalIdentityInfoDto extends AbstractAuditableDto<Long> implements IImageUploadDto {
+public class PersonalIdentityInfoDto extends AuditableDto<Long> implements IImageUploadDto {
 
     private String cardNumber;
     private LocalDate issuedDate;
     private String issuedPlace;
     private String imagePath;
-    private String domain;
+    private String tenant;
     private Long employeeDetailsId;
     private String code;
 }

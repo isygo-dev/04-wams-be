@@ -1,13 +1,13 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlHandler;
+import eu.isygoit.annotation.InjectExceptionHandler;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.impl.ControllerExceptionHandler;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.TimelineDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.TimelineMapper;
 import eu.isygoit.service.impl.TimelineService;
@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@CtrlHandler(RpmExceptionHandler.class)
+@InjectExceptionHandler(RpmExceptionHandler.class)
 @RequestMapping(path = "/api/v1/private/timeline")
 public class TimelineController extends ControllerExceptionHandler {
     /**
@@ -49,7 +49,7 @@ public class TimelineController extends ControllerExceptionHandler {
      *
      * @param requestContext the request context
      * @param code           the code
-     * @param domain         the domain
+     * @param tenant         the tenant
      * @return the response entity
      */
     @Operation(summary = "findTimeline Api",
@@ -58,14 +58,14 @@ public class TimelineController extends ControllerExceptionHandler {
             @ApiResponse(responseCode = "200",
                     description = "Api executed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))})
+                            schema = @Schema(implementation = TimelineDto.class))})
     })
-    @GetMapping(path = "/{code}/{domain}")
-    public ResponseEntity<List<TimelineDto>> findTimeline(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) RequestContextDto requestContext,
+    @GetMapping(path = "/{code}/{tenant}")
+    public ResponseEntity<List<TimelineDto>> findTimeline(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                                           @PathVariable(name = RestApiConstants.CODE) String code,
-                                                          @PathVariable(name = RestApiConstants.DOMAIN_NAME) String domain) {
+                                                          @PathVariable(name = RestApiConstants.TENANT_NAME) String tenant) {
         try {
-            List<TimelineDto> timeline = timelineMapper.listEntityToDto(timelineService.getTimelineByDomainAndCode(code, domain));
+            List<TimelineDto> timeline = timelineMapper.listEntityToDto(timelineService.getTimelineByTenantAndCode(code, tenant));
             if (timeline.isEmpty()) {
                 return ResponseFactory.responseNoContent();
             }

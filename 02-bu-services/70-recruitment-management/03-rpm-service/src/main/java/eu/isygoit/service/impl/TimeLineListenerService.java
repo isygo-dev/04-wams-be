@@ -48,7 +48,7 @@ public class TimeLineListenerService implements ITimeLineListenerService {
     private void handleResumeEventAsync(Resume resume, IEnumActionEvent.Types actionType) {
         camelRepository.asyncSendBody(ICamelRepository.timeline_queue,
                 TimelineDto.builder()
-                        .domain(resume.getDomain())
+                        .tenant(resume.getTenant())
                         .code(resume.getCode())
                         .action(actionType)
                         .object(resume.getClass().getCanonicalName())
@@ -60,7 +60,7 @@ public class TimeLineListenerService implements ITimeLineListenerService {
     private void handleJobApplicationEventAsync(JobOfferApplication jobApplication, IEnumActionEvent.Types actionType) {
         camelRepository.asyncSendBody(ICamelRepository.timeline_queue,
                 JobOfferApplicationDto.builder()
-                        .domain(jobApplication.getDomain())
+                        .tenant(jobApplication.getTenant())
                         .code(jobApplication.getCode())
                         .build()
         );

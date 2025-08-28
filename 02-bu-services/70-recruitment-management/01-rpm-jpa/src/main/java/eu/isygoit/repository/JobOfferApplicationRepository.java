@@ -1,6 +1,7 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.JobOfferApplication;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 /**
  * The interface Job offer application repository.
  */
-public interface JobOfferApplicationRepository extends JpaPagingAndSortingDomainAndCodeAssignableRepository<JobOfferApplication, Long> {
+public interface JobOfferApplicationRepository extends JpaPagingAndSortingTenantAndCodeAssignableRepository<JobOfferApplication, Long> {
     /**
      * Cancel job application long.
      *
@@ -23,38 +24,38 @@ public interface JobOfferApplicationRepository extends JpaPagingAndSortingDomain
      * Count jobs by number of applications long.
      *
      * @param code   the code
-     * @param domain the domain
+     * @param tenant the tenant
      * @return the long
      */
     @Query(name = "JobOfferApplication.countNumberApplicationsByJob", nativeQuery = true)
-    Long countJobsByNumberOfApplications(@Param("code") String code, @Param("domain") String domain);
+    Long countJobsByNumberOfApplications(@Param("code") String code, @Param("tenant") String tenant);
 
     /**
      * Count ongoing global job application long.
      *
-     * @param domain the domain
+     * @param tenant the tenant
      * @return the long
      */
     @Query(name = "JobOfferApplication.countOngoingGlobalJobApplication", nativeQuery = true)
-    Long countOngoingGlobalJobApplication(@Param("domain") String domain);
+    Long countOngoingGlobalJobApplication(@Param("tenant") String tenant);
 
     /**
      * Count on going job application by resume long.
      *
-     * @param domain the domain
+     * @param tenant the tenant
      * @param code   the code
      * @return the long
      */
     @Query(name = "JobOfferApplication.countOnGoingApplicationsByResume", nativeQuery = true)
-    Long countOnGoingJobApplicationByResume(@Param("domain") String domain, @Param("code") String code);
+    Long countOnGoingJobApplicationByResume(@Param("tenant") String tenant, @Param("code") String code);
 
     /**
-     * Count by resume code and domain long.
+     * Count by resume code and tenant long.
      *
      * @param code   the code
-     * @param domain the domain
+     * @param tenant the tenant
      * @return the long
      */
-    Long countByResumeCodeAndDomain(String code, String domain);
+    Long countByResumeCodeAndTenant(String code, String tenant);
 
 }

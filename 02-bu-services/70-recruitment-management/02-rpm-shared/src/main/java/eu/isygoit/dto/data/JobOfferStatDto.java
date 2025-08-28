@@ -1,7 +1,6 @@
 package eu.isygoit.dto.data;
 
 
-import eu.isygoit.dto.extendable.IdentifiableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -12,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Data
 @AllArgsConstructor
 @SuperBuilder
-public class JobOfferStatDto extends IdentifiableDto<Long> {
+public class JobOfferStatDto {
 
     private Long completion;
     private Long applicationCount;

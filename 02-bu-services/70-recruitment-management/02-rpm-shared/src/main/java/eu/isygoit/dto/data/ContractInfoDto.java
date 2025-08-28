@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumContractType;
 import eu.isygoit.enums.IEnumTimeType;
 import eu.isygoit.enums.IEnumWorkMode;
@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ContractInfoDto extends AbstractAuditableDto<Long> {
+public class ContractInfoDto extends AuditableDto<Long> {
 
     private String location;
     private Integer salaryMin;

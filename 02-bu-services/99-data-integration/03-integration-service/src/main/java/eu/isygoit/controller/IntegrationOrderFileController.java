@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedFileController;
 import eu.isygoit.dto.data.IntegrationOrderFileDto;
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping(path = "/api/v1/private/integration/order")
-@CtrlDef(handler = IntegrationExceptionHandler.class, mapper = IntegrationOrderFileMapper.class, minMapper = IntegrationOrderFileMapper.class, service = IntegrationOrderService.class)
+@InjectMapperAndService(handler = IntegrationExceptionHandler.class, mapper = IntegrationOrderFileMapper.class, minMapper = IntegrationOrderFileMapper.class, service = IntegrationOrderService.class)
 public class IntegrationOrderFileController extends MappedFileController<Long, IntegrationOrder, IntegrationOrderFileDto,
         IntegrationOrderFileDto, IntegrationOrderService> {
 

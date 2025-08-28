@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedImageController;
 import eu.isygoit.dto.data.PersonalIdentityInfoDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = CinMapper.class, minMapper = CinMapper.class, service = PersonalIdentityInfoService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = CinMapper.class, minMapper = CinMapper.class, service = PersonalIdentityInfoService.class)
 @RequestMapping(value = "/api/v1/private/cin")
 public class PersonalIdentityInfoController extends MappedImageController<Long, PersonalIdentityInfo, PersonalIdentityInfoDto, PersonalIdentityInfoDto, PersonalIdentityInfoService> {
 

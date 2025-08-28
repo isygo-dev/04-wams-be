@@ -1,10 +1,10 @@
 package eu.isygoit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.com.rest.service.IFileServiceMethods;
 import eu.isygoit.com.rest.service.IImageServiceMethods;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ResumeGlobalStatDto;
 import eu.isygoit.dto.data.ResumeStatDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
@@ -19,7 +19,7 @@ import java.util.Optional;
 /**
  * The interface Resume service.
  */
-public interface IResumeService extends ICrudServiceMethod<Long, Resume>, IFileServiceMethods<Long, Resume>, IImageServiceMethods<Long, Resume> {
+public interface IResumeService extends ICrudServiceMethods<Long, Resume>, IFileServiceMethods<Long, Resume>, IImageServiceMethods<Long, Resume> {
 
     /**
      * Share with accounts list.
@@ -74,7 +74,7 @@ public interface IResumeService extends ICrudServiceMethod<Long, Resume>, IFileS
      * @param requestContext the request context
      * @return the global statistics
      */
-    ResumeGlobalStatDto getGlobalStatistics(IEnumResumeStatType.Types statType, RequestContextDto requestContext);
+    ResumeGlobalStatDto getGlobalStatistics(IEnumResumeStatType.Types statType, ContextRequestDto requestContext);
 
     /**
      * Gets object statistics.
@@ -83,7 +83,7 @@ public interface IResumeService extends ICrudServiceMethod<Long, Resume>, IFileS
      * @param requestContext the request context
      * @return the object statistics
      */
-    ResumeStatDto getObjectStatistics(String code, RequestContextDto requestContext);
+    ResumeStatDto getObjectStatistics(String code, ContextRequestDto requestContext);
 
     /**
      * Gets account code.

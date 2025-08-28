@@ -1,7 +1,7 @@
 package eu.isygoit.model;
 
 import eu.isygoit.annotation.Criteria;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.CamelCaseConverter;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
@@ -34,7 +34,7 @@ import java.util.List;
         SchemaColumnConstantName.C_CHECK_CANCEL + " = true, " +
         SchemaColumnConstantName.C_CANCEL_DATE + " = CURRENT_TIMESTAMP WHERE id = ?")
 @Where(clause = SchemaColumnConstantName.C_CHECK_CANCEL + " = false")
-public class Author extends AuditableCancelableEntity<Long> implements ICodeAssignable, IDomainAssignable, IImageEntity, IFileEntity {
+public class Author extends AuditableCancelableEntity<Long> implements ICodeAssignable, ITenantAssignable, IImageEntity, IFileEntity {
 
     @Id
     @SequenceGenerator(name = "author_sequence_generator", sequenceName = "author_sequence", allocationSize = 1)
@@ -43,9 +43,9 @@ public class Author extends AuditableCancelableEntity<Long> implements ICodeAssi
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

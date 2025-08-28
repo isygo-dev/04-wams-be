@@ -1,8 +1,8 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethod;
+import eu.isygoit.com.rest.service.ICrudServiceMethods;
 import eu.isygoit.com.rest.service.IImageServiceMethods;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
 import eu.isygoit.enums.IEnumEnabledBinaryStatus;
@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * The interface Employee service.
  */
-public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, IImageServiceMethods<Long, Employee> {
+public interface IEmployeeService extends ICrudServiceMethods<Long, Employee>, IImageServiceMethods<Long, Employee> {
     /**
      * Find employee by code employee.
      *
@@ -26,12 +26,12 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
     Optional<Employee> findByCode(String code);
 
     /**
-     * Find employee by domain list.
+     * Find employee by tenant list.
      *
-     * @param domain the domain
+     * @param tenant the tenant
      * @return the list
      */
-    List<Employee> findByDomain(String domain);
+    List<Employee> findByTenant(String tenant);
 
     /**
      * Update employee status employee.
@@ -49,7 +49,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param requestContext the request context
      * @return the object statistics
      */
-    EmployeeStatDto getObjectStatistics(String code, RequestContextDto requestContext);
+    EmployeeStatDto getObjectStatistics(String code, ContextRequestDto requestContext);
 
     /**
      * Gets global statistics.
@@ -58,7 +58,7 @@ public interface IEmployeeService extends ICrudServiceMethod<Long, Employee>, II
      * @param requestContext the request context
      * @return the global statistics
      */
-    EmployeeGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, RequestContextDto requestContext);
+    EmployeeGlobalStatDto getGlobalStatistics(IEnumSharedStatType.Types statType, ContextRequestDto requestContext);
 
     /**
      * Gets account code.

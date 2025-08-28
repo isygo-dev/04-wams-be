@@ -1,6 +1,5 @@
 package eu.isygoit.dto.filter;
 
-import eu.isygoit.dto.extendable.IdentifiableDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,9 +12,9 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class ResumeFilterDto extends IdentifiableDto<Long> {
+public class ResumeFilterDto {
 
-    private String domain;
+    private String tenant;
     private String firstName;
     private String lastName;
 }

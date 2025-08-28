@@ -1,15 +1,16 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.DmsLinkFileService;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectDmsLinkedFileService;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.FileService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.exception.handler.EmployeeNotFoundException;
 import eu.isygoit.exception.handler.LeaveSummaryNotFoundException;
 import eu.isygoit.model.AppNextCode;
+import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Contract;
 import eu.isygoit.model.Employee;
 import eu.isygoit.model.LeaveSummary;
@@ -36,10 +37,10 @@ import java.util.Arrays;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@DmsLinkFileService(DmsLinkedFileService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = ContractRepository.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectDmsLinkedFileService(DmsLinkedFileService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = ContractRepository.class)
 public class ContractService extends FileService<Long, Contract, ContractRepository> implements IContractService {
 
     private final AppProperties appProperties;
@@ -91,12 +92,12 @@ public class ContractService extends FileService<Long, Contract, ContractReposit
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(Contract.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("CTR")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }

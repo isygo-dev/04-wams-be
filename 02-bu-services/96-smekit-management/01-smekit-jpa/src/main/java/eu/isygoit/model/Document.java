@@ -1,6 +1,6 @@
 package eu.isygoit.model;
 
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.converter.LowerCaseConverter;
 import eu.isygoit.enums.IEnumTemplateStatus;
 import eu.isygoit.model.jakarta.AuditableEntity;
@@ -24,7 +24,7 @@ import java.util.Set;
 
 @Table(name = SchemaTableConstantName.T_DOCUMENT)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Document extends AuditableEntity<Long> implements IDomainAssignable, ICodeAssignable, IStatusAssignable<IEnumTemplateStatus.Types> {
+public class Document extends AuditableEntity<Long> implements ITenantAssignable, ICodeAssignable, IStatusAssignable<IEnumTemplateStatus.Types> {
 
     @Id
     @SequenceGenerator(name = "document_sequence_generator", sequenceName = "document_sequence", allocationSize = 1)
@@ -33,9 +33,9 @@ public class Document extends AuditableEntity<Long> implements IDomainAssignable
     private Long id;
 
     @Convert(converter = LowerCaseConverter.class)
-    @ColumnDefault("'" + DomainConstants.DEFAULT_DOMAIN_NAME + "'")
-    @Column(name = SchemaColumnConstantName.C_DOMAIN, length = SchemaConstantSize.DOMAIN, updatable = false, nullable = false)
-    private String domain;
+    @ColumnDefault("'" + TenantConstants.DEFAULT_TENANT_NAME + "'")
+    @Column(name = SchemaColumnConstantName.C_TENANT, length = SchemaConstantSize.TENANT, updatable = false, nullable = false)
+    private String tenant;
 
     @Convert(converter = LowerCaseConverter.class)
     @Column(name = SchemaColumnConstantName.C_CODE, length = SchemaConstantSize.CODE, unique = true, updatable = false, nullable = false)

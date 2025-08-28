@@ -3,7 +3,7 @@ package eu.isygoit.api;
 import eu.isygoit.com.rest.api.IMappedCrudApi;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
-import eu.isygoit.dto.common.RequestContextDto;
+import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.CandidateQuizAnswerDto;
 import eu.isygoit.dto.data.CandidateQuizDto;
 import eu.isygoit.dto.data.QuizDto;
@@ -41,7 +41,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = QuizDto.class))})
     })
     @GetMapping(path = "/copy")
-    ResponseEntity<QuizDto> getCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<QuizDto> getCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                              @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                              @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -62,7 +62,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = Boolean.class))})
     })
     @PutMapping(path = "/submit")
-    ResponseEntity<Boolean> submitCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<Boolean> submitCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                 @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                 @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -83,7 +83,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = Long.class))})
     })
     @PostMapping(path = "/start")
-    ResponseEntity<Long> startCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<Long> startCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                             @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                             @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -105,7 +105,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = Boolean.class))})
     })
     @PutMapping(path = "/answer/submit")
-    ResponseEntity<Boolean> submitCandidateQuizAnswer(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<Boolean> submitCandidateQuizAnswer(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                       @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                       @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                       @Valid @RequestBody CandidateQuizAnswerDto answer);
@@ -127,7 +127,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = Boolean.class))})
     })
     @PutMapping(path = "/answer/list/submit")
-    ResponseEntity<Boolean> submitCandidateQuizAnswerList(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<Boolean> submitCandidateQuizAnswerList(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                           @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                           @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                           @Valid @RequestBody List<CandidateQuizAnswerDto> answers);
@@ -149,7 +149,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = Boolean.class))})
     })
     @PostMapping(path = "/answer/start")
-    ResponseEntity<Boolean> startCandidateQuizAnswer(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<Boolean> startCandidateQuizAnswer(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                      @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                      @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                      @Valid @RequestBody CandidateQuizAnswerDto answer);
@@ -171,7 +171,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = QuizDto.class))})
     })
     @GetMapping(path = "/complete")
-    ResponseEntity<QuizDto> getCompleteAnswer(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<QuizDto> getCompleteAnswer(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                               @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                               @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -192,7 +192,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = QuizDto.class))})
     })
     @GetMapping(path = "/complete/clean")
-    ResponseEntity<QuizDto> getCompleteAnswerClean(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<QuizDto> getCompleteAnswerClean(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                    @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                    @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -213,7 +213,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = QuizReportDto.class))})
     })
     @GetMapping(path = "/report")
-    ResponseEntity<QuizReportDto> getReportAnswer(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<QuizReportDto> getReportAnswer(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                   @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                   @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -234,7 +234,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                             schema = @Schema(implementation = QuizReportDto.class))})
     })
     @GetMapping(path = "/tags")
-    ResponseEntity<List<QuizReportDto>> getByCandidateAndTags(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) RequestContextDto requestContext,
+    ResponseEntity<List<QuizReportDto>> getByCandidateAndTags(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
                                                               @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                               @RequestParam(name = RestApiConstants.TAGS) List<String> tags);
 

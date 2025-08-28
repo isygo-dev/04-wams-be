@@ -1,12 +1,12 @@
 package eu.isygoit.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.annotation.CodeGenKms;
-import eu.isygoit.annotation.CodeGenLocal;
-import eu.isygoit.annotation.ServRepo;
+import eu.isygoit.annotation.InjectCodeGenKms;
+import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
-import eu.isygoit.constants.DomainConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.dto.common.*;
 import eu.isygoit.dto.data.*;
 import eu.isygoit.dto.extendable.AccountModelDto;
@@ -21,6 +21,8 @@ import eu.isygoit.model.schema.SchemaColumnConstantName;
 import eu.isygoit.remote.cms.CmsCalendarEventService;
 import eu.isygoit.remote.kms.KmsIncrementalKeyService;
 import eu.isygoit.repository.*;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAssignableRepository;
 import eu.isygoit.service.IMsgService;
 import eu.isygoit.service.IResumeService;
 import eu.isygoit.service.IWorkflowBoardService;
@@ -41,9 +43,9 @@ import java.util.stream.Stream;
 @Slf4j
 @Service
 @Transactional
-@CodeGenLocal(value = NextCodeService.class)
-@CodeGenKms(value = KmsIncrementalKeyService.class)
-@ServRepo(value = WorkflowBoardRepository.class)
+@InjectCodeGen(value = NextCodeService.class)
+@InjectCodeGenKms(value = KmsIncrementalKeyService.class)
+@InjectRepository(value = WorkflowBoardRepository.class)
 public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBoard, WorkflowBoardRepository> implements IWorkflowBoardService {
 
     private final AppProperties appProperties;
@@ -54,7 +56,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
     private final InterviewEventRepository interviewEventRepository;
     private final JobOfferApplicationRepository jobApplicationRepository;
     private final InterviewSkillsMapper interviewSkillsMapper;
-    private final GenericRepository genericRepository;
+    private final GenericRepositoryService genericRepository;
     private final CmsCalendarEventService cmsCalendarEventService;
     private final IResumeService resumeService;
 
@@ -63,7 +65,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
     private final WorkflowStateRepository workflowStateRepository;
 
     @Autowired
-    public WorkflowBoardService(AppProperties appProperties, WorkflowBoardRepository workflowBoardRepository, WorkflowRepository workflowRepository, JobOfferApplicationEventRepository jobApplicationEventRepository, InterviewEventRepository interviewEventRepository, JobOfferApplicationRepository jobApplicationRepository, InterviewSkillsMapper interviewSkillsMapper, GenericRepository genericRepository, CmsCalendarEventService cmsCalendarEventService, IResumeService resumeService, IMsgService msgService, WorkflowStateRepository workflowStateRepository) {
+    public WorkflowBoardService(AppProperties appProperties, WorkflowBoardRepository workflowBoardRepository, WorkflowRepository workflowRepository, JobOfferApplicationEventRepository jobApplicationEventRepository, InterviewEventRepository interviewEventRepository, JobOfferApplicationRepository jobApplicationRepository, InterviewSkillsMapper interviewSkillsMapper, GenericRepositoryService genericRepository, CmsCalendarEventService cmsCalendarEventService, IResumeService resumeService, IMsgService msgService, WorkflowStateRepository workflowStateRepository) {
         this.appProperties = appProperties;
         this.workflowBoardRepository = workflowBoardRepository;
         this.workflowRepository = workflowRepository;
@@ -100,7 +102,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
     }
 
     @Override
-    public List<IBoardItem> getItems(String domain, String wbCode) throws ClassNotFoundException {
+    public List<IBoardItem> getItems(String tenant, String wbCode) throws ClassNotFoundException {
         WorkflowBoard workflowBoard = this.workflowBoardRepository
                 .findByCodeIgnoreCase(wbCode)
                 .orElseThrow(() -> new WorkflowBoardNotFoundException("with code " + wbCode));
@@ -117,10 +119,10 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                 .findFirst()
                 .orElseGet(() -> workflowStates.get(0)); // Default to first state
 
-        JpaPagingAndSortingDomainAssignableRepository repository =
-                (JpaPagingAndSortingDomainAssignableRepository) genericRepository.getRepository(workflowBoard.getItem());
+        JpaPagingAndSortingTenantAssignableRepository repository =
+                (JpaPagingAndSortingTenantAssignableRepository) genericRepository.getRepository(workflowBoard.getItem());
 
-        return (List<IBoardItem>) repository.findByDomainIgnoreCaseIn(Collections.singletonList(domain)).stream()
+        return (List<IBoardItem>) repository.findByTenantIgnoreCaseIn(Collections.singletonList(tenant)).stream()
                 .map(obj -> {
                     IBoardItem item = (IBoardItem) obj;
                     String state = (item.getState() != null && stateExists((String) item.getState()))
@@ -128,7 +130,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                             : initialState.getCode();
 
                     List<MiniBoardEventDto> events = (List<MiniBoardEventDto>) item.getEvents().stream()
-                            .filter(e -> isEventNonDeletedInCalendar(domain, (IBoardEvent) e))
+                            .filter(e -> isEventNonDeletedInCalendar(tenant, (IBoardEvent) e))
                             .map(e -> MiniBoardEventDto.builder()
                                     .id(((IBoardEvent) e).getId())
                                     .title(((IBoardEvent) e).getTitle())
@@ -156,11 +158,11 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         return workflowStateOptional.isPresent();
     }
 
-    private boolean isEventNonDeletedInCalendar(String domain, IBoardEvent boardEvent) {
+    private boolean isEventNonDeletedInCalendar(String tenant, IBoardEvent boardEvent) {
         try {
             return Optional.ofNullable(
-                            cmsCalendarEventService.eventByDomainAndCalendarAndCode(
-                                    RequestContextDto.builder().build(), domain, boardEvent.getCalendar(), boardEvent.getEventCode()))
+                            cmsCalendarEventService.eventByTenantAndCalendarAndCode(
+                                    ContextRequestDto.builder().build(), tenant, boardEvent.getCalendar(), boardEvent.getEventCode()))
                     .filter(response -> {
                         if (!response.getStatusCode().is2xxSuccessful()) {
                             log.warn("Interview read failed: {}", boardEvent);
@@ -189,7 +191,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
     }
 
     @Override
-    public JobOfferApplicationInterviewEventRequestDto getInterviewEvent(String domain, String code, Long id) {
+    public JobOfferApplicationInterviewEventRequestDto getInterviewEvent(String tenant, String code, Long id) {
         // Use orElseThrow to simplify handling of Optional values and eliminate nested ifPresent() checks
         JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Job application event not found with id" + id));
@@ -200,7 +202,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         // Build DTO
         JobOfferApplicationInterviewEventRequestDto interviewEventRequestDto = JobOfferApplicationInterviewEventRequestDto.builder()
                 .id(id)
-                .domain(domain)
+                .tenant(tenant)
                 .title(jobApplicationEvent.getTitle())
                 .type(IEnumJobAppEventType.Types.INTERVIEW)
                 .startDateTime(new Date())
@@ -227,9 +229,9 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
 
         // Call the CMS service and update DTO if successful
         try {
-            ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByDomainAndCalendarAndCode(
-                    RequestContextDto.builder().build(),
-                    interviewEventRequestDto.getDomain(),
+            ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByTenantAndCalendarAndCode(
+                    ContextRequestDto.builder().build(),
+                    interviewEventRequestDto.getTenant(),
                     interviewEventRequestDto.getType().name(),
                     jobApplicationEvent.getEventCode());
 
@@ -259,20 +261,21 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
 
 
     @Override
-    public JobOfferApplicationInterviewEventRequestDto addInterviewEvent(String domain, String code, String eventType, JobOfferApplicationInterviewEventRequestDto event) {
+    public JobOfferApplicationInterviewEventRequestDto addInterviewEvent(String tenant, String code, String eventType, JobOfferApplicationInterviewEventRequestDto event) {
         jobApplicationRepository.findByCodeIgnoreCase(code)
                 .ifPresentOrElse(jobApp -> {
                             VCalendarEventDto vCalendarEventDto = VCalendarEventDto.builder()
                                     .name(event.getTitle())
                                     .title(event.getTitle())
-                                    .domain(domain)
+                                    .tenant(tenant)
                                     .calendar(event.getType().name())
                                     .startDate(event.getStartDateTime())
                                     .endDate(event.getEndDateTime())
                                     .type(event.getType().name()).build();
 
                             try {
-                                vCalendarEventDto = Optional.ofNullable(cmsCalendarEventService.saveEvent(vCalendarEventDto))
+                                vCalendarEventDto = Optional.ofNullable(cmsCalendarEventService.saveEvent(ContextRequestDto.builder().build(),
+                                                vCalendarEventDto))
                                         .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
                                         .map(result -> result.getBody())
                                         .orElse(vCalendarEventDto);
@@ -356,9 +359,9 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                                     .ifPresent(jobOfferApplicationEvent -> {
                                         Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(event.getId());
                                         try {
-                                            Optional.ofNullable(cmsCalendarEventService.eventByDomainAndCalendarAndCode(
-                                                            RequestContextDto.builder().build(),
-                                                            jobApp.getDomain(),
+                                            Optional.ofNullable(cmsCalendarEventService.eventByTenantAndCalendarAndCode(
+                                                            ContextRequestDto.builder().build(),
+                                                            jobApp.getTenant(),
                                                             jobOfferApplicationEvent.getCalendar(), jobOfferApplicationEvent.getEventCode()))
                                                     .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
                                                     .map(result -> result.getBody())
@@ -367,7 +370,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                                                                 vCalendarEventDto1.setTitle(event.getTitle());
                                                                 vCalendarEventDto1.setStartDate(event.getStartDateTime());
                                                                 vCalendarEventDto1.setEndDate(event.getEndDateTime());
-                                                                ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(//RequestContextDto.builder().build(),
+                                                                ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(ContextRequestDto.builder().build(),
                                                                         vCalendarEventDto1.getId(),
                                                                         vCalendarEventDto1);
                                                                 if (!updateResult.getStatusCode().is2xxSuccessful()) {
@@ -421,8 +424,8 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
 
 
     @Override
-    public List<String> getBoardWatchersByWorkflow(String workflowCode, String domain) {
-        return workflowBoardRepository.findByCodeIgnoreCase(domain)
+    public List<String> getBoardWatchersByWorkflow(String workflowCode, String tenant) {
+        return workflowBoardRepository.findByCodeIgnoreCase(tenant)
                 .stream().filter(wfb -> wfb.getWorkflow().getCode().equals(workflowCode))
                 .flatMap(workflowBoard -> workflowBoard.getWatchers().stream()).distinct()
                 .collect(Collectors.toUnmodifiableList());
@@ -476,7 +479,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         //transition is allowed
         log.info("Transition from state {} to state {} is allowed", bpmEventRequest.getFromState(), bpmEventRequest.getToState());
         //Get Original Board item by Item type (class name)
-        JpaPagingAndSortingDomainAndCodeAssignableRepository repository = (JpaPagingAndSortingDomainAndCodeAssignableRepository) genericRepository.getRepository(workflowBoard.getItem());
+        JpaPagingAndSortingTenantAndCodeAssignableRepository repository = (JpaPagingAndSortingTenantAndCodeAssignableRepository) genericRepository.getRepository(workflowBoard.getItem());
         Optional<IBoardItem> item = repository.findByCodeIgnoreCase(bpmEventRequest.getItem().getCode());
         if (!item.isPresent()) {
             throw new BoardItemNotFoundException(workflowBoard.getItem() + " with code " + bpmEventRequest.getItem().getCode());
@@ -491,7 +494,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
 
         //Check if should be notified
         if (workflowTransition.getNotify() != null && workflowTransition.getNotify()) {
-            msgService.sendMessage(workflowBoard.getDomain(),
+            msgService.sendMessage(workflowBoard.getTenant(),
                     prepareNotifMessage(workflowBoard, workflowTransition, bpmEventRequest.getItem().getItemName()),
                     appProperties.isSendAsyncEmail());
         }
@@ -513,7 +516,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         variables.put(MsgTemplateVariables.V_TO_STATE, workflowTransition.getToCode());
 
         return MailMessageDto.builder()
-                .domain(workflowBoard.getDomain())
+                .tenant(workflowBoard.getTenant())
                 .subject(EmailSubjects.ITEM_STATUS_CHANGED_EMAIL_SUBJECT)
                 .toAddr(String.join(",",
                         Stream.concat(workflowBoard.getWatchers().stream(),
@@ -527,12 +530,12 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
     @Override
     public AppNextCode initCodeGenerator() {
         return AppNextCode.builder()
-                .domain(DomainConstants.DEFAULT_DOMAIN_NAME)
+                .tenant(TenantConstants.DEFAULT_TENANT_NAME)
                 .entity(WorkflowBoard.class.getSimpleName())
                 .attribute(SchemaColumnConstantName.C_CODE)
                 .prefix("WFB")
                 .valueLength(6L)
-                .value(1L)
+                .codeValue(1L)
                 .increment(1)
                 .build();
     }

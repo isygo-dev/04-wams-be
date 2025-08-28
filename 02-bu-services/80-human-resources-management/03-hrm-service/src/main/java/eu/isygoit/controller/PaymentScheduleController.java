@@ -1,11 +1,11 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.data.PaymentScheduleDto;
-import eu.isygoit.dto.extendable.IdentifiableDto;
+
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.PaymentBonusScheduleMapper;
 import eu.isygoit.mapper.PaymentScheduleMapper;
@@ -35,7 +35,7 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = PaymentScheduleMapper.class, minMapper = PaymentScheduleMapper.class, service = PaymentScheduleService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = PaymentScheduleMapper.class, minMapper = PaymentScheduleMapper.class, service = PaymentScheduleService.class)
 @RequestMapping(value = "/api/v1/private/payment-Schedule")
 public class PaymentScheduleController extends MappedCrudController<Long, PaymentSchedule, PaymentScheduleDto, PaymentScheduleDto, PaymentScheduleService> {
     @Autowired
@@ -54,7 +54,7 @@ public class PaymentScheduleController extends MappedCrudController<Long, Paymen
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Api executed successfully",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdentifiableDto.class))),
+                            schema = @Schema(implementation = PaymentScheduleDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
 

@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.dto.data.VacationDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = HrmExceptionHandler.class, mapper = VacationMapper.class, minMapper = VacationMapper.class, service = VacationService.class)
+@InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = VacationMapper.class, minMapper = VacationMapper.class, service = VacationService.class)
 @RequestMapping(value = "/api/v1/private/vacation")
 public class VacationController extends MappedCrudController<Long, Vacation, VacationDto, VacationDto, VacationService> {
 

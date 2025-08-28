@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import eu.isygoit.enums.IEnumPrimeType;
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 
-public class PrimeDto extends AbstractAuditableDto<Long> {
+public class PrimeDto extends AuditableDto<Long> {
 
     private IEnumPrimeType.Types primeType;
     private Double annualMaxAmount;

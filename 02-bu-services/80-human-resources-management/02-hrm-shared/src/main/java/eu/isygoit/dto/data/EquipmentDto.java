@@ -1,6 +1,6 @@
 package eu.isygoit.dto.data;
 
-import eu.isygoit.dto.extendable.AbstractAuditableDto;
+import eu.isygoit.dto.extendable.AuditableDto;
 import lombok.Data;
 
 /**
@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 
-public class EquipmentDto extends AbstractAuditableDto<Long> {
+public class EquipmentDto extends AuditableDto<Long> {
     private Long id;
     private String type;
     private String description;

@@ -1,6 +1,6 @@
 package eu.isygoit.controller;
 
-import eu.isygoit.annotation.CtrlDef;
+import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.api.IMappedMultiFileUploadApi;
 import eu.isygoit.com.rest.controller.impl.MappedMultiFileController;
 import eu.isygoit.dto.data.ResumeDto;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Validated
 @RestController
-@CtrlDef(handler = RpmExceptionHandler.class, mapper = ResumeMapper.class, minMapper = ResumeMapper.class, service = ResumeMultiFileService.class)
+@InjectMapperAndService(handler = RpmExceptionHandler.class, mapper = ResumeMapper.class, minMapper = ResumeMapper.class, service = ResumeMultiFileService.class)
 @RequestMapping(path = "/api/v1/private/resume")
 public class ResumeMultiFileController extends MappedMultiFileController<Long, Resume, ResumeLinkedFileDto, ResumeDto, ResumeDto, ResumeMultiFileService>
         implements IMappedMultiFileUploadApi<ResumeLinkedFileDto, Long> {

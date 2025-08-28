@@ -10,11 +10,11 @@ import java.util.List;
  */
 public interface ITimeLineService {
     /**
-     * Gets timeline by domain and code.
+     * Gets timeline by tenant and code.
      *
      * @param code   the code
-     * @param domain the domain
-     * @return the timeline by domain and code
+     * @param tenant the tenant
+     * @return the timeline by tenant and code
      */
-    List<Timeline> getTimelineByDomainAndCode(String code, String domain);
+    List<Timeline> getTimelineByTenantAndCode(String code, String tenant);
 }
