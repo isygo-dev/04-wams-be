@@ -9,7 +9,6 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferDto;
 import eu.isygoit.dto.data.JobOfferShareInfoDto;
-
 import eu.isygoit.dto.request.ShareJobRequestDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.JobOfferMapper;

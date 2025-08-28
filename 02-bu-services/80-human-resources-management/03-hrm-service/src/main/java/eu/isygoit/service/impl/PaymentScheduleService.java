@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CrudService;
 import eu.isygoit.enums.IEnumContractType;

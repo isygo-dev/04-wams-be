@@ -9,7 +9,6 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
-
 import eu.isygoit.enums.IEnumSharedStatType;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.service.IJobOfferService;

@@ -7,7 +7,6 @@ import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.WorkflowDto;
-
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.WorkflowMapper;
 import eu.isygoit.model.Workflow;

@@ -13,7 +13,6 @@ import eu.isygoit.dto.data.JobOfferApplicationInterviewEventRequestDto;
 import eu.isygoit.dto.data.WorkflowBoardDto;
 import eu.isygoit.dto.data.WorkflowStateDto;
 import eu.isygoit.dto.extendable.AccountModelDto;
-
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.WorkflowBoardMapper;
 import eu.isygoit.mapper.WorkflowStateMapper;

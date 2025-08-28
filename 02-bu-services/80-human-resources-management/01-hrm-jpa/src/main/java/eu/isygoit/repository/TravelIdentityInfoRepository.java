@@ -1,7 +1,6 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.TravelIdentityInfo;
-import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 

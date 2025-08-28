@@ -2,7 +2,6 @@ package eu.isygoit.repository;
 
 
 import eu.isygoit.model.ResumeDetails;
-import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 /**

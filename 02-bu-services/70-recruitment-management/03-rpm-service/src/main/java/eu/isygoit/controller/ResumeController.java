@@ -9,7 +9,6 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ResumeDto;
 import eu.isygoit.dto.data.ResumeShareInfoDto;
-
 import eu.isygoit.dto.extendable.IdAssignableDto;
 import eu.isygoit.dto.request.ShareResumeRequestDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;

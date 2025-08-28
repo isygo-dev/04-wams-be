@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectDmsLinkedFileService;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.FileImageService;
@@ -11,7 +11,6 @@ import eu.isygoit.exception.PostDeleteForbiddenException;
 import eu.isygoit.exception.PostUpdateForbiddenException;
 import eu.isygoit.helper.DateHelper;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Blog;
 import eu.isygoit.model.Post;
 import eu.isygoit.model.schema.SchemaColumnConstantName;

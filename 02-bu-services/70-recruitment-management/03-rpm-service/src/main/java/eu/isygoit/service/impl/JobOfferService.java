@@ -1,8 +1,8 @@
 package eu.isygoit.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
@@ -19,7 +19,6 @@ import eu.isygoit.exception.JobOfferNotFoundException;
 import eu.isygoit.exception.ShareJobNotificationException;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferDetails;
 import eu.isygoit.model.JobOfferShareInfo;

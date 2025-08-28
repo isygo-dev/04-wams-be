@@ -1,9 +1,9 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.Post;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 

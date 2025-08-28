@@ -9,7 +9,6 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.IntegrationElementDto;
 import eu.isygoit.dto.data.IntegrationFlowFileDto;
-
 import eu.isygoit.exception.handler.IntegrationExceptionHandler;
 import eu.isygoit.mapper.IntegrationElementMapper;
 import eu.isygoit.mapper.IntegrationFlowFileMapper;

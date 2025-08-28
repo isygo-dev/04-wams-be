@@ -5,7 +5,6 @@ import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.data.PaymentScheduleDto;
-
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.PaymentBonusScheduleMapper;
 import eu.isygoit.mapper.PaymentScheduleMapper;

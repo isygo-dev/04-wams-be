@@ -9,7 +9,6 @@ import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ResumeGlobalStatDto;
 import eu.isygoit.dto.data.ResumeStatDto;
-
 import eu.isygoit.enums.IEnumResumeStatType;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.service.IResumeService;

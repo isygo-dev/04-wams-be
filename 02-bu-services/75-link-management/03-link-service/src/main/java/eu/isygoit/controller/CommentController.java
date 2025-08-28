@@ -10,7 +10,6 @@ import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.PostCommentDto;
-
 import eu.isygoit.exception.PostCommentNotFoundException;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.PostCommentMapper;

@@ -1,9 +1,9 @@
 package eu.isygoit.repository;
 
 import eu.isygoit.model.JobOffer;
+import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

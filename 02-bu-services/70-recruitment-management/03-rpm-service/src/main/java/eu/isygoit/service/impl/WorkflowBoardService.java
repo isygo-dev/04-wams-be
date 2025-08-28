@@ -1,8 +1,8 @@
 package eu.isygoit.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;

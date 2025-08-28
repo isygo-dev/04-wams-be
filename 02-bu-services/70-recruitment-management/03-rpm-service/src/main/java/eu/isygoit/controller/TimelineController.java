@@ -7,7 +7,6 @@ import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.TimelineDto;
-
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.TimelineMapper;
 import eu.isygoit.service.impl.TimelineService;

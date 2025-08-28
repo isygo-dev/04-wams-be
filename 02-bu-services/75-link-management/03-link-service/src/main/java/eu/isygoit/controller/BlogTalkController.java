@@ -7,7 +7,6 @@ import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.BlogTalkDto;
-
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.BlogTalkMapper;
 import eu.isygoit.model.BlogTalk;

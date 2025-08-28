@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectDmsLinkedFileService;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.FileService;
@@ -10,7 +10,6 @@ import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.exception.handler.EmployeeNotFoundException;
 import eu.isygoit.exception.handler.LeaveSummaryNotFoundException;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Contract;
 import eu.isygoit.model.Employee;
 import eu.isygoit.model.LeaveSummary;

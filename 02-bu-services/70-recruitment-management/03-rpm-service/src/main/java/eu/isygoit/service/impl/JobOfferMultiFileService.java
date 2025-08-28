@@ -5,7 +5,6 @@ import eu.isygoit.com.rest.service.MultiFileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.JobOffer;
 import eu.isygoit.model.JobOfferLinkedFile;
 import eu.isygoit.model.schema.SchemaColumnConstantName;

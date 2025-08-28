@@ -5,7 +5,6 @@ import eu.isygoit.model.Template;
 import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAssignableRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
-import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectCodeGen;
+import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.com.rest.service.CodeAssignableService;
 import eu.isygoit.config.AppProperties;
@@ -11,7 +11,6 @@ import eu.isygoit.exception.ObjectNotFoundException;
 import eu.isygoit.exception.ResourceNotFoundException;
 import eu.isygoit.helper.FileHelper;
 import eu.isygoit.model.AppNextCode;
-import eu.isygoit.repository.code.NextCodeRepository;
 import eu.isygoit.model.Quiz;
 import eu.isygoit.model.QuizQuestion;
 import eu.isygoit.model.schema.SchemaColumnConstantName;

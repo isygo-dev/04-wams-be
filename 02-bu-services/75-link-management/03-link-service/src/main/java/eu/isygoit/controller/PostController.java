@@ -5,12 +5,11 @@ import eu.isygoit.api.PostControllerApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
-import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.constants.JwtConstants;
 import eu.isygoit.constants.RestApiConstants;
+import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.PostDto;
-
 import eu.isygoit.exception.PostNotFoundException;
 import eu.isygoit.exception.handler.LinkExceptionHandler;
 import eu.isygoit.mapper.PostMapper;

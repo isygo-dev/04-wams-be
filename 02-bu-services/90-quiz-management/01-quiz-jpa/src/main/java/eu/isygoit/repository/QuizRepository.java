@@ -2,7 +2,6 @@ package eu.isygoit.repository;
 
 import eu.isygoit.model.Quiz;
 import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
-import eu.isygoit.repository.tenancy.JpaPagingAndSortingTenantAndCodeAssignableRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
