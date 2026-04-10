@@ -8,7 +8,7 @@ import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.camel.repository.ICamelRepository;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
-import eu.isygoit.com.rest.service.FileImageService;
+import eu.isygoit.com.rest.service.media.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.AppParameterConstants;
 import eu.isygoit.constants.TenantConstants;
@@ -19,6 +19,7 @@ import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
 import eu.isygoit.enums.IEnumEmailTemplate;
 import eu.isygoit.enums.IEnumResumeStatType;
+import eu.isygoit.exception.ObjectNotFoundException;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.*;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -33,7 +34,6 @@ import eu.isygoit.service.IMsgService;
 import eu.isygoit.service.IResumeService;
 import eu.isygoit.types.EmailSubjects;
 import eu.isygoit.types.MsgTemplateVariables;
-import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -143,7 +143,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
                     resume.getResumeShareInfos().addAll(shareInfos);
                 }, () ->
                         // Handle the case where the Resume with the given ID doesn't exist
-                        new NotFoundException("Resume not found with ID: " + id)
+                        new ObjectNotFoundException("Resume not found with ID: " + id)
         );
 
         return repository().save(optional.get()).getResumeShareInfos();

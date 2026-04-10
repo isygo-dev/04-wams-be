@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
 import eu.isygoit.model.Quiz;
 import eu.isygoit.model.QuizQuestion;
 import org.springframework.core.io.Resource;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * The interface Quiz service.
  */
-public interface IQuizService extends ICrudServiceMethods<Long, Quiz> {
+public interface IQuizService extends ICrudServiceOperations<Long, Quiz> {
 
     /**
      * Download question image resource.

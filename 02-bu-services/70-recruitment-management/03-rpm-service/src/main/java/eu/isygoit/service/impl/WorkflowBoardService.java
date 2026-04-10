@@ -28,7 +28,6 @@ import eu.isygoit.service.IResumeService;
 import eu.isygoit.service.IWorkflowBoardService;
 import eu.isygoit.types.EmailSubjects;
 import eu.isygoit.types.MsgTemplateVariables;
-import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -187,17 +186,17 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                         .fullName(jobOfferApplication.getResume().getFullName())
                         .code(jobOfferApplication.getResume().getCode())
                         .email(jobOfferApplication.getResume().getEmail()).build())
-                .orElseThrow(() -> new NotFoundException("Job application not found with code" + code));
+                .orElseThrow(() -> new ObjectNotFoundException("Job application not found with code" + code));
     }
 
     @Override
     public JobOfferApplicationInterviewEventRequestDto getInterviewEvent(String tenant, String code, Long id) {
         // Use orElseThrow to simplify handling of Optional values and eliminate nested ifPresent() checks
         JobOfferApplicationEvent jobApplicationEvent = jobApplicationEventRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Job application event not found with id" + id));
+                .orElseThrow(() -> new ObjectNotFoundException("Job application event not found with id" + id));
 
         JobOfferApplication jobApplication = jobApplicationRepository.findByCodeIgnoreCase(code)
-                .orElseThrow(() -> new NotFoundException("Job application not found with code " + code));
+                .orElseThrow(() -> new ObjectNotFoundException("Job application not found with code " + code));
 
         // Build DTO
         JobOfferApplicationInterviewEventRequestDto interviewEventRequestDto = JobOfferApplicationInterviewEventRequestDto.builder()
@@ -382,7 +381,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                                                                 if (interviewOptional.isPresent()) {
                                                                     interviewEventRepository.deleteById(interviewOptional.get().getId());
                                                                 }
-                                                                throw new NotFoundException("Event not found with id : " + event.getId());
+                                                                throw new ObjectNotFoundException("Event not found with id : " + event.getId());
                                                             });
                                         } catch (Exception e) {
                                             log.error("Remote feign call failed : ", e);

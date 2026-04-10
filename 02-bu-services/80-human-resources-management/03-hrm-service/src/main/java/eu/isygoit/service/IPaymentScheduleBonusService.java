@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
 import eu.isygoit.model.PaymentBonusSchedule;
 
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * The interface Payment schedule bonus service.
  */
-public interface IPaymentScheduleBonusService extends ICrudServiceMethods<Long, PaymentBonusSchedule> {
+public interface IPaymentScheduleBonusService extends ICrudServiceOperations<Long, PaymentBonusSchedule> {
     /**
      * Calculate bonus payment schedule list.
      *

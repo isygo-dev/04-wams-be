@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.com.rest.controller.impl.MappedImageController;
+import eu.isygoit.com.rest.controller.impl.media.MappedImageController;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;
 import eu.isygoit.mapper.EmployeeMapper;

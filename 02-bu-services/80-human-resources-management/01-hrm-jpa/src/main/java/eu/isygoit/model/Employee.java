@@ -9,6 +9,7 @@ import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.model.jakarta.AuditableCancelableEntity;
 import eu.isygoit.model.schema.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.util.CollectionUtils;
 
-import javax.validation.constraints.Email;
 import java.util.List;
 
 /**

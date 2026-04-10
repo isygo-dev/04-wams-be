@@ -1,7 +1,7 @@
 package eu.isygoit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.JobOfferGlobalStatDto;
 import eu.isygoit.dto.data.JobOfferStatDto;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The interface Job offer service.
  */
-public interface IJobOfferService extends ICrudServiceMethods<Long, JobOffer> {
+public interface IJobOfferService extends ICrudServiceOperations<Long, JobOffer> {
 
 
     /**

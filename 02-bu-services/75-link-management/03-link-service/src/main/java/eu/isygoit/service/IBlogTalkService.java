@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
 import eu.isygoit.model.BlogTalk;
 import jakarta.transaction.NotSupportedException;
 
@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * The interface Blog talk service.
  */
-public interface IBlogTalkService extends ICrudServiceMethods<UUID, BlogTalk> {
+public interface IBlogTalkService extends ICrudServiceOperations<UUID, BlogTalk> {
 
     /**
      * Find by blog id list.

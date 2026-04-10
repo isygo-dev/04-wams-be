@@ -1,7 +1,7 @@
 package eu.isygoit.service.impl;
 
 import eu.isygoit.annotation.*;
-import eu.isygoit.com.rest.service.MultiFileService;
+import eu.isygoit.com.rest.service.media.MultiFileService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;

@@ -6,7 +6,7 @@ import eu.isygoit.annotation.InjectDmsLinkedFileService;
 import eu.isygoit.annotation.InjectRepository;
 import eu.isygoit.async.kafka.KafkaRegisterAccountProducer;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
-import eu.isygoit.com.rest.service.ImageService;
+import eu.isygoit.com.rest.service.media.ImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.dto.common.ContextRequestDto;
@@ -16,6 +16,7 @@ import eu.isygoit.dto.request.NewAccountDto;
 import eu.isygoit.enums.IEnumAccountOrigin;
 import eu.isygoit.enums.IEnumEnabledBinaryStatus;
 import eu.isygoit.enums.IEnumSharedStatType;
+import eu.isygoit.exception.ObjectNotFoundException;
 import eu.isygoit.exception.StatisticTypeNotSupportedException;
 import eu.isygoit.model.*;
 import eu.isygoit.model.schema.SchemaColumnConstantName;
@@ -27,7 +28,6 @@ import eu.isygoit.repository.ContractRepository;
 import eu.isygoit.repository.EmployeeRepository;
 import eu.isygoit.service.IEmployeeService;
 import eu.isygoit.service.ILeaveSummaryService;
-import jakarta.ws.rs.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -140,7 +140,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     public List<Employee> findByTenant(String tenant) {
         List<Employee> employees = employeeRepository.findByTenantIgnoreCase(tenant);
         if (CollectionUtils.isEmpty(employees)) {
-            throw new NotFoundException("Employee not found with tenant: " + tenant);
+            throw new ObjectNotFoundException("Employee not found with tenant: " + tenant);
         }
         return employees;
     }
@@ -148,7 +148,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     @Override
     public Employee updateStatus(Long id, IEnumEnabledBinaryStatus.Types newStatus) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Employee not found with CODE: " + id));
+                .orElseThrow(() -> new ObjectNotFoundException("Employee not found with CODE: " + id));
 
         employee.setEmployeeStatus(newStatus);
         return update(employee);

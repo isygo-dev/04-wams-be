@@ -1,7 +1,7 @@
 package eu.isygoit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
 import eu.isygoit.dto.common.BpmEventRequestDto;
 import eu.isygoit.dto.common.BpmEventResponseDto;
 import eu.isygoit.dto.data.JobOfferApplicationInterviewEventRequestDto;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * The interface Workflow board service.
  */
-public interface IWorkflowBoardService extends ICrudServiceMethods<Long, WorkflowBoard> {
+public interface IWorkflowBoardService extends ICrudServiceOperations<Long, WorkflowBoard> {
 
     /**
      * Gets states.

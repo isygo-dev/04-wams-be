@@ -9,7 +9,7 @@
 
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>web-app-microservices</artifactId>
-    <version>WB-1.0.250603-T1554</version>
+    <version>WB-1.0.260408-T1636</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -37,22 +37,5 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>isygo-it-github-01</id>
-            <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/your-org/01-wams-stack</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>isygo-it-github-02</id>
-            <name>GitHub isygo-it Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/your-org/02-wams-core</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+
 </project>

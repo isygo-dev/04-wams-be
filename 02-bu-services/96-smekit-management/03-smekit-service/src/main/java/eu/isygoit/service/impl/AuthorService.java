@@ -4,7 +4,7 @@ import eu.isygoit.annotation.InjectCodeGen;
 import eu.isygoit.annotation.InjectCodeGenKms;
 import eu.isygoit.annotation.InjectDmsLinkedFileService;
 import eu.isygoit.annotation.InjectRepository;
-import eu.isygoit.com.rest.service.FileImageService;
+import eu.isygoit.com.rest.service.media.FileImageService;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.model.AppNextCode;

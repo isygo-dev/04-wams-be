@@ -1,9 +1,8 @@
 package eu.isygoit.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
-import eu.isygoit.com.rest.service.IFileServiceMethods;
-import eu.isygoit.com.rest.service.IImageServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
+import eu.isygoit.com.rest.service.media.IImageServiceOperations;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.ResumeGlobalStatDto;
 import eu.isygoit.dto.data.ResumeStatDto;
@@ -19,7 +18,7 @@ import java.util.Optional;
 /**
  * The interface Resume service.
  */
-public interface IResumeService extends ICrudServiceMethods<Long, Resume>, IFileServiceMethods<Long, Resume>, IImageServiceMethods<Long, Resume> {
+public interface IResumeService extends ICrudServiceOperations<Long, Resume>, eu.isygoit.com.rest.service.media.IFileServiceOperations<Long, Resume>, IImageServiceOperations<Long, Resume> {
 
     /**
      * Share with accounts list.

@@ -1,7 +1,7 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
-import eu.isygoit.com.rest.service.IImageServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
+import eu.isygoit.com.rest.service.media.IImageServiceOperations;
 import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.EmployeeGlobalStatDto;
 import eu.isygoit.dto.data.EmployeeStatDto;
@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * The interface Employee service.
  */
-public interface IEmployeeService extends ICrudServiceMethods<Long, Employee>, IImageServiceMethods<Long, Employee> {
+public interface IEmployeeService extends ICrudServiceOperations<Long, Employee>, IImageServiceOperations<Long, Employee> {
     /**
      * Find employee by code employee.
      *

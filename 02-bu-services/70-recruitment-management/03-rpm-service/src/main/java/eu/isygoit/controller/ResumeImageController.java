@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.com.rest.controller.impl.MappedImageController;
+import eu.isygoit.com.rest.controller.impl.media.MappedImageController;
 import eu.isygoit.dto.data.ResumeDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.ResumeMapper;

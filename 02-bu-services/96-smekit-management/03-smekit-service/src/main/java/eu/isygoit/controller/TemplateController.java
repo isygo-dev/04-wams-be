@@ -83,7 +83,7 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
                 }
                 crudService().update(template);
             }, () -> {
-                throw new ObjectNotFoundException("with id " + templateId);
+                throw new ObjectNotFoundException(Template.class.getSimpleName() + " with id " + templateId);
             });
 
             return ResponseFactory.responseOk(Boolean.TRUE);

@@ -2,7 +2,7 @@ package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
 import eu.isygoit.com.rest.api.IMappedMultiFileUploadApi;
-import eu.isygoit.com.rest.controller.impl.MappedMultiFileController;
+import eu.isygoit.com.rest.controller.impl.media.MappedMultiFileController;
 import eu.isygoit.dto.data.EmployeeDto;
 import eu.isygoit.dto.data.EmployeeLinkedFileDto;
 import eu.isygoit.exception.handler.HrmExceptionHandler;

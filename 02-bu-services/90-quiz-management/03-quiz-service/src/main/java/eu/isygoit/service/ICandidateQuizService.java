@@ -1,6 +1,6 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
 import eu.isygoit.dto.data.QuizDto;
 import eu.isygoit.dto.data.QuizReportDto;
 import eu.isygoit.model.CandidateQuiz;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The interface Candidate quiz service.
  */
-public interface ICandidateQuizService extends ICrudServiceMethods<Long, CandidateQuiz> {
+public interface ICandidateQuizService extends ICrudServiceOperations<Long, CandidateQuiz> {
 
     /**
      * Find by quiz code and account code candidate quiz.

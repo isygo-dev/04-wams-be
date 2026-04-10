@@ -1,7 +1,7 @@
 package eu.isygoit.service;
 
-import eu.isygoit.com.rest.service.ICrudServiceMethods;
-import eu.isygoit.com.rest.service.IFileServiceMethods;
+import eu.isygoit.com.rest.service.ICrudServiceOperations;
+import eu.isygoit.com.rest.service.media.IFileServiceOperations;
 import eu.isygoit.model.IntegrationFlow;
 import eu.isygoit.model.nosql.IntegrationElement;
 
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * The interface Integration flow service.
  */
-public interface IIntegrationFlowService extends ICrudServiceMethods<Long, IntegrationFlow>, IFileServiceMethods<Long, IntegrationFlow> {
+public interface IIntegrationFlowService extends ICrudServiceOperations<Long, IntegrationFlow>, IFileServiceOperations<Long, IntegrationFlow> {
 
     /**
      * Find all integrated elements list.
