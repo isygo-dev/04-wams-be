@@ -10,8 +10,10 @@
     <groupId>eu.isygo-it.services</groupId>
     <artifactId>quiz-management</artifactId>
     <version>WB-1.0.260408-T1636</version>
-
     <packaging>pom</packaging>
+
+    <name>quiz-management</name>
+    <description>Quiz Management Parent POM</description>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
@@ -26,7 +28,5 @@
     </modules>
 
     <build>
-        <plugins>
-        </plugins>
     </build>
 </project>

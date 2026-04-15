@@ -13,8 +13,9 @@
     <artifactId>human-resources-management-jpa</artifactId>
     <version>WB-1.0.260408-T1636</version>
     <packaging>jar</packaging>
+
     <name>human-resources-management-jpa</name>
-    <description>human-resources-management-jpa</description>
+    <description>Human Resources Management JPA Module</description>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
@@ -22,9 +23,6 @@
         <version>WB-1.0.260408-T1636</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <properties>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -46,15 +44,9 @@
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>human-resources-management-shared</artifactId>
             <version>WB-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <resources>
-        </resources>
-
-        <plugins>
-        </plugins>
     </build>
 </project>

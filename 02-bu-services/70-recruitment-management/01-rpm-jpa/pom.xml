@@ -13,8 +13,9 @@
     <artifactId>recruitment-management-jpa</artifactId>
     <version>WB-1.0.260408-T1636</version>
     <packaging>jar</packaging>
+
     <name>recruitment-management-jpa</name>
-    <description>recruitment-management-jpa</description>
+    <description>Recruitment Management JPA Module</description>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
@@ -22,9 +23,6 @@
         <version>WB-1.0.260408-T1636</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <properties>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -46,15 +44,9 @@
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>recruitment-management-shared</artifactId>
             <version>WB-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <resources>
-        </resources>
-
-        <plugins>
-        </plugins>
     </build>
 </project>

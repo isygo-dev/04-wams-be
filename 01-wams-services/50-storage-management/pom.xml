@@ -12,6 +12,9 @@
     <version>WB-1.0.260408-T1636</version>
     <packaging>pom</packaging>
 
+    <name>storage-management</name>
+    <description>Storage Management Parent POM</description>
+
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>wams-services</artifactId>
@@ -23,7 +26,5 @@
     </modules>
 
     <build>
-        <plugins>
-        </plugins>
     </build>
 </project>

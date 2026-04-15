@@ -13,8 +13,9 @@
     <artifactId>human-resources-management-shared</artifactId>
     <version>WB-1.0.260408-T1636</version>
     <packaging>jar</packaging>
+
     <name>human-resources-management-shared</name>
-    <description>human-resources-management-shared</description>
+    <description>Human Resources Management Shared Module</description>
 
     <parent>
         <groupId>eu.isygo-it.services</groupId>
@@ -22,9 +23,6 @@
         <version>WB-1.0.260408-T1636</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <properties>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -35,10 +33,5 @@
     </dependencies>
 
     <build>
-        <resources>
-        </resources>
-
-        <plugins>
-        </plugins>
     </build>
 </project>

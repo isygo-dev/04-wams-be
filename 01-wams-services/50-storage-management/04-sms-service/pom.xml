@@ -12,6 +12,9 @@
     <version>WB-1.0.260408-T1636</version>
     <packaging>jar</packaging>
 
+    <name>storage-management-service</name>
+    <description>Storage Management Service</description>
+
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>service-stack-parent</artifactId>
@@ -76,7 +79,6 @@
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>storage-management-starter-parent</artifactId>
             <version>WC-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -112,15 +114,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
                 <configuration>
                     <additionalClasspathElements>
                         <additionalClasspathElement>../uploads/</additionalClasspathElement>
@@ -133,7 +131,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -148,7 +145,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.1</version>
                 <configuration>
                     <mainClass>eu.isygoit.SmsStarter</mainClass>
                     <executable>true</executable>

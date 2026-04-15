@@ -12,6 +12,9 @@
     <version>WB-1.0.260408-T1636</version>
     <packaging>jar</packaging>
 
+    <name>quiz-management-service</name>
+    <description>Quiz Management Service</description>
+
     <parent>
         <groupId>eu.isygo-it.services</groupId>
         <artifactId>service-stack-parent</artifactId>
@@ -60,7 +63,6 @@
         </profile>
     </profiles>
 
-
     <dependencies>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
@@ -78,41 +80,40 @@
             <version>WS-1.0.260408-T1636</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>key-management-shared</artifactId>
             <version>WC-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>document-management-shared</artifactId>
             <version>WC-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>messaging-management-shared</artifactId>
             <version>WC-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>calendar-management-shared</artifactId>
             <version>WC-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>eu.isygo-it.services</groupId>
             <artifactId>identity-management-shared</artifactId>
             <version>WC-1.0.260408-T1636</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.statemachine</groupId>
             <artifactId>spring-statemachine-core</artifactId>
@@ -157,15 +158,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
                 <configuration>
                     <additionalClasspathElements>
                         <additionalClasspathElement>../uploads/</additionalClasspathElement>
@@ -178,7 +175,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -193,7 +189,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.1</version>
                 <configuration>
                     <mainClass>eu.isygoit.QuizStarter</mainClass>
                     <executable>true</executable>
