@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
  * The interface Quiz repository.
  */
 @Repository
-public interface QuizRepository extends JpaPagingAndSortingCodeAssingnableRepository<Quiz, Long> {
+public interface QuizRepository extends JpaPagingAndSortingCodeAssignableRepository<Quiz, Long> {
 
 }

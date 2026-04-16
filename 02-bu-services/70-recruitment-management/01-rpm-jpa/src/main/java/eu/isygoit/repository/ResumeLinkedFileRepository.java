@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
  * The interface Resume linked file repository.
  */
 @Repository
-public interface ResumeLinkedFileRepository extends JpaPagingAndSortingCodeAssingnableRepository<ResumeLinkedFile, Long> {
+public interface ResumeLinkedFileRepository extends JpaPagingAndSortingCodeAssignableRepository<ResumeLinkedFile, Long> {
 }

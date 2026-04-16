@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Repository
 
-public interface AuthorRepository extends JpaPagingAndSortingCodeAssingnableRepository<Author, Long> {
+public interface AuthorRepository extends JpaPagingAndSortingCodeAssignableRepository<Author, Long> {
     @Query("SELECT COUNT(a) FROM Author a WHERE a.createDate BETWEEN :start AND :end")
     Long countByCreateDateBetween(@Param("start") Date startDate,
                                   @Param("end") Date endDate);

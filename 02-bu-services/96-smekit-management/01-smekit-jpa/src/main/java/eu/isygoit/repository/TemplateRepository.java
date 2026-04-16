@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface TemplateRepository extends JpaPagingAndSortingTenantAssignableRepository<Template, Long>, JpaPagingAndSortingCodeAssingnableRepository<Template, Long> {
+public interface TemplateRepository extends JpaPagingAndSortingTenantAssignableRepository<Template, Long>, JpaPagingAndSortingCodeAssignableRepository<Template, Long> {
 
     List<Template> findByCategoryId(Long categoryId);
 
