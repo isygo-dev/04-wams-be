@@ -50,13 +50,17 @@ public class JobOfferController extends MappedCrudController<Long, JobOffer, Job
      * @param shareJobRequestDto the share job request dto
      * @return the response entity
      */
-    @Operation(summary = "share Api",
-            description = "share")
+    @Operation(summary = "Share job offer",
+            description = "This endpoint shares a job offer with multiple accounts.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Job offer shared successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JobOfferShareInfoDto.class))})
+                            schema = @Schema(implementation = JobOfferShareInfoDto.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request data"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/share/{id}")
     public ResponseEntity<List<JobOfferShareInfoDto>> share(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,

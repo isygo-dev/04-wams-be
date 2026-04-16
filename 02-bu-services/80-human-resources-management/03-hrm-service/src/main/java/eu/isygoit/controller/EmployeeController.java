@@ -15,6 +15,9 @@ import eu.isygoit.mapper.EmployeeMapper;
 import eu.isygoit.model.Employee;
 import eu.isygoit.service.IEmployeeService;
 import eu.isygoit.service.impl.EmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -108,8 +111,18 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
      * @param employeeDto    the employee dto
      * @return the response entity
      */
+    @Operation(summary = "Create user account for employee",
+            description = "This endpoint creates a user account based on the provided employee data.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "Account created successfully"),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid employee data provided"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @PostMapping(path = "/create/account")
-    public ResponseEntity<HttpStatus> createAccountToEmployee(
+    public ResponseEntity<HttpStatus> createAccountForEmployee(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
             @Valid @RequestBody EmployeeDto employeeDto) {
         try {

@@ -51,13 +51,17 @@ public class TimelineController extends ControllerExceptionHandler {
      * @param tenant         the tenant
      * @return the response entity
      */
-    @Operation(summary = "findTimeline Api",
-            description = "findTimeline")
+    @Operation(summary = "Find timeline by code and tenant",
+            description = "This endpoint retrieves the timeline events for a given code and tenant.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Timeline retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = TimelineDto.class))})
+                            schema = @Schema(implementation = TimelineDto.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No timeline found for the given code and tenant"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/{code}/{tenant}")
     public ResponseEntity<List<TimelineDto>> findTimeline(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,

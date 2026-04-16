@@ -44,13 +44,15 @@ public class JobOfferStatisticsController extends ControllerExceptionHandler {
      * @param statType       the stat type
      * @return the global statistics
      */
-    @Operation(summary = "Get Global Statistics Api",
-            description = "Get Global Statistics")
+    @Operation(summary = "Get global job offer statistics",
+            description = "This endpoint retrieves global statistics for job offers based on the specified statistic type.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Global statistics retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JobOfferGlobalStatDto.class))})
+                            schema = @Schema(implementation = JobOfferGlobalStatDto.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/global")
     ResponseEntity<JobOfferGlobalStatDto> getGlobalStatistics(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext
@@ -71,13 +73,15 @@ public class JobOfferStatisticsController extends ControllerExceptionHandler {
      * @param code           the code
      * @return the object statistics
      */
-    @Operation(summary = "Get Object Statistics Api",
-            description = "Get Object Statistics")
+    @Operation(summary = "Get object-specific job offer statistics",
+            description = "This endpoint retrieves statistics for a specific job offer identified by its code.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Object statistics retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JobOfferStatDto.class))})
+                            schema = @Schema(implementation = JobOfferStatDto.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/object")
     ResponseEntity<JobOfferStatDto> getObjectStatistics(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,

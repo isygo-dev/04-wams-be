@@ -60,13 +60,17 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param wbCode         the wb code
      * @return the states
      */
-    @Operation(summary = "getStates Api",
-            description = "getStates")
+    @Operation(summary = "Get states by workflow board code",
+            description = "This endpoint retrieves all states associated with a specific workflow board code.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "States retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = WorkflowStateDto.class))})
+                            schema = @Schema(implementation = WorkflowStateDto.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No states found for the given code"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/states")
     ResponseEntity<List<WorkflowStateDto>> getStates(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -93,15 +97,18 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param wbCode         the wb code
      * @return the items
      */
-    @Operation(summary = "getItems Api",
-            description = "getItems")
+    @Operation(summary = "Get items by workflow board code",
+            description = "This endpoint retrieves all items associated with a specific workflow board code for a given tenant.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Items retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IBoardItem.class))})
+                            schema = @Schema(implementation = IBoardItem.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No items found for the given code"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
-
     @GetMapping(path = "/items")
     ResponseEntity<List<IBoardItem>> getItems(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
                                               @RequestParam(name = RestApiConstants.WB_CODE) String wbCode) {
@@ -124,13 +131,15 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param code           the code
      * @return the job application candidate
      */
-    @Operation(summary = "getJobApplicationCandidate Api",
-            description = "getJobApplicationCandidate")
+    @Operation(summary = "Get candidate data for a job application",
+            description = "This endpoint retrieves the candidate account data for a given application code.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Candidate data retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = AccountModelDto.class))})
+                            schema = @Schema(implementation = AccountModelDto.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/candidate/{code}")
     ResponseEntity<AccountModelDto> getJobApplicationCandidate(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -150,13 +159,17 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param requestContext the request context
      * @return the item types
      */
-    @Operation(summary = "getItemTypes Api",
-            description = "getItemTypes")
+    @Operation(summary = "Get item types",
+            description = "This endpoint retrieves the list of item types that are status assignable.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Item types retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No item types found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/itemTypes")
     ResponseEntity<List<String>> getItemTypes(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
@@ -181,13 +194,17 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param bpmEventRequest the bpm event request
      * @return the response entity
      */
-    @Operation(summary = "createEvent Api",
-            description = "createEvent")
+    @Operation(summary = "Create BPM event",
+            description = "This endpoint performs a BPM event based on the provided request.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "BPM event performed successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = BpmEventResponseDto.class))})
+                            schema = @Schema(implementation = BpmEventResponseDto.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request provided"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/event")
     ResponseEntity<BpmEventResponseDto> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -208,13 +225,15 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param id             the id
      * @return the event
      */
-    @Operation(summary = "getEvent Api",
-            description = "getEvent")
+    @Operation(summary = "Get interview event",
+            description = "This endpoint retrieves an interview event by its code and ID for the current tenant.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Interview event retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JobOfferApplicationInterviewEventRequestDto.class))})
+                            schema = @Schema(implementation = JobOfferApplicationInterviewEventRequestDto.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/board-event/{code}/{id}")
     ResponseEntity<JobOfferApplicationInterviewEventRequestDto> getEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -237,13 +256,17 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param event          the event
      * @return the response entity
      */
-    @Operation(summary = "event Api",
-            description = "event")
+    @Operation(summary = "Add interview event",
+            description = "This endpoint adds a new interview event of a specific type for a given application code.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Interview event added successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid event data provided"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/board-event/{eventType}/{code}")
     ResponseEntity<?> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -267,13 +290,17 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param event          the event
      * @return the response entity
      */
-    @Operation(summary = "updateEvent Api",
-            description = "updateEvent")
+    @Operation(summary = "Update interview event",
+            description = "This endpoint updates an existing interview event of a specific type for a given application code.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Interview event updated successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid event data provided"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PutMapping(path = "/board-event/{eventType}/{code}")
     ResponseEntity<?> updateEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -296,13 +323,15 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
      * @param wfCode         the wf code
      * @return the available workflow emails
      */
-    @Operation(summary = "getAvailableWorkflowEmails Api",
-            description = "getAvailableWorkflowEmails")
+    @Operation(summary = "Get available workflow emails",
+            description = "This endpoint retrieves the list of emails associated with watchers for a specific workflow.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Watcher emails retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/watchers")
     ResponseEntity<List<String>> getAvailableWorkflowEmails(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,

@@ -27,7 +27,7 @@ public class IntegrationService implements IIntegrationService<String> {
 
     @Override
     public String create(IntegrationOrder order, String bodyJson) {
-        //String url = "http://identity-service/api/private/account";
+        //String url = "http://identity-service/api/v1/private/account";
         String url = new StringBuilder(order.getServiceName()).append("/").append(order.getMapping()).toString();
         try {
             RequestEntity<String> requestEntity = RequestEntity.post(new URL(url).toURI()).contentType(MediaType.APPLICATION_JSON).body(bodyJson);
@@ -42,7 +42,7 @@ public class IntegrationService implements IIntegrationService<String> {
 
     @Override
     public String update(IntegrationOrder order, String bodyJson) {
-        //String url = "http://identity-service/api/private/account";
+        //String url = "http://identity-service/api/v1/private/account";
         String url = new StringBuilder(order.getServiceName()).append("/").append(order.getMapping()).toString();
         try {
             RequestEntity<String> requestEntity = RequestEntity.put(new URL(url).toURI()).contentType(MediaType.APPLICATION_JSON).body(bodyJson);
@@ -57,7 +57,7 @@ public class IntegrationService implements IIntegrationService<String> {
 
     @Override
     public boolean delete(IntegrationOrder order, String identifier) {
-        //String url = "http://identity-service/api/private/account";
+        //String url = "http://identity-service/api/v1/private/account";
         String url = new StringBuilder(order.getServiceName()).append("/").append(order.getMapping()).append("/").append(identifier).toString();
         restTemplate.delete(url);
         return true;
@@ -65,7 +65,7 @@ public class IntegrationService implements IIntegrationService<String> {
 
     @Override
     public List<String> fetch(IntegrationOrder order) {
-        //String url = "http://identity-service/api/private/account";
+        //String url = "http://identity-service/api/v1/private/account";
         String url = new StringBuilder(order.getServiceName()).append("/").append(order.getMapping()).toString();
         ResponseEntity<List> response = restTemplate.getForEntity(url, List.class);
         return response.getBody();

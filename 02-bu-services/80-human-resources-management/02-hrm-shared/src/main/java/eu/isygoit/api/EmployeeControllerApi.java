@@ -29,14 +29,15 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
      * @param newStatus      the new status
      * @return the response entity
      */
-    @Operation(summary = "xxx Api",
-            description = "xxx")
+    @Operation(summary = "Update employee status",
+            description = "This endpoint updates the status (ENABLED/DISABLED) of an employee identified by their ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Employee status updated successfully",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = EmployeeDto.class))}),
-            @ApiResponse(responseCode = "404", description = "Api not found")
+            @ApiResponse(responseCode = "404", description = "Employee not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PutMapping(path = "/updateStatusEmployee")
     ResponseEntity<EmployeeDto> updateEmployeeStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,

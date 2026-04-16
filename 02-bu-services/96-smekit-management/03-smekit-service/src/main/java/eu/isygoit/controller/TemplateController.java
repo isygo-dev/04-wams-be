@@ -12,6 +12,11 @@ import eu.isygoit.exception.handler.SmeKitExceptionHandler;
 import eu.isygoit.mapper.TemplateMapper;
 import eu.isygoit.model.Template;
 import eu.isygoit.service.impl.TemplateService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
@@ -30,6 +35,18 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/api/v1/private/template")
 public class TemplateController extends MappedCrudController<Long, Template, TemplateDto, TemplateDto, TemplateService> {
 
+    @Operation(summary = "Update template",
+            description = "This endpoint updates an existing template identified by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Template updated successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Template.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Template not found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @PutMapping("update/{id}")
     public ResponseEntity<Template> updateTemplate(@PathVariable Long id, @RequestBody Template updatedTemplate) {
         log.info(" Mise à jour du template ID: {}", id);
@@ -47,6 +64,16 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
         return ResponseEntity.ok(savedTemplate);
     }
 
+    @Operation(summary = "Get templates by category",
+            description = "This endpoint retrieves all templates belonging to a specific category.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Templates retrieved successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TemplateDto.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<TemplateDto>> getTemplatesByCategory(@PathVariable Long categoryId) {
         try {
@@ -66,6 +93,18 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
         }
     }
 
+    @Operation(summary = "Toggle pin status for a template",
+            description = "This endpoint allows a user to pin or unpin a template.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Pin status toggled successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Template not found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @PostMapping("/{templateId}/pin")
     public ResponseEntity<Boolean> togglePinStatus(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -93,6 +132,18 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
         }
     }
 
+    @Operation(summary = "Get pinned templates",
+            description = "This endpoint retrieves all templates pinned by the current user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Pinned templates retrieved successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = TemplateDto.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No pinned templates found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping("/pinned")
     public ResponseEntity<List<TemplateDto>> getPinnedTemplates(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
@@ -112,6 +163,18 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
         }
     }
 
+    @Operation(summary = "Check template pin status",
+            description = "This endpoint checks if a specific template is pinned by the current user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Template is pinned",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Boolean.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Template is not pinned"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping("/{templateId}/pinned-status")
     public ResponseEntity<Boolean> checkPinStatus(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -139,6 +202,16 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
     }
 
 
+    @Operation(summary = "Count pinned templates",
+            description = "This endpoint retrieves the total number of templates pinned by the current user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Count retrieved successfully",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Long.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping("/pinned/count")
     public ResponseEntity<Long> countMyPinnedTemplates(
             @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {

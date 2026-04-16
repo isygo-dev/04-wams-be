@@ -52,13 +52,17 @@ public class JobOfferApplicationController extends MappedCrudController<Long, Jo
      * @param resumeCode     the resume code
      * @return the job offers not assigned to resume
      */
-    @Operation(summary = "getJobOffersNotAssignedToResume Api",
-            description = "getJobOffersNotAssignedToResume")
+    @Operation(summary = "Get job offers not assigned to resume",
+            description = "This endpoint retrieves the list of job offers that a specific resume has not yet applied to.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Job offers retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = JobOfferDto.class))})
+                            schema = @Schema(implementation = JobOfferDto.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No job offers found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/not-applied/{resumeCode}")
     public ResponseEntity<List<JobOfferDto>> getJobOffersNotAssignedToResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,

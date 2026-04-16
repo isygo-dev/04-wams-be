@@ -42,13 +42,15 @@ public class WorkflowController extends MappedCrudController<Long, Workflow, Wor
      * @param requestContext the request context
      * @return the unassociated workflows
      */
-    @Operation(summary = "xxx Api",
-            description = "xxx")
+    @Operation(summary = "Get unassociated workflows",
+            description = "This endpoint retrieves the list of workflows that are not yet associated with any board.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Unassociated workflows retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/unassociated")
     ResponseEntity<List<String>> getUnassociatedWorkflows(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {

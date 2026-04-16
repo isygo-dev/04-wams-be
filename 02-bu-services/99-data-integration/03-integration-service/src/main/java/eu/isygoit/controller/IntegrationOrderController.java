@@ -7,6 +7,11 @@ import eu.isygoit.exception.handler.IntegrationExceptionHandler;
 import eu.isygoit.mapper.IntegrationOrderFileMapper;
 import eu.isygoit.model.IntegrationOrder;
 import eu.isygoit.service.impl.IntegrationOrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -55,9 +60,19 @@ public class IntegrationOrderController extends MappedCrudController<Long, Integ
      *
      * @return the response entity
      */
+    @Operation(summary = "Call rest template GET",
+            description = "This endpoint demonstrates calling an external service (identity-service) using RestTemplate.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Request successful",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = List.class))}),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
+    })
     @GetMapping(path = "/call_rest_templateGet")
     public ResponseEntity<List> callRestTemplate() {
-        String getAccountsURI = "http://identity-service/api/private/account";
+        String getAccountsURI = "http://identity-service/api/v1/private/account";
         ResponseEntity<List> response = restTemplate.getForEntity(getAccountsURI, List.class);
         return response;
     }
@@ -69,7 +84,7 @@ public class IntegrationOrderController extends MappedCrudController<Long, Integ
      */
     @GetMapping(path = "/call_rest_template_post")
     public ResponseEntity<String> callRestTemplatePost() {
-        String getAccountsURI = "http://identity-service/api/private/account";
+        String getAccountsURI = "http://identity-service/api/v1/private/account";
         String postBodyJson = "{\n" +
                 "    \"email\": \"s.mbarki@isygoit.eu\",\n" +
                 "    \"fullName\": \"Sami Mbarki\",\n" +

@@ -58,13 +58,17 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
      * @param shareResumeRequestDto the share resume request dto
      * @return the response entity
      */
-    @Operation(summary = "shareResume Api",
-            description = "shareResume")
+    @Operation(summary = "Share resume",
+            description = "This endpoint shares a resume with multiple accounts.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Resume shared successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdAssignableDto.class))})
+                            schema = @Schema(implementation = ResumeShareInfoDto.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request data"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/share/{id}")
     public ResponseEntity<List<ResumeShareInfoDto>> shareResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -105,13 +109,17 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
      * @param resumeShareInfo the resume share info
      * @return the response entity
      */
-    @Operation(summary = "updateResumeReview Api",
-            description = "updateResumeReview")
+    @Operation(summary = "Update resume review",
+            description = "This endpoint updates the review information for a shared resume.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Resume review updated successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdAssignableDto.class))})
+                            schema = @Schema(implementation = ResumeShareInfo.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid review data provided"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PutMapping(path = "/resume-review/update/{id}")
     public ResponseEntity<ResumeShareInfo> updateResumeReview(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -134,13 +142,17 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
      * @param requestContext the request context
      * @return the resume by account code
      */
-    @Operation(summary = "findCurrentUserResume Api",
-            description = "findCurrentUserResume")
+    @Operation(summary = "Get resume by candidate code",
+            description = "This endpoint retrieves the resume associated with the current user (candidate).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Resume retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdAssignableDto.class))})
+                            schema = @Schema(implementation = ResumeDto.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No resume found for the current candidate"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/findByCandidateCode")
     public ResponseEntity<ResumeDto> getResumeByAccountCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
@@ -164,13 +176,17 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
      * @param resumeDto      the resume dto
      * @return the response entity
      */
-    @Operation(summary = "createCurrentUserResume Api",
-            description = "createCurrentUserResume")
+    @Operation(summary = "Create current user resume",
+            description = "This endpoint creates a new resume for the current user (candidate).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Resume created successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdAssignableDto.class))})
+                            schema = @Schema(implementation = ResumeDto.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid resume data provided"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/candidate")
     public ResponseEntity<ResumeDto> createCurrentUserResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -193,13 +209,17 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
      * @param resumeDto      the resume dto
      * @return the response entity
      */
-    @Operation(summary = "create Account to resume Api",
-            description = "create account toResume")
+    @Operation(summary = "Assign account to resume",
+            description = "This endpoint assigns an account code to a specific resume.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Account assigned successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = IdAssignableDto.class))})
+                            schema = @Schema(implementation = Boolean.class))}),
+            @ApiResponse(responseCode = "400",
+                    description = "Invalid request data"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/create/account")
     public ResponseEntity<Boolean> assignAccountToResume(

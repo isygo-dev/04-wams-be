@@ -57,13 +57,17 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
      * @param isLike         the is like
      * @return the response entity
      */
-    @Operation(summary = "createLikePost Api",
-            description = "createLikePost")
+    @Operation(summary = "Like or unlike a post",
+            description = "This endpoint allows a user to like or unlike a post identified by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Post like status updated successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PostDto.class))})
+                            schema = @Schema(implementation = PostDto.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Post not found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/like")
     public ResponseEntity<PostDto> createLikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -98,13 +102,17 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
      * @param postId         the post id
      * @return the users liked post by post id
      */
-    @Operation(summary = "getListUsersLikedPost Api",
-            description = "getListUsersLikedPost")
+    @Operation(summary = "Get users who liked a post",
+            description = "This endpoint retrieves the list of account codes of users who liked a specific post.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "List of users retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Post not found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/like/{postId}")
     public ResponseEntity<List<String>> getUsersLikedPostByPostId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -128,13 +136,17 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
      * @param isLike         the is like
      * @return the response entity
      */
-    @Operation(summary = "createDislikePost Api",
-            description = "createDislikePost")
+    @Operation(summary = "Dislike or undislike a post",
+            description = "This endpoint allows a user to dislike or undislike a post identified by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Post dislike status updated successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PostDto.class))})
+                            schema = @Schema(implementation = PostDto.class))}),
+            @ApiResponse(responseCode = "404",
+                    description = "Post not found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @PostMapping(path = "/dislike")
     public ResponseEntity<PostDto> createDislikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
@@ -169,13 +181,17 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
      * @param size           the size
      * @return the response entity
      */
-    @Operation(summary = "Find all objects with minimal data by page (uses Min Dto)",
-            description = "Find all objects with minimal data by page (uses Min Dto)")
+    @Operation(summary = "Find all posts for blogs",
+            description = "This endpoint retrieves a paginated list of posts, sorted by creation date in descending order.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    description = "Api executed successfully",
+                    description = "Posts retrieved successfully",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PostDto.class))})
+                            schema = @Schema(implementation = PostDto.class))}),
+            @ApiResponse(responseCode = "204",
+                    description = "No posts found"),
+            @ApiResponse(responseCode = "500",
+                    description = "Internal server error")
     })
     @GetMapping(path = "/blog/{page}/{size}")
     public ResponseEntity<List<PostDto>> findAllBlogs(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
