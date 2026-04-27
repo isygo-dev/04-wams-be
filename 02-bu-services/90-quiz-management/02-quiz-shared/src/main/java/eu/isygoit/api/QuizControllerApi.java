@@ -28,8 +28,7 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
 
     /**
      * Download question image response entity.
-     *
-     * @param requestContext the request context
+     
      * @param id             the id
      * @return the response entity
      * @throws IOException the io exception
@@ -43,13 +42,12 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
                             schema = @Schema(implementation = Resource.class))})
     })
     @GetMapping(path = "/question/image/download/{id}")
-    ResponseEntity<Resource> downloadQuestionImage(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<Resource> downloadQuestionImage(
                                                    @PathVariable(name = RestApiConstants.ID) Long id) throws IOException;
 
     /**
      * Upload question image response entity.
-     *
-     * @param requestContext the request context
+     
      * @param id             the id
      * @param file           the file
      * @return the response entity
@@ -63,15 +61,14 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
                             schema = @Schema(implementation = QuizQuestionDto.class))})
     })
     @PostMapping(path = "/question/image/upload/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<QuizQuestionDto> uploadQuestionImage(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<QuizQuestionDto> uploadQuestionImage(
                                                         @PathVariable(name = RestApiConstants.ID) Long id,
                                                         @RequestPart(name = RestApiConstants.FILE) MultipartFile file);
 
 
     /**
      * Gets quiz codes by category.
-     *
-     * @param requestContext the request context
+     
      * @param category       the category
      * @return the quiz codes by category
      */
@@ -84,14 +81,13 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
                             schema = @Schema(implementation = QuizListDto.class))})
     })
     @GetMapping(path = "/category")
-    ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(
                                                              @RequestParam(name = RestApiConstants.CATEGORY) String category);
 
 
     /**
      * Find by code response entity.
-     *
-     * @param requestContext the request context
+     
      * @param code           the code
      * @return the response entity
      */
@@ -104,6 +100,6 @@ public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto
                             schema = @Schema(implementation = QuizDto.class))})
     })
     @GetMapping(path = "/code/{code}")
-    ResponseEntity<QuizDto> findByCodeIgnoreCase(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<QuizDto> findByCodeIgnoreCase(
                                                  @PathVariable(name = RestApiConstants.CODE) String code);
 }

@@ -45,8 +45,7 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
 
     /**
      * Find all integrated elements response entity.
-     *
-     * @param requestContext the request context
+     
      * @param flowId         the flow id
      * @return the response entity
      */
@@ -59,7 +58,7 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
                             schema = @Schema(implementation = IntegrationElementDto.class))})
     })
     @GetMapping(path = "/elements")
-    ResponseEntity<List<IntegrationElementDto>> findAllIntegratedElements(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<List<IntegrationElementDto>> findAllIntegratedElements(
                                                                           @RequestParam(name = RestApiConstants.FLOW_ID) Long flowId) {
         log.info("Find all integrated elements request received", IntegrationElement.class.getSimpleName());
         try {
@@ -78,8 +77,7 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
 
     /**
      * Find integrated element by id response entity.
-     *
-     * @param requestContext the request context
+     
      * @param elementId      the element id
      * @return the response entity
      */
@@ -92,7 +90,7 @@ public class IntegrationFlowController extends MappedCrudController<Long, Integr
                             schema = @Schema(implementation = IntegrationElementDto.class))})
     })
     @GetMapping(path = "/element/id")
-    ResponseEntity<IntegrationElementDto> findIntegratedElementById(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<IntegrationElementDto> findIntegratedElementById(
                                                                     @RequestParam(name = RestApiConstants.ID) Long elementId) {
         log.info("Find integrated element by id request received", IntegrationElement.class.getSimpleName());
         try {

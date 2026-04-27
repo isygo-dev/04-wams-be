@@ -26,8 +26,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
 
     /**
      * Gets candidate quiz.
-     *
-     * @param requestContext the request context
+     
      * @param quizCode       the quiz code
      * @param accountCode    the account code
      * @return the candidate quiz
@@ -43,14 +42,13 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @GetMapping(path = "/copy")
-    ResponseEntity<QuizDto> getCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<QuizDto> getCandidateQuiz(
                                              @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                              @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
     /**
      * Submit candidate quiz response entity.
-     *
-     * @param requestContext the request context
+     
      * @param quizCode       the quiz code
      * @param accountCode    the account code
      * @return the response entity
@@ -66,14 +64,13 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @PutMapping(path = "/submit")
-    ResponseEntity<Boolean> submitCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<Boolean> submitCandidateQuiz(
                                                 @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                 @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
     /**
      * Start candidate quiz response entity.
-     *
-     * @param requestContext the request context
+     
      * @param quizCode       the quiz code
      * @param accountCode    the account code
      * @return the response entity
@@ -89,7 +86,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @PostMapping(path = "/start")
-    ResponseEntity<Long> startCandidateQuiz(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<Long> startCandidateQuiz(
                                             @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                             @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
@@ -113,7 +110,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @PutMapping(path = "/answer/submit")
-    ResponseEntity<Boolean> submitCandidateQuizAnswer(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<Boolean> submitCandidateQuizAnswer(//
                                                       @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                       @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                       @Valid @RequestBody CandidateQuizAnswerDto answer);
@@ -137,7 +134,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @PutMapping(path = "/answer/list/submit")
-    ResponseEntity<Boolean> submitCandidateQuizAnswerList(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<Boolean> submitCandidateQuizAnswerList(//
                                                           @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                           @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                           @Valid @RequestBody List<CandidateQuizAnswerDto> answers);
@@ -161,15 +158,14 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @PostMapping(path = "/answer/start")
-    ResponseEntity<Boolean> startCandidateQuizAnswer(//@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<Boolean> startCandidateQuizAnswer(//
                                                      @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                      @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                      @Valid @RequestBody CandidateQuizAnswerDto answer);
 
     /**
      * Gets complete answer.
-     *
-     * @param requestContext the request context
+     
      * @param quizCode       the quiz code
      * @param accountCode    the account code
      * @return the complete answer
@@ -187,14 +183,13 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @GetMapping(path = "/complete")
-    ResponseEntity<QuizDto> getCompleteAnswer(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<QuizDto> getCompleteAnswer(
                                               @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                               @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
     /**
      * Gets complete answer.
-     *
-     * @param requestContext the request context
+     
      * @param quizCode       the quiz code
      * @param accountCode    the account code
      * @return the complete answer
@@ -212,14 +207,13 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @GetMapping(path = "/complete/clean")
-    ResponseEntity<QuizDto> getCompleteAnswerClean(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<QuizDto> getCompleteAnswerClean(
                                                    @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                    @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
     /**
      * Gets report answer.
-     *
-     * @param requestContext the request context
+     
      * @param quizCode       the quiz code
      * @param accountCode    the account code
      * @return the report answer
@@ -237,14 +231,13 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @GetMapping(path = "/report")
-    ResponseEntity<QuizReportDto> getReportAnswer(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<QuizReportDto> getReportAnswer(
                                                   @RequestParam(name = RestApiConstants.QUIZ_CODE) String quizCode,
                                                   @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode);
 
     /**
      * Gets by candidate and tags.
-     *
-     * @param requestContext the request context
+     
      * @param accountCode    the account code
      * @param tags           the tags
      * @return the by candidate and tags
@@ -262,7 +255,7 @@ public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, Candida
                     description = "Internal server error")
     })
     @GetMapping(path = "/tags")
-    ResponseEntity<List<QuizReportDto>> getByCandidateAndTags(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<List<QuizReportDto>> getByCandidateAndTags(
                                                               @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                               @RequestParam(name = RestApiConstants.TAGS) List<String> tags);
 

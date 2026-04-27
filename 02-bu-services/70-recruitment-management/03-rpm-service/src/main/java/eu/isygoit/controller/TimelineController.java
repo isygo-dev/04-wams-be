@@ -9,12 +9,14 @@ import eu.isygoit.dto.common.ContextRequestDto;
 import eu.isygoit.dto.data.TimelineDto;
 import eu.isygoit.exception.handler.RpmExceptionHandler;
 import eu.isygoit.mapper.TimelineMapper;
+import eu.isygoit.service.RequestContextService;
 import eu.isygoit.service.impl.TimelineService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,11 +44,13 @@ public class TimelineController extends ControllerExceptionHandler {
      */
     @Autowired
     TimelineMapper timelineMapper;
+    @Getter
+    @Autowired
+    private RequestContextService requestContextService;
 
     /**
      * Find timeline response entity.
-     *
-     * @param requestContext the request context
+     
      * @param code           the code
      * @param tenant         the tenant
      * @return the response entity
@@ -64,7 +68,7 @@ public class TimelineController extends ControllerExceptionHandler {
                     description = "Internal server error")
     })
     @GetMapping(path = "/{code}/{tenant}")
-    public ResponseEntity<List<TimelineDto>> findTimeline(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<TimelineDto>> findTimeline(
                                                           @PathVariable(name = RestApiConstants.CODE) String code,
                                                           @PathVariable(name = RestApiConstants.TENANT_NAME) String tenant) {
         try {

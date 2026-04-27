@@ -207,7 +207,7 @@ public class JobOfferService extends CodeAssignableService<Long, JobOffer, JobOf
         final String defaultUrl = "https://localhost:4002/apps/job/";
 
         // Fetch job view URL parameter, fallback to default if unavailable
-        String jobUrl = Optional.ofNullable(imsAppParameterService.getValueByTenantAndName(ContextRequestDto.builder().build(),
+        String jobUrl = Optional.ofNullable(imsAppParameterService.getValueByTenantAndName(
                         jobOffer.getTenant(), AppParameterConstants.JOB_VIEW_URL, true, defaultUrl))
                 .filter(result -> result.hasBody() && StringUtils.hasText(result.getBody()))
                 .map(result -> result.getBody() + jobOffer.getId())

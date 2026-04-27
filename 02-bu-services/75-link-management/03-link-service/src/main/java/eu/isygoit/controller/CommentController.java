@@ -59,8 +59,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
 
     /**
      * Create like comment response entity.
-     *
-     * @param requestContext the request context
+     
      * @param commentId      the comment id
      * @param accountCode    the account code
      * @return the response entity
@@ -74,7 +73,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                             schema = @Schema(implementation = PostCommentDto.class))})
     })
     @PostMapping(path = "/like")
-    public ResponseEntity<PostCommentDto> createLikeComment(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<PostCommentDto> createLikeComment(
                                                             @RequestParam(name = RestApiConstants.ID) Long commentId,
                                                             @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode
     ) {
@@ -97,8 +96,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
 
     /**
      * Gets liked comment by comment id.
-     *
-     * @param requestContext the request context
+     
      * @param commentId      the comment id
      * @return the liked comment by comment id
      */
@@ -111,7 +109,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                             schema = @Schema(implementation = String.class))})
     })
     @GetMapping(path = "/like/{commentId}")
-    public ResponseEntity<List<String>> getLikedCommentByCommentId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<String>> getLikedCommentByCommentId(
                                                                    @PathVariable(name = RestApiConstants.COMMENT_ID) Long commentId) {
         try {
             return ResponseFactory.responseOk(commentService.findById(commentId)
@@ -126,8 +124,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
 
     /**
      * Create dislike comment response entity.
-     *
-     * @param requestContext the request context
+     
      * @param commentId      the comment id
      * @param accountCode    the account code
      * @return the response entity
@@ -141,7 +138,7 @@ public class CommentController extends MappedCrudController<Long, PostComment, P
                             schema = @Schema(implementation = PostCommentDto.class))})
     })
     @PostMapping(path = "/dislike")
-    public ResponseEntity<PostCommentDto> createDislikeComment(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<PostCommentDto> createDislikeComment(
                                                                @RequestParam(name = RestApiConstants.ID) Long commentId,
                                                                @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode
     ) {

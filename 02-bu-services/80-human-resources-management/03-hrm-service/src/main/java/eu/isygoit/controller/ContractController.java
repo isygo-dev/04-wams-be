@@ -35,7 +35,7 @@ public class ContractController extends MappedCrudController<Long, Contract, Min
     private IContractService contractService;
 
     @Override
-    public ResponseEntity<ContractDto> updateContractStatus(ContextRequestDto requestContext,
+    public ResponseEntity<ContractDto> updateContractStatus(
                                                             Long id, Boolean isLocked) {
         log.info("update contrat status");
         try {

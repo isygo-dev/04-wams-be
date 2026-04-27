@@ -151,7 +151,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
 
     private void shareResumeNotification(Resume resume, String resumeOwner, AccountModelDto account) throws JsonProcessingException {
         final String defaultUrl = "https://localhost:4004/apps/resumes/view/";
-        String resumeUrl = Optional.ofNullable(imsAppParameterService.getValueByTenantAndName(ContextRequestDto.builder().build(),
+        String resumeUrl = Optional.ofNullable(imsAppParameterService.getValueByTenantAndName(
                         resume.getTenant(), AppParameterConstants.RESUME_VIEW_URL, true, defaultUrl))
                 .filter(result -> result.hasBody() && StringUtils.hasText(result.getBody()))
                 .map(result -> result.getBody() + resume.getId())
@@ -333,7 +333,7 @@ public class ResumeService extends FileImageService<Long, Resume, ResumeReposito
     private void completeSkills(Resume resume, String accountCode) {
         resume.getDetails().getSkills().forEach(resumeSkills -> {
             try {
-                ResponseEntity<List<QuizReportDto>> result = quizCandidateQuizService.getByCandidateAndTags(ContextRequestDto.builder().build(),
+                ResponseEntity<List<QuizReportDto>> result = quizCandidateQuizService.getByCandidateAndTags(
                         accountCode,
                         Arrays.asList(resumeSkills.getName())
                 );

@@ -40,7 +40,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     private CandidateQuizAnswerMapper candidateQuizAnswerMapper;
 
     @Override
-    public ResponseEntity<QuizDto> getCandidateQuiz(ContextRequestDto requestContext,
+    public ResponseEntity<QuizDto> getCandidateQuiz(
                                                     String quizCode, String accountCode) {
         try {
             return ResponseFactory.responseOk(crudService().getCandidateQuiz(quizCode, accountCode));
@@ -51,7 +51,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<Boolean> submitCandidateQuiz(ContextRequestDto requestContext,
+    public ResponseEntity<Boolean> submitCandidateQuiz(
                                                        String quizCode, String accountCode) {
         try {
             return ResponseFactory.responseOk(crudService().submitCandidateQuiz(quizCode, accountCode));
@@ -62,7 +62,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<Long> startCandidateQuiz(ContextRequestDto requestContext,
+    public ResponseEntity<Long> startCandidateQuiz(
                                                    String quizCode, String accountCode) {
         try {
             return ResponseFactory.responseOk(crudService().startCandidateQuiz(quizCode, accountCode));
@@ -73,7 +73,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<Boolean> submitCandidateQuizAnswer(//ContextRequestDto requestContext,
+    public ResponseEntity<Boolean> submitCandidateQuizAnswer(//ContextRequestDto getRequestContextService().getCurrentContext(),
                                                              String quizCode, String accountCode, CandidateQuizAnswerDto answer) {
         try {
             return ResponseFactory.responseOk(crudService().submitCandidateAnswer(quizCode, accountCode,
@@ -96,7 +96,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<Boolean> startCandidateQuizAnswer(//ContextRequestDto requestContext,
+    public ResponseEntity<Boolean> startCandidateQuizAnswer(//ContextRequestDto getRequestContextService().getCurrentContext(),
                                                             String quizCode, String accountCode, CandidateQuizAnswerDto answer) {
         try {
             return ResponseFactory.responseOk(crudService().startCandidateAnswer(quizCode, accountCode,
@@ -108,7 +108,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<QuizDto> getCompleteAnswer(ContextRequestDto requestContext,
+    public ResponseEntity<QuizDto> getCompleteAnswer(
                                                      String quizCode, String accountCode) {
         try {
             QuizDto completeAnswer = crudService().getCompleteAnswer(quizCode, accountCode);
@@ -124,7 +124,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<QuizDto> getCompleteAnswerClean(ContextRequestDto requestContext,
+    public ResponseEntity<QuizDto> getCompleteAnswerClean(
                                                           String quizCode, String accountCode) {
         try {
             QuizDto completeAnswer = crudService().getCompleteAnswerClean(quizCode, accountCode);
@@ -140,7 +140,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<QuizReportDto> getReportAnswer(ContextRequestDto requestContext,
+    public ResponseEntity<QuizReportDto> getReportAnswer(
                                                          String quizCode, String accountCode) {
         try {
             QuizReportDto quizReport = crudService().getReport(quizCode, accountCode);
@@ -156,7 +156,7 @@ public class CandidateQuizController extends MappedCrudController<Long, Candidat
     }
 
     @Override
-    public ResponseEntity<List<QuizReportDto>> getByCandidateAndTags(ContextRequestDto requestContext,
+    public ResponseEntity<List<QuizReportDto>> getByCandidateAndTags(
                                                                      String accountCode, List<String> tags) {
         try {
             List<QuizReportDto> list = crudService().getByCandidateAndTags(accountCode, tags);

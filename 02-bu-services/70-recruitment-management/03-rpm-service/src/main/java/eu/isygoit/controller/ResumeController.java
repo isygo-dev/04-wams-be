@@ -53,7 +53,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
     /**
      * Share resume response entity.
      *
-     * @param requestContext        the request context
+     * @param getRequestContextService().getCurrentContext()        the request context
      * @param id                    the id
      * @param shareResumeRequestDto the share resume request dto
      * @return the response entity
@@ -71,7 +71,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
                     description = "Internal server error")
     })
     @PostMapping(path = "/share/{id}")
-    public ResponseEntity<List<ResumeShareInfoDto>> shareResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<ResumeShareInfoDto>> shareResume(
                                                                 @PathVariable(name = RestApiConstants.ID) Long id,
                                                                 @Valid @RequestBody ShareResumeRequestDto shareResumeRequestDto) {
         log.info("share resume ");
@@ -104,7 +104,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
     /**
      * Update resume review response entity.
      *
-     * @param requestContext  the request context
+     * @param getRequestContextService().getCurrentContext()  the request context
      * @param id              the id
      * @param resumeShareInfo the resume share info
      * @return the response entity
@@ -122,7 +122,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
                     description = "Internal server error")
     })
     @PutMapping(path = "/resume-review/update/{id}")
-    public ResponseEntity<ResumeShareInfo> updateResumeReview(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<ResumeShareInfo> updateResumeReview(
                                                               @PathVariable(name = RestApiConstants.ID) Long id,
                                                               @Valid @RequestBody ResumeShareInfo resumeShareInfo) {
         log.info("update resume review");
@@ -138,8 +138,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
 
     /**
      * Gets resume by account code.
-     *
-     * @param requestContext the request context
+     
      * @return the resume by account code
      */
     @Operation(summary = "Get resume by candidate code",
@@ -155,9 +154,9 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
                     description = "Internal server error")
     })
     @GetMapping(path = "/findByCandidateCode")
-    public ResponseEntity<ResumeDto> getResumeByAccountCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
+    public ResponseEntity<ResumeDto> getResumeByAccountCode() {
         try {
-            ResumeDto resumeDto = mapper().entityToDto(crudService().getResumeByAccountCode(requestContext.getSenderUser()));
+            ResumeDto resumeDto = mapper().entityToDto(crudService().getResumeByAccountCode(getRequestContextService().getCurrentContext().getSenderUser()));
             if (resumeDto != null) {
                 return ResponseFactory.responseOk(resumeDto);
             }
@@ -171,8 +170,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
 
     /**
      * Create current user resume response entity.
-     *
-     * @param requestContext the request context
+     
      * @param resumeDto      the resume dto
      * @return the response entity
      */
@@ -189,13 +187,13 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
                     description = "Internal server error")
     })
     @PostMapping(path = "/candidate")
-    public ResponseEntity<ResumeDto> createCurrentUserResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<ResumeDto> createCurrentUserResume(
                                                              @Valid @RequestBody ResumeDto resumeDto) {
         try {
             if (!StringUtils.hasText(resumeDto.getTenant())) {
-                resumeDto.setTenant(requestContext.getSenderTenant());
+                resumeDto.setTenant(getRequestContextService().getCurrentContext().getSenderTenant());
             }
-            return ResponseFactory.responseOk(mapper().entityToDto(crudService().createResumeForAccount(requestContext.getSenderUser(),
+            return ResponseFactory.responseOk(mapper().entityToDto(crudService().createResumeForAccount(getRequestContextService().getCurrentContext().getSenderUser(),
                     mapper().dtoToEntity(resumeDto))));
         } catch (Exception ex) {
             return getBackExceptionResponse(ex);
@@ -204,8 +202,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
 
     /**
      * Assign account to resume response entity.
-     *
-     * @param requestContext the request context
+     
      * @param resumeDto      the resume dto
      * @return the response entity
      */
@@ -223,7 +220,7 @@ public class ResumeController extends MappedCrudController<Long, Resume, ResumeD
     })
     @PostMapping(path = "/create/account")
     public ResponseEntity<Boolean> assignAccountToResume(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+            
             @Valid @RequestBody ResumeDto resumeDto) {
         try {
             crudService().createAccount(mapper().dtoToEntity(resumeDto));

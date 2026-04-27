@@ -45,7 +45,7 @@ public class JobOfferController extends MappedCrudController<Long, JobOffer, Job
     /**
      * Share response entity.
      *
-     * @param requestContext     the request context
+     * @param getRequestContextService().getCurrentContext()     the request context
      * @param id                 the id
      * @param shareJobRequestDto the share job request dto
      * @return the response entity
@@ -63,7 +63,7 @@ public class JobOfferController extends MappedCrudController<Long, JobOffer, Job
                     description = "Internal server error")
     })
     @PostMapping(path = "/share/{id}")
-    public ResponseEntity<List<JobOfferShareInfoDto>> share(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<JobOfferShareInfoDto>> share(
                                                             @PathVariable(name = RestApiConstants.ID) Long id,
                                                             @Valid @RequestBody ShareJobRequestDto shareJobRequestDto) {
         log.info("share job ");

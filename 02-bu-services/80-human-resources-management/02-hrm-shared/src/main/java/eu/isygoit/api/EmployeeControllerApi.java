@@ -23,8 +23,7 @@ import java.util.List;
 public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeDto, EmployeeDto> {
     /**
      * Update employee status response entity.
-     *
-     * @param requestContext the request context
+     
      * @param id             the id
      * @param newStatus      the new status
      * @return the response entity
@@ -40,14 +39,13 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PutMapping(path = "/updateStatusEmployee")
-    ResponseEntity<EmployeeDto> updateEmployeeStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<EmployeeDto> updateEmployeeStatus(
                                                      @RequestParam(name = RestApiConstants.ID) Long id,
                                                      @RequestParam(name = RestApiConstants.NEW_STATUS) IEnumEnabledBinaryStatus.Types newStatus);
 
     /**
      * Gets employee by code.
-     *
-     * @param requestContext the request context
+     
      * @param code           the code
      * @return the employee by code
      */
@@ -58,13 +56,12 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
             @ApiResponse(responseCode = "404", description = "Employee not found")
     })
     @GetMapping("/code/{code}")
-    ResponseEntity<EmployeeDto> getEmployeeByCode(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<EmployeeDto> getEmployeeByCode(
                                                   @PathVariable(name = RestApiConstants.CODE) String code);
 
     /**
      * Gets employee by tenant.
-     *
-     * @param requestContext the request context
+     
      * @param tenant         the tenant
      * @return the employee by tenant
      */
@@ -75,6 +72,6 @@ public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeD
             @ApiResponse(responseCode = "404", description = "Employee not found")
     })
     @GetMapping("/tenant/{tenant}")
-    ResponseEntity<List<EmployeeDto>> getEmployeeByTenant(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<List<EmployeeDto>> getEmployeeByTenant(
                                                           @PathVariable(name = RestApiConstants.TENANT_NAME) String tenant);
 }

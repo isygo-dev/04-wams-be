@@ -55,8 +55,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Gets states.
-     *
-     * @param requestContext the request context
+     
      * @param wbCode         the wb code
      * @return the states
      */
@@ -73,7 +72,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @GetMapping(path = "/states")
-    ResponseEntity<List<WorkflowStateDto>> getStates(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<List<WorkflowStateDto>> getStates(
                                                      @RequestParam(name = RestApiConstants.WB_CODE) String wbCode) {
         try {
             List<WorkflowStateDto> list = workflowStateMapper.listEntityToDto(workflowBoardService.getStates(wbCode))
@@ -92,8 +91,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Gets items.
-     *
-     * @param requestContext the request context
+     
      * @param wbCode         the wb code
      * @return the items
      */
@@ -110,10 +108,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @GetMapping(path = "/items")
-    ResponseEntity<List<IBoardItem>> getItems(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<List<IBoardItem>> getItems(
                                               @RequestParam(name = RestApiConstants.WB_CODE) String wbCode) {
         try {
-            List<IBoardItem> list = workflowBoardService.getItems(requestContext.getSenderTenant(), wbCode);
+            List<IBoardItem> list = workflowBoardService.getItems(getRequestContextService().getCurrentContext().getSenderTenant(), wbCode);
             if (CollectionUtils.isEmpty(list)) {
                 return ResponseFactory.responseNoContent();
             }
@@ -126,8 +124,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Gets job application candidate.
-     *
-     * @param requestContext the request context
+     
      * @param code           the code
      * @return the job application candidate
      */
@@ -142,7 +139,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @GetMapping(path = "/candidate/{code}")
-    ResponseEntity<AccountModelDto> getJobApplicationCandidate(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<AccountModelDto> getJobApplicationCandidate(
                                                                @PathVariable(name = RestApiConstants.CODE) String code) {
         try {
             return ResponseFactory.responseOk(workflowBoardService.getCandidateData(code));
@@ -155,8 +152,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Gets item types.
-     *
-     * @param requestContext the request context
+     
      * @return the item types
      */
     @Operation(summary = "Get item types",
@@ -172,7 +168,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @GetMapping(path = "/itemTypes")
-    ResponseEntity<List<String>> getItemTypes(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
+    ResponseEntity<List<String>> getItemTypes() {
         try {
             List<String> list = this.exceptionHandler().getEntityMap().values().stream()
                     .filter(c -> IStatusAssignable.class.isAssignableFrom(c))
@@ -190,7 +186,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
     /**
      * Create event response entity.
      *
-     * @param requestContext  the request context
+     * @param getRequestContextService().getCurrentContext()  the request context
      * @param bpmEventRequest the bpm event request
      * @return the response entity
      */
@@ -207,7 +203,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @PostMapping(path = "/event")
-    ResponseEntity<BpmEventResponseDto> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<BpmEventResponseDto> createEvent(
                                                     @Valid @RequestBody BpmEventRequestDto bpmEventRequest) {
         try {
             return ResponseFactory.responseOk(workflowBoardService.performEvent(bpmEventRequest));
@@ -219,8 +215,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Gets event.
-     *
-     * @param requestContext the request context
+     
      * @param code           the code
      * @param id             the id
      * @return the event
@@ -236,11 +231,11 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @GetMapping(path = "/board-event/{code}/{id}")
-    ResponseEntity<JobOfferApplicationInterviewEventRequestDto> getEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<JobOfferApplicationInterviewEventRequestDto> getEvent(
                                                                          @PathVariable(name = RestApiConstants.CODE) String code,
                                                                          @PathVariable(name = RestApiConstants.ID) Long id) {
         try {
-            return ResponseFactory.responseOk(workflowBoardService.getInterviewEvent(requestContext.getSenderTenant(), code, id));
+            return ResponseFactory.responseOk(workflowBoardService.getInterviewEvent(getRequestContextService().getCurrentContext().getSenderTenant(), code, id));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -249,8 +244,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Create event response entity.
-     *
-     * @param requestContext the request context
+     
      * @param eventType      the event type
      * @param code           the code
      * @param event          the event
@@ -269,12 +263,12 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @PostMapping(path = "/board-event/{eventType}/{code}")
-    ResponseEntity<?> createEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<?> createEvent(
                                   @PathVariable(name = RestApiConstants.EVENT_TYPE) String eventType,
                                   @PathVariable(name = RestApiConstants.CODE) String code,
                                   @Valid @RequestBody JobOfferApplicationInterviewEventRequestDto event) {
         try {
-            return ResponseFactory.responseOk(workflowBoardService.addInterviewEvent(requestContext.getSenderTenant(), code, eventType, event));
+            return ResponseFactory.responseOk(workflowBoardService.addInterviewEvent(getRequestContextService().getCurrentContext().getSenderTenant(), code, eventType, event));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -283,8 +277,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Update event response entity.
-     *
-     * @param requestContext the request context
+     
      * @param eventType      the event type
      * @param code           the code
      * @param event          the event
@@ -303,7 +296,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @PutMapping(path = "/board-event/{eventType}/{code}")
-    ResponseEntity<?> updateEvent(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<?> updateEvent(
                                   @PathVariable(name = RestApiConstants.EVENT_TYPE) String eventType,
                                   @PathVariable(name = RestApiConstants.CODE) String code,
                                   @Valid @RequestBody JobOfferApplicationInterviewEventRequestDto event) {
@@ -318,8 +311,7 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
 
     /**
      * Gets available workflow emails.
-     *
-     * @param requestContext the request context
+     
      * @param wfCode         the wf code
      * @return the available workflow emails
      */
@@ -334,10 +326,10 @@ public class WorkflowBoardController extends MappedCrudController<Long, Workflow
                     description = "Internal server error")
     })
     @GetMapping(path = "/watchers")
-    ResponseEntity<List<String>> getAvailableWorkflowEmails(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    ResponseEntity<List<String>> getAvailableWorkflowEmails(
                                                             @RequestParam(name = RestApiConstants.WF_CODE) String wfCode) {
         try {
-            return ResponseFactory.responseOk(crudService().getBoardWatchersByWorkflow(wfCode, requestContext.getSenderTenant()));
+            return ResponseFactory.responseOk(crudService().getBoardWatchersByWorkflow(wfCode, getRequestContextService().getCurrentContext().getSenderTenant()));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);

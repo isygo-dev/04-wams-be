@@ -107,12 +107,12 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
     })
     @PostMapping("/{templateId}/pin")
     public ResponseEntity<Boolean> togglePinStatus(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+            
             @PathVariable Long templateId) {
 
         log.info("togglePinStatus");
         try {
-            String userName = requestContext.getSenderUser();
+            String userName = getRequestContextService().getCurrentContext().getSenderUser();
             Optional<Template> optionalTemplate = crudService().findById(templateId);
             optionalTemplate.ifPresentOrElse(template -> {
                 if (CollectionUtils.isEmpty(template.getFavorites())) {
@@ -145,12 +145,11 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
                     description = "Internal server error")
     })
     @GetMapping("/pinned")
-    public ResponseEntity<List<TemplateDto>> getPinnedTemplates(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
+    public ResponseEntity<List<TemplateDto>> getPinnedTemplates() {
 
         log.info("togglePinStatus");
         try {
-            String userName = requestContext.getSenderUser();
+            String userName = getRequestContextService().getCurrentContext().getSenderUser();
             List<Template> pinned = crudService().findAllByFavoritesContaining(userName);
             if (CollectionUtils.isEmpty(pinned)) {
                 return ResponseEntity.noContent().build();
@@ -177,12 +176,12 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
     })
     @GetMapping("/{templateId}/pinned-status")
     public ResponseEntity<Boolean> checkPinStatus(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+            
             @PathVariable Long templateId) {
 
         log.info("checkPinStatus");
         try {
-            String userName = requestContext.getSenderUser();
+            String userName = getRequestContextService().getCurrentContext().getSenderUser();
             log.info("Checking pin status for template ID: {} by user: {}", templateId, userName);
 
             Template template = crudService().findAllByIdAndFavoritesContaining(templateId, userName);
@@ -213,11 +212,10 @@ public class TemplateController extends MappedCrudController<Long, Template, Tem
                     description = "Internal server error")
     })
     @GetMapping("/pinned/count")
-    public ResponseEntity<Long> countMyPinnedTemplates(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
+    public ResponseEntity<Long> countMyPinnedTemplates() {
         log.info("checkPinStatus");
         try {
-            String userName = requestContext.getSenderUser();
+            String userName = getRequestContextService().getCurrentContext().getSenderUser();
             return ResponseEntity.ok(crudService().countTemplatesWithFavoriteUser(userName));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);

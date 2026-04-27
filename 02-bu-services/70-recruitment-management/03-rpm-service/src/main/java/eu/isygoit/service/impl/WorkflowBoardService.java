@@ -161,7 +161,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         try {
             return Optional.ofNullable(
                             cmsCalendarEventService.eventByTenantAndCalendarAndCode(
-                                    ContextRequestDto.builder().build(), tenant, boardEvent.getCalendar(), boardEvent.getEventCode()))
+                                     tenant, boardEvent.getCalendar(), boardEvent.getEventCode()))
                     .filter(response -> {
                         if (!response.getStatusCode().is2xxSuccessful()) {
                             log.warn("Interview read failed: {}", boardEvent);
@@ -229,7 +229,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
         // Call the CMS service and update DTO if successful
         try {
             ResponseEntity<VCalendarEventDto> result = cmsCalendarEventService.eventByTenantAndCalendarAndCode(
-                    ContextRequestDto.builder().build(),
+                    
                     interviewEventRequestDto.getTenant(),
                     interviewEventRequestDto.getType().name(),
                     jobApplicationEvent.getEventCode());
@@ -273,7 +273,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                                     .type(event.getType().name()).build();
 
                             try {
-                                vCalendarEventDto = Optional.ofNullable(cmsCalendarEventService.saveEvent(ContextRequestDto.builder().build(),
+                                vCalendarEventDto = Optional.ofNullable(cmsCalendarEventService.saveEvent(
                                                 vCalendarEventDto))
                                         .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
                                         .map(result -> result.getBody())
@@ -359,7 +359,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                                         Optional<Interview> interviewOptional = interviewEventRepository.findByJobApplicationEvent_Id(event.getId());
                                         try {
                                             Optional.ofNullable(cmsCalendarEventService.eventByTenantAndCalendarAndCode(
-                                                            ContextRequestDto.builder().build(),
+                                                            
                                                             jobApp.getTenant(),
                                                             jobOfferApplicationEvent.getCalendar(), jobOfferApplicationEvent.getEventCode()))
                                                     .filter(result -> result.getStatusCode().is2xxSuccessful() && result.hasBody())
@@ -369,7 +369,7 @@ public class WorkflowBoardService extends CodeAssignableService<Long, WorkflowBo
                                                                 vCalendarEventDto1.setTitle(event.getTitle());
                                                                 vCalendarEventDto1.setStartDate(event.getStartDateTime());
                                                                 vCalendarEventDto1.setEndDate(event.getEndDateTime());
-                                                                ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(ContextRequestDto.builder().build(),
+                                                                ResponseEntity<VCalendarEventDto> updateResult = cmsCalendarEventService.updateEvent(
                                                                         vCalendarEventDto1.getId(),
                                                                         vCalendarEventDto1);
                                                                 if (!updateResult.getStatusCode().is2xxSuccessful()) {

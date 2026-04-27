@@ -37,8 +37,7 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
 
     /**
      * Find all by blog id response entity.
-     *
-     * @param requestContext the request context
+     
      * @param blogId         the blog id
      * @param page           the page
      * @param size           the size
@@ -57,7 +56,7 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
                     description = "Internal server error")
     })
     @GetMapping(path = "/blogId/page")
-    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(
                                                              @RequestParam(name = RestApiConstants.BLOG_ID) Long blogId,
                                                              @RequestParam(name = RestApiConstants.PAGE) Integer page,
                                                              @RequestParam(name = RestApiConstants.SIZE) Integer size) {
@@ -75,8 +74,7 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
 
     /**
      * Find all by blog id response entity.
-     *
-     * @param requestContext the request context
+     
      * @param blogId         the blog id
      * @return the response entity
      */
@@ -93,7 +91,7 @@ public class BlogTalkController extends MappedCrudController<UUID, BlogTalk, Blo
                     description = "Internal server error")
     })
     @GetMapping(path = "/blogId")
-    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<BlogTalkDto>> findAllByBlogId(
                                                              @RequestParam(name = RestApiConstants.PAGE) Long blogId) {
         try {
             List<BlogTalk> list = this.crudService().findByBlogId(blogId);

@@ -53,7 +53,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     }
 
     @Override
-    public ResponseEntity<EmployeeDto> getEmployeeByCode(ContextRequestDto requestContext,
+    public ResponseEntity<EmployeeDto> getEmployeeByCode(
                                                          String code) {
         try {
             return crudService().findByCode(code)
@@ -66,7 +66,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     }
 
     @Override
-    public ResponseEntity<List<EmployeeDto>> getEmployeeByTenant(ContextRequestDto requestContext, String tenant) {
+    public ResponseEntity<List<EmployeeDto>> getEmployeeByTenant( String tenant) {
         try {
             List<Employee> employees = crudService().findByTenant(tenant);
             if (CollectionUtils.isEmpty(employees)) {
@@ -81,7 +81,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
 
 
     @Override
-    public ResponseEntity<EmployeeDto> updateEmployeeStatus(ContextRequestDto requestContext,
+    public ResponseEntity<EmployeeDto> updateEmployeeStatus(
                                                             Long id,
                                                             IEnumEnabledBinaryStatus.Types newStatus) {
         log.info("update employee status");
@@ -106,8 +106,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
 
     /**
      * Create account to employee response entity.
-     *
-     * @param requestContext the request context
+     
      * @param employeeDto    the employee dto
      * @return the response entity
      */
@@ -123,7 +122,7 @@ public class EmployeeController extends MappedCrudController<Long, Employee, Min
     })
     @PostMapping(path = "/create/account")
     public ResponseEntity<HttpStatus> createAccountForEmployee(
-            @RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+            
             @Valid @RequestBody EmployeeDto employeeDto) {
         try {
             employeeService.createAccount(mapper().dtoToEntity(employeeDto));

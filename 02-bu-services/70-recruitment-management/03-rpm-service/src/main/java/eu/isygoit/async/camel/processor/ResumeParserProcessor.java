@@ -52,7 +52,7 @@ public class ResumeParserProcessor extends AbstractCamelProcessor<ResumeParseDto
                 org.springframework.util.StringUtils.hasText(resumeParseDto.getFile().getOriginalFilename()) &&
                 FilenameUtils.isExtension(resumeParseDto.getFile().getOriginalFilename().toLowerCase(), "pdf")) { //NOSONAR
             try {
-                ResponseEntity<Resource> result = dmsFileFileConverterService.convertPdf(ContextRequestDto.builder().build(),
+                ResponseEntity<Resource> result = dmsFileFileConverterService.convertPdf(
                         IEnumFile.Types.TEXT, resumeParseDto.getFile());
                 if (result.getStatusCode().is2xxSuccessful() && result.hasBody()) {
                     Optional<Resume> optional = resumeRepository.findByCodeIgnoreCase(resumeParseDto.getCode());

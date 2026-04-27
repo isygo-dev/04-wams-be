@@ -273,7 +273,7 @@ public class EmployeeService extends ImageService<Long, Employee, EmployeeReposi
     }
 
     private Long stat_GetConfirmedEmployeesCount(ContextRequestDto requestContext) {
-        ResponseEntity<Long> responseEntity = imAccountService.getConfirmedAccountNumberByEmployee(requestContext);
+        ResponseEntity<Long> responseEntity = imAccountService.getConfirmedAccountNumberByEmployee();
         return responseEntity.getBody();
     }
 

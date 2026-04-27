@@ -22,8 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ContractControllerApi extends IMappedCrudApi<Long, MinContractDto, ContractDto> {
     /**
      * Update contract status response entity.
-     *
-     * @param requestContext the request context
+     
      * @param id             the id
      * @param isLocked       the is locked
      * @return the response entity
@@ -37,7 +36,7 @@ public interface ContractControllerApi extends IMappedCrudApi<Long, MinContractD
                             schema = @Schema(implementation = ContractDto.class))})
     })
     @PutMapping(path = "/updateContractStatus")
-    ResponseEntity<ContractDto> updateContractStatus(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT, required = false) ContextRequestDto requestContext,
+    ResponseEntity<ContractDto> updateContractStatus(
                                                      @RequestParam(name = RestApiConstants.ID) Long id,
                                                      @RequestParam(name = RestApiConstants.IS_LOCKED) Boolean isLocked);
 

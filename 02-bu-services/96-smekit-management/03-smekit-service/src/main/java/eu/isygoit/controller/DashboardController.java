@@ -7,10 +7,13 @@ import eu.isygoit.com.rest.controller.impl.ControllerExceptionHandler;
 import eu.isygoit.dto.data.DashboardStatsDTO;
 import eu.isygoit.exception.handler.SmeKitExceptionHandler;
 import eu.isygoit.mapper.DocumentCommentMapper;
+import eu.isygoit.service.RequestContextService;
 import eu.isygoit.service.impl.DashboardService;
 import eu.isygoit.service.impl.DocumentCommentService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DashboardController extends ControllerExceptionHandler {
 
     private final DashboardService dashboardService;
+    @Getter
+    @Autowired
+    private RequestContextService requestContextService;
 
     @GetMapping("/stats")
     public ResponseEntity<DashboardStatsDTO> getDashboardStats(@RequestParam(required = false) String userIdentifier) {

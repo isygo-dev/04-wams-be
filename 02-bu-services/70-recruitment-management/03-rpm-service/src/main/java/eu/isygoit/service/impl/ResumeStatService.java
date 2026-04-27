@@ -49,7 +49,7 @@ public class ResumeStatService {
     }
 
     public Long stat_GetConfirmedResumesCount(ContextRequestDto requestContext) {
-        ResponseEntity<Long> responseEntity = imAccountService.getConfirmedResumeAccountsCount(requestContext);
+        ResponseEntity<Long> responseEntity = imAccountService.getConfirmedResumeAccountsCount();
         return responseEntity.getBody();
     }
 

@@ -38,8 +38,7 @@ public class WorkflowController extends MappedCrudController<Long, Workflow, Wor
 
     /**
      * Gets unassociated workflows.
-     *
-     * @param requestContext the request context
+     
      * @return the unassociated workflows
      */
     @Operation(summary = "Get unassociated workflows",
@@ -53,7 +52,7 @@ public class WorkflowController extends MappedCrudController<Long, Workflow, Wor
                     description = "Internal server error")
     })
     @GetMapping(path = "/unassociated")
-    ResponseEntity<List<String>> getUnassociatedWorkflows(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext) {
+    ResponseEntity<List<String>> getUnassociatedWorkflows() {
         try {
             return ResponseFactory.responseOk(crudService().getWorkflowNotAssociated());
         } catch (Throwable e) {

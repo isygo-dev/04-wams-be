@@ -50,8 +50,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
 
     /**
      * Create like post response entity.
-     *
-     * @param requestContext the request context
+     
      * @param postId         the post id
      * @param accountCode    the account code
      * @param isLike         the is like
@@ -70,7 +69,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                     description = "Internal server error")
     })
     @PostMapping(path = "/like")
-    public ResponseEntity<PostDto> createLikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<PostDto> createLikePost(
                                                   @RequestParam(name = RestApiConstants.ID) Long postId,
                                                   @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                   @RequestParam Boolean isLike
@@ -97,8 +96,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
 
     /**
      * Gets users liked post by post id.
-     *
-     * @param requestContext the request context
+     
      * @param postId         the post id
      * @return the users liked post by post id
      */
@@ -115,7 +113,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                     description = "Internal server error")
     })
     @GetMapping(path = "/like/{postId}")
-    public ResponseEntity<List<String>> getUsersLikedPostByPostId(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<String>> getUsersLikedPostByPostId(
                                                                   @PathVariable(name = RestApiConstants.POST_ID) Long postId) {
         try {
             return ResponseFactory.responseOk(postService.findById(postId)
@@ -129,8 +127,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
 
     /**
      * Create dislike post response entity.
-     *
-     * @param requestContext the request context
+     
      * @param postId         the post id
      * @param accountCode    the account code
      * @param isLike         the is like
@@ -149,7 +146,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                     description = "Internal server error")
     })
     @PostMapping(path = "/dislike")
-    public ResponseEntity<PostDto> createDislikePost(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<PostDto> createDislikePost(
                                                      @RequestParam(name = RestApiConstants.ID) Long postId,
                                                      @RequestParam(name = RestApiConstants.ACCOUNT_CODE) String accountCode,
                                                      @RequestParam Boolean isLike) {
@@ -175,8 +172,7 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
 
     /**
      * Find all blogs response entity.
-     *
-     * @param requestContext the request context
+     
      * @param page           the page
      * @param size           the size
      * @return the response entity
@@ -194,23 +190,23 @@ public class PostController extends MappedCrudController<Long, Post, PostDto, Po
                     description = "Internal server error")
     })
     @GetMapping(path = "/blog/{page}/{size}")
-    public ResponseEntity<List<PostDto>> findAllBlogs(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
+    public ResponseEntity<List<PostDto>> findAllBlogs(
                                                       @PathVariable(name = RestApiConstants.PAGE) Integer page,
                                                       @PathVariable(name = RestApiConstants.SIZE) Integer size) {
         log.info("Find all post/blogs by page/size request received {}/{}", page, size);
         try {
             List<PostDto> list = null;
-            if (TenantConstants.SUPER_TENANT_NAME.equals(requestContext.getSenderTenant())) {
+            if (TenantConstants.SUPER_TENANT_NAME.equals(getRequestContextService().getCurrentContext().getSenderTenant())) {
                 list = this.mapper().listEntityToDto(this.crudService().findByIsBlogTrue(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"))));
             } else {
-                list = this.mapper().listEntityToDto(this.crudService().findByTenantAndIsBlogTrue(requestContext.getSenderTenant(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"))));
+                list = this.mapper().listEntityToDto(this.crudService().findByTenantAndIsBlogTrue(getRequestContextService().getCurrentContext().getSenderTenant(), PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createDate"))));
             }
 
             if (CollectionUtils.isEmpty(list)) {
                 return ResponseFactory.responseNoContent();
             }
 
-            this.afterFindAll(requestContext, list);
+            this.afterFindAll(getRequestContextService().getCurrentContext(), list);
             return ResponseFactory.responseOk(list);
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);

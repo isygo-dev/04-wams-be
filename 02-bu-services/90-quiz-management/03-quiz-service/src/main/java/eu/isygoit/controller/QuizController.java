@@ -52,7 +52,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     private QuizListMapper quizListMapper;
 
     @Override
-    public ResponseEntity<Resource> downloadQuestionImage(ContextRequestDto requestContext, Long id) throws IOException {
+    public ResponseEntity<Resource> downloadQuestionImage(Long id) throws IOException {
         log.info("Download question image request received");
         try {
             Resource imageResource = crudService().downloadQuestionImage(id);
@@ -67,11 +67,11 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public ResponseEntity<QuizQuestionDto> uploadQuestionImage(ContextRequestDto requestContext, Long id, MultipartFile file) {
+    public ResponseEntity<QuizQuestionDto> uploadQuestionImage( Long id, MultipartFile file) {
         log.info("Upload question image request received");
         try {
             return ResponseFactory.responseOk(quizQuestionMapper.entityToDto(crudService().uploadQuestionImage(id,
-                    requestContext.getSenderTenant(), file)));
+                    getRequestContextService().getCurrentContext().getSenderTenant(), file)));
         } catch (Throwable e) {
             log.error(CtrlConstants.ERROR_API_EXCEPTION, e);
             return getBackExceptionResponse(e);
@@ -79,7 +79,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public ResponseEntity<List<QuizListDto>> getQuizCodesByCategory(ContextRequestDto requestContext, String category) {
+    public ResponseEntity<List<QuizListDto>> getQuizCodesByCategory( String category) {
         log.info("get Quiz Codes By Category request received");
         try {
             List<Quiz> list = crudService().getQuizCodesByCategory(category);
@@ -94,7 +94,7 @@ public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, Qu
     }
 
     @Override
-    public ResponseEntity<QuizDto> findByCodeIgnoreCase(ContextRequestDto requestContext, String code) {
+    public ResponseEntity<QuizDto> findByCodeIgnoreCase( String code) {
         log.info("get quiz by code received");
         try {
             QuizDto quizDto = mapper().entityToDto(crudService().getQuizByCode(code));

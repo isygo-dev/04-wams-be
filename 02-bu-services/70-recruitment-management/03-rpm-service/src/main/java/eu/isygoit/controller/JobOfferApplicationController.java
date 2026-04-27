@@ -47,8 +47,7 @@ public class JobOfferApplicationController extends MappedCrudController<Long, Jo
 
     /**
      * Gets job offers not assigned to resume.
-     *
-     * @param requestContext the request context
+     
      * @param resumeCode     the resume code
      * @return the job offers not assigned to resume
      */
@@ -65,8 +64,7 @@ public class JobOfferApplicationController extends MappedCrudController<Long, Jo
                     description = "Internal server error")
     })
     @GetMapping(path = "/not-applied/{resumeCode}")
-    public ResponseEntity<List<JobOfferDto>> getJobOffersNotAssignedToResume(@RequestAttribute(value = JwtConstants.JWT_USER_CONTEXT) ContextRequestDto requestContext,
-                                                                             @PathVariable(name = RestApiConstants.RESUME_CODE) String resumeCode) {
+    public ResponseEntity<List<JobOfferDto>> getJobOffersNotAssignedToResume(@PathVariable(name = RestApiConstants.RESUME_CODE) String resumeCode) {
         try {
             List<JobOfferDto> jobOffers = jobOfferMapper.listEntityToDto(jobOfferService.findJobOffersNotAssignedToResume(resumeCode));
             if (jobOffers.isEmpty()) {
