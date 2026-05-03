@@ -3,9 +3,9 @@ services:
   ##############################################################
   ###  minio:
   ##############################################################
-  minio-server:
+  minio:
     container_name: minIo
-    image: bitnami/minio:latest
+    image: minio/minio:latest
     ports:
       - '9000:9000'
       - '9001:9001'

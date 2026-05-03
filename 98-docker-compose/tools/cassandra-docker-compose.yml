@@ -1,5 +1,3 @@
-version: '3'  #choose version as per your need
-
 services:
   cassandra:
     container_name: cassandra
