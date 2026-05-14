@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * The interface Candidate quiz controller api.
  */
-public interface CandidateQuizControllerApi extends IMappedCrudApi<Long, CandidateQuizDto, CandidateQuizDto> {
+public interface CandidateQuizServiceApi extends IMappedCrudApi<Long, CandidateQuizDto, CandidateQuizDto> {
 
     /**
      * Gets candidate quiz.

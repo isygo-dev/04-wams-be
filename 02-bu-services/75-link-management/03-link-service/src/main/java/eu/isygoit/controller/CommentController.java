@@ -2,7 +2,7 @@ package eu.isygoit.controller;
 
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.CommentControllerApi;
+import eu.isygoit.api.CommentServiceApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -39,7 +39,7 @@ import java.util.Optional;
 @RestController
 @InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = PostCommentMapper.class, minMapper = PostCommentMapper.class, service = PostCommentService.class)
 @RequestMapping(value = "/api/v1/private/comment")
-public class CommentController extends MappedCrudController<Long, PostComment, PostCommentDto, PostCommentDto, PostCommentService> implements CommentControllerApi {
+public class CommentController extends MappedCrudController<Long, PostComment, PostCommentDto, PostCommentDto, PostCommentService> implements CommentServiceApi {
 
     /**
      * The Comment mapper.

@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.PostControllerApi;
+import eu.isygoit.api.PostServiceApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -41,7 +41,7 @@ import java.util.Optional;
 @RestController
 @InjectMapperAndService(handler = LinkExceptionHandler.class, mapper = PostMapper.class, minMapper = PostMapper.class, service = PostService.class)
 @RequestMapping(value = "/api/v1/private/post")
-public class PostController extends MappedCrudController<Long, Post, PostDto, PostDto, PostService> implements PostControllerApi {
+public class PostController extends MappedCrudController<Long, Post, PostDto, PostDto, PostService> implements PostServiceApi {
 
     @Autowired
     private IPostService postService;

@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * The interface Employee controller api.
  */
-public interface EmployeeControllerApi extends IMappedCrudApi<Long, MinEmployeeDto, EmployeeDto> {
+public interface EmployeeServiceApi extends IMappedCrudApi<Long, MinEmployeeDto, EmployeeDto> {
     /**
      * Update employee status response entity.
      

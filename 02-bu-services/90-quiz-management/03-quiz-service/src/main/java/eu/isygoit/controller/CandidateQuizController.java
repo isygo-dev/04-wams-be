@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.CandidateQuizControllerApi;
+import eu.isygoit.api.CandidateQuizServiceApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -34,7 +34,7 @@ import java.util.List;
 @InjectMapperAndService(handler = QuizExceptionHandler.class, mapper = CandidateQuizMapper.class, minMapper = CandidateQuizMapper.class, service = CandidateQuizService.class)
 @RequestMapping(value = "/api/v1/private/candidate/quiz")
 public class CandidateQuizController extends MappedCrudController<Long, CandidateQuiz, CandidateQuizDto, CandidateQuizDto, CandidateQuizService>
-        implements CandidateQuizControllerApi {
+        implements CandidateQuizServiceApi {
 
     @Autowired
     private CandidateQuizAnswerMapper candidateQuizAnswerMapper;

@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.ContractControllerApi;
+import eu.isygoit.api.ContractServiceApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = ContractMapper.class, minMapper = ContractMapper.class, service = ContractService.class)
 @RequestMapping(value = "/api/v1/private/contract")
 public class ContractController extends MappedCrudController<Long, Contract, MinContractDto, ContractDto, ContractService>
-        implements ContractControllerApi {
+        implements ContractServiceApi {
     @Autowired
     private IContractService contractService;
 

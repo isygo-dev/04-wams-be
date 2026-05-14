@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.EmployeeControllerApi;
+import eu.isygoit.api.EmployeeServiceApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @InjectMapperAndService(handler = HrmExceptionHandler.class, mapper = EmployeeMapper.class, minMapper = EmployeeMapper.class, service = EmployeeService.class)
 @RequestMapping(value = "/api/v1/private/employee")
 public class EmployeeController extends MappedCrudController<Long, Employee, MinEmployeeDto, EmployeeDto, EmployeeService>
-        implements EmployeeControllerApi {
+        implements EmployeeServiceApi {
 
     private final IEmployeeService employeeService;
 

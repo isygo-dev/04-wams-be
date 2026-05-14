@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  * The interface Contract controller api.
  */
-public interface ContractControllerApi extends IMappedCrudApi<Long, MinContractDto, ContractDto> {
+public interface ContractServiceApi extends IMappedCrudApi<Long, MinContractDto, ContractDto> {
     /**
      * Update contract status response entity.
      

@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.QuizControllerApi;
+import eu.isygoit.api.QuizServiceApi;
 import eu.isygoit.com.rest.controller.ResponseFactory;
 import eu.isygoit.com.rest.controller.constants.CtrlConstants;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
@@ -42,7 +42,7 @@ import java.util.Objects;
 @InjectMapperAndService(handler = QuizExceptionHandler.class, mapper = QuizMapper.class, minMapper = QuizMapper.class, service = QuizService.class)
 @RequestMapping(value = "/api/v1/private/quiz")
 public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, QuizDto, QuizService>
-        implements QuizControllerApi {
+        implements QuizServiceApi {
 
     @Autowired
     private QuizQuestionMapper quizQuestionMapper;

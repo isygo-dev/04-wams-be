@@ -6,5 +6,5 @@ import eu.isygoit.dto.data.PostCommentDto;
 /**
  * The interface Comment controller api.
  */
-public interface CommentControllerApi extends IMappedCrudApi<Long, PostCommentDto, PostCommentDto> {
+public interface CommentServiceApi extends IMappedCrudApi<Long, PostCommentDto, PostCommentDto> {
 }

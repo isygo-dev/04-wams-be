@@ -6,6 +6,6 @@ import eu.isygoit.dto.data.QuizDto;
 /**
  * The interface Quiz controller api.
  */
-public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto> {
+public interface QuizServiceApi extends IMappedCrudApi<Long, QuizDto, QuizDto> {
 
 }

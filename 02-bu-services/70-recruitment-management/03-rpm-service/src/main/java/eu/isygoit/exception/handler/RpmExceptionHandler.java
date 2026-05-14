@@ -1,7 +1,7 @@
 package eu.isygoit.exception.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import eu.isygoit.api.AppParameterControllerApi;
+import eu.isygoit.api.AppParameterServiceApi;
 import eu.isygoit.config.AppProperties;
 import eu.isygoit.constants.TenantConstants;
 import eu.isygoit.dto.data.MailMessageDto;
@@ -29,7 +29,7 @@ public class RpmExceptionHandler extends ControllerExceptionHandler {
     @Autowired
     private IMsgService msgService;
     @Autowired
-    private AppParameterControllerApi appParameterService;
+    private AppParameterServiceApi appParameterService;
 
     /**
      * Instantiates a new Rpm exception handler.

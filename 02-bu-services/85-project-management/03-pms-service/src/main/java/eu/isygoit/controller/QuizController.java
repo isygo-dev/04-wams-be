@@ -1,7 +1,7 @@
 package eu.isygoit.controller;
 
 import eu.isygoit.annotation.InjectMapperAndService;
-import eu.isygoit.api.QuizControllerApi;
+import eu.isygoit.api.QuizServiceApi;
 import eu.isygoit.com.rest.controller.impl.MappedCrudController;
 import eu.isygoit.dto.data.QuizDto;
 import eu.isygoit.exception.handler.PmsExceptionHandler;
@@ -21,6 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @InjectMapperAndService(handler = PmsExceptionHandler.class, mapper = QuizMapper.class, minMapper = QuizMapper.class, service = QuizService.class)
 @RequestMapping(value = "/api/v1/private/quiz")
-public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, QuizDto, QuizService> implements QuizControllerApi {
+public class QuizController extends MappedCrudController<Long, Quiz, QuizDto, QuizDto, QuizService> implements QuizServiceApi {
 
 }

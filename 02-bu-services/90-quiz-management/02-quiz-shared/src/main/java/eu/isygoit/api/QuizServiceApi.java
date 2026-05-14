@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * The interface Quiz controller api.
  */
-public interface QuizControllerApi extends IMappedCrudApi<Long, QuizDto, QuizDto> {
+public interface QuizServiceApi extends IMappedCrudApi<Long, QuizDto, QuizDto> {
 
     /**
      * Download question image response entity.
